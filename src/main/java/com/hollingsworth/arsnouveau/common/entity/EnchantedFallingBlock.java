@@ -61,6 +61,13 @@ import java.util.function.Predicate;
 
 public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntity {
 
+    private FallingBlockEntity vanillaCopy() {
+        FallingBlockEntity copy = new FallingBlockEntity(EntityType.FALLING_BLOCK, level);
+        copy.setPos(this.getX(), this.getY(), this.getZ());
+        copy.blockState = this.blockState;
+        return copy;
+    }
+
     public BlockState blockState = Blocks.SAND.defaultBlockState();
     public int time;
     public boolean dropItem = true;
@@ -258,7 +265,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
                 ((ServerLevel) this.level).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(blockpos, this.level.getBlockState(blockpos)));
                 this.discard();
                 if (block instanceof Fallable fallable) {
-                    fallable.onLand(this.level, blockpos, this.blockState, blockstate, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
+                    fallable.onLand(this.level, blockpos, this.blockState, blockstate, vanillaCopy());
                 }else if(context != null && resolver != null){
                     RewindAttachment.get(context).addRewindEvent(level.getGameTime(), new EntityToBlockRewind(this, blockpos, this.blockState));
                     ShapersFocus.tryPropagateBlockSpell(new BlockHitResult(
@@ -413,7 +420,7 @@ public class EnchantedFallingBlock extends ColoredProjectile implements GeoEntit
 
     public void callOnBrokenAfterFall(Block p_149651_, BlockPos p_149652_) {
         if (p_149651_ instanceof Fallable) {
-            ((Fallable) p_149651_).onBrokenAfterFall(this.level, p_149652_, new FallingBlockEntity(level, this.getX(), this.getY(), this.getZ(), this.blockState));
+            ((Fallable) p_149651_).onBrokenAfterFall(this.level, p_149652_, vanillaCopy());
         }
 
     }

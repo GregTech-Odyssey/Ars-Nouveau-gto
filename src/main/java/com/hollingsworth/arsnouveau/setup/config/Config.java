@@ -43,6 +43,8 @@ public class Config {
     public static ForgeConfigSpec.IntValue MELDER_INPUT_COST;
     public static ForgeConfigSpec.IntValue MELDER_SOURCE_COST;
     public static ForgeConfigSpec.IntValue ENCHANTED_FLASK_CAP;
+    public static ForgeConfigSpec.DoubleValue AE_PER_SOURCE;
+    public static ForgeConfigSpec.IntValue OUTPUT_P2P_BUFFER;
     public static ForgeConfigSpec.BooleanValue HUNTER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue STALKER_ATTACK_ANIMALS;
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
@@ -153,6 +155,11 @@ public class Config {
         MELDER_OUTPUT = SERVER_BUILDER.comment("How much potion a melder outputs per cycle. 100 = 1 potion").defineInRange("melderOutput", 100, 100, Integer.MAX_VALUE);
         MELDER_SOURCE_COST = SERVER_BUILDER.comment("How much source a melder takes per cycle").defineInRange("melderSourceCost", 300, 0, Integer.MAX_VALUE);
         ENCHANTED_FLASK_CAP = SERVER_BUILDER.comment("The max potion level the enchanted flask can grant. This isnt needed unless you have an infinite potion leveling exploit.").defineInRange("enchantedFlaskCap", 255, 2, Integer.MAX_VALUE);
+        SERVER_BUILDER.pop();
+
+        SERVER_BUILDER.comment("Applied Energistics 2 integration").push("ae2");
+        AE_PER_SOURCE = SERVER_BUILDER.comment("How much AE energy the Source Acceptor should produce per unit of source.").defineInRange("aePerSource", 16, 0, Double.MAX_VALUE);
+        OUTPUT_P2P_BUFFER = SERVER_BUILDER.comment("The maximum source capacity of Source P2P output tunnels.").defineInRange("outputP2PBuffer", 1000, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Debug").push("debug");

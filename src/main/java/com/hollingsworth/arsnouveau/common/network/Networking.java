@@ -224,6 +224,7 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), PacketUpdateSpellSoundAll.class, PacketUpdateSpellSoundAll::toBytes, PacketUpdateSpellSoundAll::new, PacketUpdateSpellSoundAll::handle);
         INSTANCE.registerMessage(nextID(), PotionSyncPacket.class, PotionSyncPacket::toBytes, PotionSyncPacket::new, PotionSyncPacket::handle);
         INSTANCE.registerMessage(nextID(), PacketClientRewindEffect.class, PacketClientRewindEffect::toBytes, PacketClientRewindEffect::new, PacketClientRewindEffect::handle);
+        INSTANCE.registerMessage(nextID(), PacketClientFx.class, PacketClientFx::encode, PacketClientFx::decode, PacketClientFx::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

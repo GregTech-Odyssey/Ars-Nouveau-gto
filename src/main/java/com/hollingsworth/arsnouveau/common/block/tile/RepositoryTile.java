@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
+import com.gto.datasynclib.FieldDataManager;
+import com.hollingsworth.arsnouveau.common.network.BlockEntitySync;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
@@ -28,7 +30,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider {
+public class RepositoryTile extends RandomizableContainerBlockEntity implements GeoBlockEntity, ITooltipProvider, BlockEntitySync.Holder {
     public static String[][] CONFIGURATIONS = new String[][]{
             {"1","2_3","4_6","7_9","10_12","13_15","16_18","19_21","22_24", "25_27"},
             {"1","2_3","25_27","22_24","19_21","10_12","7_9","4_6","13_15","16_18"},
@@ -155,33 +157,81 @@ public class RepositoryTile extends RandomizableContainerBlockEntity implements 
         configuration = pTag.getInt("configuration");
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
-    }
-
     public boolean updateBlock() {
         if(level == null) {
             return false;
         }
-        BlockState state = level.getBlockState(worldPosition);
-        level.sendBlockUpdated(worldPosition, state, state, 3);
+        if (level.isClientSide) {
+            BlockState state = level.getBlockState(worldPosition);
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+        } else {
+            BlockEntitySync.request(this);
+        }
         setChanged();
         return true;
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
-        return tag;
+        return ars$sync().writeFull();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        if (BlockEntitySync.isFullSync(tag)) {
+            ars$sync().readFull(tag);
+        } else {
+            super.handleUpdateTag(tag);
+        }
     }
 
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+        BlockEntitySync.request(this);
+        return null;
+    }
+
+    private CompoundTag writeSyncTag() {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("fillLevel", fillLevel);
+        tag.putInt("configuration", configuration);
+        if (hasCustomName()) {
+            tag.putString("CustomName", Component.Serializer.toJson(getCustomName()));
+        }
+        return tag;
+    }
+
+    private void readSyncTag(CompoundTag tag) {
+        fillLevel = tag.getInt("fillLevel");
+        configuration = tag.getInt("configuration");
+        setCustomName(tag.contains("CustomName", 8) ? Component.Serializer.fromJson(tag.getString("CustomName")) : null);
+    }
+
+    private BlockEntitySync sync;
+
+    @Override
+    public BlockEntitySync ars$sync() {
+        var s = sync;
+        if (s == null) {
+            sync = s = new BlockEntitySync(this, this::writeSyncTag, this::readSyncTag);
+        }
+        return s;
+    }
+
+    @Override
+    public FieldDataManager getFieldDataManager() {
+        return ars$sync().manager().get();
+    }
+
+    @Override
+    public void writeCustomSyncData(FriendlyByteBuf buf, boolean writeAll) {
+        ars$sync().writeCustom(buf, writeAll);
+    }
+
+    @Override
+    public void readCustomSyncData(FriendlyByteBuf buf) {
+        ars$sync().readCustom(buf);
     }
 
     @Override

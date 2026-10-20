@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
@@ -289,7 +290,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             int min = -2;
             int max = 2;
             EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
-            level.addFreshEntity(proj1);
+            ClientFx.spawn(level, proj1);
         }
     }
 

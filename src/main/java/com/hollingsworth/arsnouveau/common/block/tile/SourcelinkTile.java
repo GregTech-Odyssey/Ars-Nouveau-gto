@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
-import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.SourceIndex;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -30,6 +30,8 @@ import java.util.List;
 
 public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEntity, ITickable {
 
+    public static final int EVENT_RANGE = 15;
+
     int progress;
     public boolean isDisabled = false;
     public boolean registered = false;
@@ -53,18 +55,40 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        if (usesEventQueue() && level != null && !level.isClientSide) {
+            SourceIndex.registerSourcelink(this);
+            registered = true;
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        if (registered) {
+            SourceIndex.unregisterSourcelink(this);
+            registered = false;
+        }
+        super.setRemoved();
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        if (registered) {
+            SourceIndex.unregisterSourcelink(this);
+            registered = false;
+        }
+        super.onChunkUnloaded();
+    }
+
+    @Override
     public void tick() {
         if (level.isClientSide)
             return;
-        if (level.getGameTime() % 120 == 0 && usesEventQueue()) {
-            SourcelinkEventQueue.addPosition(level, this.worldPosition);
-            registered = true;
-        }
-
-        if (level.getGameTime() % 100 == 0 && getSource() > 0) {
+        if (level.getGameTime() % 100 == 0 && getSourceLong() > 0) {
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if(!providers.isEmpty()){
-                transferSource(this, providers.get(0).getSource());
+                transferSourceLong(this, providers.get(0).getSource());
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, providers.get(0).getCurrentPos(), this.getColor());
             }
         }
@@ -81,12 +105,16 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     public void getManaEvent(BlockPos sourcePos, int total) {
-        this.addSource(total);
+        getManaEvent(sourcePos, (long) total);
+    }
+
+    public void getManaEvent(BlockPos sourcePos, long total) {
+        this.addSourceLong(total);
         ParticleUtil.spawnFollowProjectile(level, sourcePos, this.worldPosition, this.getColor());
     }
 
     public boolean eventInRange(BlockPos sourcePos, @Nullable Event event) {
-        return BlockUtil.distanceFrom(this.worldPosition, sourcePos) <= 15;
+        return BlockUtil.distanceFrom(this.worldPosition, sourcePos) <= EVENT_RANGE;
     }
 
     public boolean usesEventQueue() {

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -58,7 +59,7 @@ public class RitualMobCapture extends AbstractRitual {
                         if(tile.setEntityData(e)){
                             e.remove(Entity.RemovalReason.UNLOADED_TO_CHUNK);
                             EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
-                            level.addFreshEntity(followProjectile);
+                            ClientFx.spawn(level, followProjectile);
                             ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
                             didWorkOnce = true;
                             if(e instanceof Starbuncle starbuncle){

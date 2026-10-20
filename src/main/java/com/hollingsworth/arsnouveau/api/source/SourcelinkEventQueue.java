@@ -3,42 +3,26 @@ package com.hollingsworth.arsnouveau.api.source;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.eventbus.api.Event;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SourcelinkEventQueue {
 
-    public static Map<String, Set<BlockPos>> posMap = new ConcurrentHashMap<>();
-
     public static void addPosition(Level world, BlockPos pos) {
-        String key = world.dimension().location().toString();
-        if (!posMap.containsKey(key))
-            posMap.put(key, new HashSet<>());
-
-        posMap.get(key).add(pos);
+        if (world.isLoaded(pos) && world.getBlockEntity(pos) instanceof SourcelinkTile tile && !tile.isRemoved() && tile.usesEventQueue()) {
+            SourceIndex.registerSourcelink(tile);
+            tile.registered = true;
+        }
     }
 
     public static void addManaEvent(Level world, Class<? extends SourcelinkTile> tileType, int amount, Event event, BlockPos sourcePos) {
-        List<BlockPos> stalePos = new ArrayList<>();
-        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().location().toString(), new HashSet<>());
-        for (BlockPos p : worldList) {
-            if (!world.isLoaded(p))
-                continue;
-            BlockEntity entity = world.getBlockEntity(p);
-            if (world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile)) {
-                stalePos.add(p);
-                continue;
-            }
-            if (entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptSource()) {
-                ((SourcelinkTile) entity).getManaEvent(sourcePos, amount);
-                break;
-            }
-        }
-        for (BlockPos p : stalePos) {
-            worldList.remove(p);
+        addManaEvent(world, tileType, (long) amount, event, sourcePos);
+    }
+
+    public static void addManaEvent(Level world, Class<? extends SourcelinkTile> tileType, long amount, Event event, BlockPos sourcePos) {
+        SourcelinkTile tile = SourceIndex.nearestSourcelink(world, sourcePos, SourcelinkTile.EVENT_RANGE,
+                t -> t.getClass().equals(tileType) && !t.isRemoved() && t.eventInRange(sourcePos, event) && t.canAcceptSource());
+        if (tile != null) {
+            tile.getManaEvent(sourcePos, amount);
         }
     }
 }

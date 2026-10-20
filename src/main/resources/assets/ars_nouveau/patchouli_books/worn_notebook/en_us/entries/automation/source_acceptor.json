@@ -1,0 +1,24 @@
+{
+  "flag": "mod:ae2",
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:source_acceptor",
+  "name": "block.ars_nouveau.source_acceptor",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.source_acceptor"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:ae2/source_acceptor"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ars_nouveau.page.source_acceptor_description"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "ars_nouveau:ae2/cable_source_acceptor"
+    }
+  ]
+}

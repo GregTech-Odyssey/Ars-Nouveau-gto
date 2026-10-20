@@ -1,0 +1,9 @@
+{
+  "parent": "ae2:part/energy_acceptor",
+  "textures": {
+    "back": "ars_nouveau:part/source_acceptor_back",
+    "front": "ars_nouveau:block/source_acceptor",
+    "particle": "ars_nouveau:part/source_acceptor_back",
+    "sides": "ars_nouveau:part/source_acceptor_sides"
+  }
+}

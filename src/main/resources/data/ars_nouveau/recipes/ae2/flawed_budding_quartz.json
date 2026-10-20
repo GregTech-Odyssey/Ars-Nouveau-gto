@@ -1,0 +1,12 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "ars_nouveau:budding_conversion",
+  "id": "ars_nouveau:ae2/flawed_budding_quartz",
+  "input": "ae2:quartz_block",
+  "result": "ae2:flawed_budding_quartz"
+}

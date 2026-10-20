@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.world.level.Level;
 
@@ -21,7 +22,7 @@ public class FlyingItemEvent implements ITimedEvent {
             delay--;
         }
         if(serverSide && delay <= 0){
-            level.addFreshEntity(flyingItem);
+            ClientFx.spawn(level, flyingItem);
         }
     }
 

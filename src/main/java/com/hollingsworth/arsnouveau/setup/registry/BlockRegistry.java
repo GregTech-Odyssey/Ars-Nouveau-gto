@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.items.LargeSourceJarItem;
 import com.hollingsworth.arsnouveau.common.items.MobJarItem;
 import com.hollingsworth.arsnouveau.common.items.ModBlockItem;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -145,6 +146,8 @@ public class BlockRegistry {
     public static RegistryWrapper<BlockEntityType<WixieCauldronTile>> WIXIE_CAULDRON_TYPE = registerTile(LibBlockNames.WIXIE_CAULDRON, WixieCauldronTile::new, WIXIE_CAULDRON);
     public static RegistryWrapper<CreativeSourceJar> CREATIVE_SOURCE_JAR = registerBlockAndItem(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJar::new);
     public static RegistryWrapper<BlockEntityType<CreativeSourceJarTile>> CREATIVE_SOURCE_JAR_TILE = registerTile(LibBlockNames.CREATIVE_SOURCE_JAR, CreativeSourceJarTile::new, CREATIVE_SOURCE_JAR);
+    public static RegistryWrapper<LargeSourceJar> LARGE_SOURCE_JAR = registerBlockAndItem(LibBlockNames.LARGE_SOURCE_JAR, LargeSourceJar::new, (reg) -> new LargeSourceJarItem(reg.get(), defaultItemProperties(), () -> LargeSourceJarTile.UNIT_CAPACITY));
+    public static RegistryWrapper<BlockEntityType<LargeSourceJarTile>> LARGE_SOURCE_JAR_TILE = registerTile(LibBlockNames.LARGE_SOURCE_JAR, LargeSourceJarTile::new, LARGE_SOURCE_JAR);
     public static RegistryWrapper<StrippableLog> CASCADING_LOG = registerBlockAndItem(LibBlockNames.CASCADING_LOG, () ->  new StrippableLog(LOG_PROP, BlockRegistry.STRIPPED_AWLOG_BLUE));
     public static RegistryWrapper<MagicLeaves> CASCADING_LEAVE = registerBlockAndItem(LibBlockNames.CASCADING_LEAVES, () -> createLeavesBlock(MapColor.COLOR_BLUE));
     public static RegistryWrapper<SaplingBlock> CASCADING_SAPLING = registerBlockAndItem(LibBlockNames.CASCADING_SAPLING, () -> new SaplingBlock(new MagicTree(WorldgenRegistry.CONFIGURED_CASCADING_TREE), SAP_PROP));

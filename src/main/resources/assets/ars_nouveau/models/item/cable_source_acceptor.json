@@ -1,0 +1,8 @@
+{
+  "parent": "ae2:item/cable_energy_acceptor",
+  "textures": {
+    "back": "ars_nouveau:part/source_acceptor_back",
+    "front": "ars_nouveau:block/source_acceptor",
+    "sides": "ars_nouveau:part/source_acceptor_sides"
+  }
+}

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
@@ -72,7 +73,7 @@ public class PotionCraftingManager extends CraftingManager {
                     new Vec3(jarPos.getX() + 0.5, jarPos.getY(), jarPos.getZ() + 0.5),
                     Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                     .withNoTouch();
-            level.addFreshEntity(flying);
+            ClientFx.spawn(level, flying);
         }
         super.completeCraft(tile);
     }

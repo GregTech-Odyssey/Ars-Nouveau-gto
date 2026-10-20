@@ -18,6 +18,9 @@ public class PacketUpdateMana {
 
     public int tierBonus;
     public float reserved;
+    public double regen = Double.NaN;
+    public int interval;
+    public long time;
 
     //Decoder
     public PacketUpdateMana(FriendlyByteBuf buf) {
@@ -26,6 +29,9 @@ public class PacketUpdateMana {
         glyphBonus = buf.readInt();
         tierBonus = buf.readInt();
         reserved = buf.readFloat();
+        regen = buf.readDouble();
+        interval = buf.readVarInt();
+        time = buf.readVarLong();
     }
 
     //Encoder
@@ -35,6 +41,9 @@ public class PacketUpdateMana {
         buf.writeInt(glyphBonus);
         buf.writeInt(tierBonus);
         buf.writeFloat(reserved);
+        buf.writeDouble(regen);
+        buf.writeVarInt(interval);
+        buf.writeVarLong(time);
     }
 
     public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus, float reserved) {
@@ -43,6 +52,13 @@ public class PacketUpdateMana {
         this.glyphBonus = glyphBonus;
         this.tierBonus = tierBonus;
         this.reserved = reserved;
+    }
+
+    public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus, float reserved, double regen, int interval, long time) {
+        this(mana, maxMana, glyphBonus, tierBonus, reserved);
+        this.regen = regen;
+        this.interval = interval;
+        this.time = time;
     }
 
     public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus) {
@@ -66,6 +82,11 @@ public class PacketUpdateMana {
             //sync the client cache of reserved mana
             if (ctx.get().getDirection().getReceptionSide().isClient() && reserved != -1)
                 ClientInfo.reservedOverlayMana = reserved;
+            if (ctx.get().getDirection().getReceptionSide().isClient() && !Double.isNaN(regen)) {
+                ClientInfo.manaRegen = regen;
+                ClientInfo.manaRegenInterval = interval;
+                ClientInfo.manaSyncTime = time;
+            }
         });
         ctx.get().setPacketHandled(true);
     }

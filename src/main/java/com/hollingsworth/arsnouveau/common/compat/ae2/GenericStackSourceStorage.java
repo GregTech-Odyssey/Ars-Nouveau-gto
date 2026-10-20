@@ -1,0 +1,91 @@
+package com.hollingsworth.arsnouveau.common.compat.ae2;
+
+import com.google.common.primitives.Ints;
+
+import appeng.api.behaviors.GenericInternalInventory;
+import appeng.api.config.Actionable;
+
+import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
+
+@SuppressWarnings("UnstableApiUsage")
+public record GenericStackSourceStorage(GenericInternalInventory inv) implements IAdvancedSourceTile {
+    @Override
+    public int getTransferRate() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean canAcceptSource() {
+        return insert(1, Actionable.SIMULATE) > 0;
+    }
+
+    @Override
+    public int getSource() {
+        return extract(Integer.MAX_VALUE, Actionable.SIMULATE);
+    }
+
+    @Override
+    public int getMaxSource() {
+        var slots = 0;
+
+        for (var i = 0; i < inv.size(); i++) {
+            var key = inv.getKey(i);
+
+            if (key == null || key == SourceKey.KEY) {
+                slots += 1;
+            }
+        }
+
+        return Ints.saturatedCast(slots * inv.getMaxAmount(SourceKey.KEY));
+    }
+
+    @Override
+    public void setMaxSource(int max) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int setSource(int source) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int addSource(int source) {
+        return insert(source, Actionable.MODULATE);
+    }
+
+    @Override
+    public int removeSource(int source) {
+        return extract(source, Actionable.MODULATE);
+    }
+
+    private int insert(int amount, Actionable mode) {
+        var inserted = 0L;
+
+        for (var i = 0; i < inv.size() && inserted < amount; ++i) {
+            inserted += inv.insert(i, SourceKey.KEY, amount - inserted, mode);
+        }
+
+        return inserted > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) inserted;
+    }
+
+    private int extract(int amount, Actionable mode) {
+        var extracted = 0L;
+
+        for (var i = 0; i < inv.size() && extracted < amount; ++i) {
+            extracted += inv.extract(i, SourceKey.KEY, amount - extracted, mode);
+        }
+
+        return extracted > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) extracted;
+    }
+
+    @Override
+    public boolean relayCanTakePower() {
+        return true;
+    }
+
+    @Override
+    public boolean sourcelinksCanProvidePower() {
+        return false;
+    }
+}

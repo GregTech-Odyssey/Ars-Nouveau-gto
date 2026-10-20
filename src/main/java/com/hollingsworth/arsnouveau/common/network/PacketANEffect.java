@@ -57,13 +57,13 @@ public class PacketANEffect {
         double x = buf.readDouble();
         double y = buf.readDouble();
         double z = buf.readDouble();
-        CompoundTag nbt = buf.readNbt();
+        ParticleColor color = PacketClientFx.readColor(buf);
         int[] args = new int[type.argCount];
 
         for (int i = 0; i < args.length; i++) {
             args[i] = buf.readVarInt();
         }
-        return new PacketANEffect(type, x, y, z, ParticleColorRegistry.from(nbt), args);
+        return new PacketANEffect(type, x, y, z, color, args);
     }
 
     public static void encode(PacketANEffect msg, FriendlyByteBuf buf) {
@@ -71,7 +71,7 @@ public class PacketANEffect {
         buf.writeDouble(msg.x);
         buf.writeDouble(msg.y);
         buf.writeDouble(msg.z);
-        buf.writeNbt(msg.particleNbt);
+        PacketClientFx.writeColor(buf, ParticleColorRegistry.from(msg.particleNbt));
         for (int i = 0; i < msg.type.argCount; i++) {
             buf.writeVarInt(msg.args[i]);
         }

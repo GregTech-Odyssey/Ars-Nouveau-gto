@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:chest"
+    },
+    {
+      "item": "ae2:cell_component_64k"
+    },
+    {
+      "item": "ae2:energy_cell"
+    },
+    {
+      "item": "ars_nouveau:source_cell_housing"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:portable_source_cell_64k"
+  }
+}

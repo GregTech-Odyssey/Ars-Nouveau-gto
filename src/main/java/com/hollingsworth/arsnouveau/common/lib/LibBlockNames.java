@@ -32,6 +32,7 @@ public class LibBlockNames {
     public static final String SOURCEBERRY_BUSH = "sourceberry_bush";
     public static final String WIXIE_CAULDRON = "wixie_cauldron";
     public static final String CREATIVE_SOURCE_JAR = "creative_source_jar";
+    public static final String LARGE_SOURCE_JAR = "large_source_jar";
     public static final String BLAZING_LEAVES = "red_archwood_leaves";
     public final static String BLAZING_LOG = "red_archwood_log";
     public final static String BLAZING_SAPLING = "red_archwood_sapling";

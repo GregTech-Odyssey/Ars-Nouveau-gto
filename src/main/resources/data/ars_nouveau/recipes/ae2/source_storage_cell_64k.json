@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:source_cell_housing"
+    },
+    {
+      "item": "ae2:cell_component_64k"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:source_storage_cell_64k"
+  }
+}

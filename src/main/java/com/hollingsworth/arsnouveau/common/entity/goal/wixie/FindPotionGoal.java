@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
@@ -74,7 +75,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
             int b = (color) & 0xFF;
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r, g, b);
 
-            world.addFreshEntity(aoeProjectile);
+            ClientFx.spawn(world, aoeProjectile);
             found = true;
 
         }

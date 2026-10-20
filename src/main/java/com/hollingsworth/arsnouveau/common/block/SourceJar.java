@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -115,10 +116,16 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        SourceJarTile tile = (SourceJarTile) worldIn.getBlockEntity(pos);
-        if (tile == null || tile.getSource() <= 0) return 0;
-        int step = (tile.getMaxSource() - 1) / 14;
-        return (tile.getSource() - 1) / step + 1;
+        return worldIn.getBlockEntity(pos) instanceof ISourceTile tile ? comparatorSignal(tile.getSourceLong(), tile.getMaxSourceLong()) : 0;
+    }
+
+    public static int comparatorSignal(long source, long maxSource) {
+        if (source <= 0)
+            return 0;
+        long step = (maxSource - 1) / 14;
+        if (step <= 0)
+            return 15;
+        return (int) Math.min(15, (source - 1) / step + 1);
     }
 
     @Override
@@ -126,7 +133,7 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (stack.getTag() == null)
             return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
+        long mana = stack.getTag().getCompound("BlockEntityTag").getLong("source");
         tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
     }
 

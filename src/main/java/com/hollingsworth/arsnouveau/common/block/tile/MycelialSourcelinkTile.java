@@ -37,8 +37,8 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
         if (level.getGameTime() % 40 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
                 if (i.getItem().getItem().isEdible()) {
-                    int source = getSourceValue(i.getItem());
-                    this.addSource(source);
+                    long source = getSourceValue(i.getItem());
+                    this.addSourceLong(source);
                     ItemStack containerItem = i.getItem().getCraftingRemainingItem();
                     i.getItem().shrink(1);
                     if (!containerItem.isEmpty()) {
@@ -49,9 +49,9 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
                 }
             }
             for (ArcanePedestalTile i : getSurroundingPedestals()) {
-                int sourceValue = getSourceValue(i.getItem(0));
+                long sourceValue = getSourceValue(i.getItem(0));
                 if (sourceValue > 0) {
-                    this.addSource(sourceValue);
+                    this.addSourceLong(sourceValue);
                     ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
@@ -62,12 +62,12 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
         }
     }
 
-    public int getSourceValue(ItemStack i) {
+    public long getSourceValue(ItemStack i) {
         if (i.getItem().isEdible()) {
             FoodProperties food = i.getItem().getFoodProperties(i, null);
             if(food == null)
                 return 0;
-            int mana = 0;
+            long mana = 0;
             mana += 11 * food.getNutrition();
             mana += (int) (30.0 * ((food.getSaturationModifier() * 2.0)));
             progress += 1;

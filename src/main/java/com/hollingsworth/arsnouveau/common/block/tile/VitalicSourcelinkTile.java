@@ -46,7 +46,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
                             return;
                         }
                         entity.setAge(Math.min(0, entity.getAge() + 500));
-                        this.addSource(10);
+                        this.addSourceLong(10);
                         ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition, this.getColor());
                     }
                 }
@@ -57,7 +57,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void babySpawnEvent(BabyEntitySpawnEvent e) {
-        int mana = 600;
+        long mana = 600;
         SourcelinkEventQueue.addManaEvent(e.getParentA().level, VitalicSourcelinkTile.class, mana, e, e.getParentA().blockPosition());
     }
 
@@ -65,7 +65,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     public static void livingDeath(LivingDeathEvent e) {
         if (e.getEntity().level.isClientSide || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon)
             return;
-        int mana = 200;
+        long mana = 200;
         SourcelinkEventQueue.addManaEvent(e.getEntity().level, VitalicSourcelinkTile.class, mana, e, e.getEntity().blockPosition());
     }
 

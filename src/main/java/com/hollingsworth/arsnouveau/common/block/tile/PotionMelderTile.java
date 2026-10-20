@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
@@ -125,11 +126,11 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             EntityFlyingItem item = new EntityFlyingItem(level, tile1.getBlockPos().above(), worldPosition, Math.round(255 * color1.getRed()), Math.round(255 * color1.getGreen()), Math.round(255 * color1.getBlue()))
                     .withNoTouch();
             item.setDistanceAdjust(2f);
-            level.addFreshEntity(item);
+            ClientFx.spawn(level, item);
             EntityFlyingItem item2 = new EntityFlyingItem(level, tile2.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                     .withNoTouch();
             item2.setDistanceAdjust(2f);
-            level.addFreshEntity(item2);
+            ClientFx.spawn(level, item2);
         }
         if (!level.isClientSide && timeMixing >= maxMergeTicks) {
             timeMixing = 0;
@@ -148,7 +149,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
                 Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                 .withNoTouch();
         item2.setDistanceAdjust(2f);
-        level.addFreshEntity(item2);
+        ClientFx.spawn(level, item2);
         updateBlock();
     }
 

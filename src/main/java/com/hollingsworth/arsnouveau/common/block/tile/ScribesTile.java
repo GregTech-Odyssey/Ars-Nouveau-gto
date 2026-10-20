@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -49,10 +50,18 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
 public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable, Container, ITooltipProvider, IAnimationListener, IWandable {
+    private static final List<Consumer<ScribesTile>> EXTRA_ITEM_SOURCES = new CopyOnWriteArrayList<>();
+
+    public static void registerItemSource(Consumer<ScribesTile> source) {
+        EXTRA_ITEM_SOURCES.add(source);
+    }
+
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     private ItemStack stack = ItemStack.EMPTY;
     boolean synced;
@@ -139,7 +148,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
                             consumedStacks.add(stack1);
                             EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
                             flyingItem.setStack(stack1);
-                            level.addFreshEntity(flyingItem);
+                            ClientFx.spawn(level, flyingItem);
                             updateBlock();
                             return;
                         }
@@ -147,7 +156,9 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
                 }
             }
         }
-
+        for (Consumer<ScribesTile> source : EXTRA_ITEM_SOURCES) {
+            source.accept(this);
+        }
     }
 
     public boolean consumeStack(ItemStack stack) {

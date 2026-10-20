@@ -37,11 +37,11 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
         super.tick();
         if (level.isClientSide)
             return;
-        if (level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
+        if (level.getGameTime() % 80 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
-                int source = getSourceValue(i.getItem());
-                if (source > 0 && (canConsumeEntireItem(i.getItem()) || this.getSource() <= 0)) {
-                    this.addSource(source);
+                long source = getSourceValue(i.getItem());
+                if (source > 0 && (canConsumeEntireItem(i.getItem()) || this.getSourceLong() <= 0)) {
+                    this.addSourceLong(source);
                     ItemStack containerItem = i.getItem().getCraftingRemainingItem();
                     i.getItem().shrink(1);
                     if (!containerItem.isEmpty()) {
@@ -53,9 +53,9 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
                 }
             }
             for (ArcanePedestalTile i : getSurroundingPedestals()) {
-                int sourceValue = getSourceValue(i.getItem(0));
-                if (sourceValue > 0 && (canConsumeEntireItem(i.getItem(0)) || this.getSource() <= 0)) {
-                    this.addSource(sourceValue);
+                long sourceValue = getSourceValue(i.getItem(0));
+                if (sourceValue > 0 && (canConsumeEntireItem(i.getItem(0)) || this.getSourceLong() <= 0)) {
+                    this.addSourceLong(sourceValue);
                     ItemStack containerItem = i.getItem(0).getCraftingRemainingItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
@@ -67,12 +67,12 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
     }
 
     public boolean canConsumeEntireItem(ItemStack i){
-        int sourceValue = getSourceValue(i);
-        return this.getSource() + sourceValue <= this.getMaxSource();
+        long sourceValue = getSourceValue(i);
+        return this.getSourceLong() + sourceValue <= this.getMaxSourceLong();
     }
 
-    public int getSourceValue(ItemStack i) {
-        int source = 0;
+    public long getSourceValue(ItemStack i) {
+        long source = 0;
         int progress = 0;
         int burnTime = ForgeHooks.getBurnTime(i, null);
         if (burnTime > 0) {

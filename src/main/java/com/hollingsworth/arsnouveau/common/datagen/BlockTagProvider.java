@@ -58,7 +58,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
         this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
         this.tag(RELOCATION_NOT_SUPPORTED);
-        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST);
+        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST).addOptionalTag(new ResourceLocation("forge", "budding"));
         this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.RELAY.get(),
@@ -71,6 +71,7 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.RUNE_BLOCK.get(),
                 BlockRegistry.IMBUEMENT_BLOCK.get(),
                 BlockRegistry.SOURCE_JAR.get(),
+                BlockRegistry.LARGE_SOURCE_JAR.get(),
                 BlockRegistry.RELAY_SPLITTER.get(),
                 BlockRegistry.ENCHANTED_SPELL_TURRET.get(),
                 BlockRegistry.VOLCANIC_BLOCK.get(),

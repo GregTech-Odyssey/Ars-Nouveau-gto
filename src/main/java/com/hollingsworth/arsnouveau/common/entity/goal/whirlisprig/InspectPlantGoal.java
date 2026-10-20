@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
@@ -23,6 +25,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
     BlockPos pos;
     int timeLooking;
     int timePerforming;
+    private BlockPos fxPos;
 
     public InspectPlantGoal(Whirlisprig entity, Supplier<BlockPos> from, int maxDistanceFrom) {
         super(from, maxDistanceFrom);
@@ -49,8 +52,10 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         } else {
             ServerLevel world = (ServerLevel) entity.level;
             entity.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
-            if (world.random.nextInt(20) == 0)
-                world.sendParticles(ParticleTypes.HEART, this.pos.getX() + 0.5, this.pos.getY() + 1.1, this.pos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+            if (fxPos != this.pos) {
+                fxPos = this.pos;
+                ClientFx.emit(world, ParticleTypes.HEART, new Vec3(this.pos.getX() + 0.5, this.pos.getY() + 1.1, this.pos.getZ() + 0.5), Math.max(1, this.timeLooking), 20);
+            }
             this.timeLooking--;
         }
     }
@@ -89,7 +94,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         this.timePerforming = 240;
         EntityFlyingItem flyingItem = new EntityFlyingItem(entity.level, pos, entity.flowerPos, 50, 255, 40);
         flyingItem.getEntityData().set(EntityFlyingItem.HELD_ITEM, entity.level.getBlockState(pos).getBlock().asItem().getDefaultInstance());
-        entity.level.addFreshEntity(flyingItem);
+        ClientFx.spawn(entity.level, flyingItem);
         entity.timeSinceGen = 0;
         entity.getTile().addProgress();
     }

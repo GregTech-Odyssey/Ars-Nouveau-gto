@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -49,14 +50,14 @@ public class ParticleUtil {
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to, ParticleColor color) {
         if (world.isLoaded(to) && world.isLoaded(from)) {
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to, color.toWrapper());
-            world.addFreshEntity(aoeProjectile);
+            ClientFx.spawn(world, aoeProjectile);
         }
     }
 
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to) {
         if (world.isLoaded(to) && world.isLoaded(from)) {
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-            world.addFreshEntity(aoeProjectile);
+            ClientFx.spawn(world, aoeProjectile);
         }
     }
 
@@ -83,19 +84,14 @@ public class ParticleUtil {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
             if (world.isClientSide)
                 world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
-            if (world instanceof ServerLevel) {
-                ((ServerLevel) world).sendParticles(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, r.nextInt(4), 0, 0.0, 0, 0.0);
-            }
+        }
+        if (world instanceof ServerLevel) {
+            ClientFx.beam(world, toThisBlock, fromThisBlock);
         }
     }
 
     public static void spawnPoof(ServerLevel world, BlockPos pos) {
-        for (int i = 0; i < 10; i++) {
-            double d0 = pos.getX() + 0.5;
-            double d1 = pos.getY() + 1.2;
-            double d2 = pos.getZ() + .5;
-            (world).sendParticles(ParticleTypes.END_ROD, d0, d1, d2, 2, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, (world.random.nextFloat() * 1 - 0.5) / 3, 0.1f);
-        }
+        ClientFx.poof(world, pos);
     }
 
     public static void spawnTouch(ClientLevel world, BlockPos loc) {
@@ -152,7 +148,7 @@ public class ParticleUtil {
         proj1.getEntityData().set(EntityFollowProjectile.SPAWN_TOUCH, true);
         proj1.getEntityData().set(EntityFollowProjectile.DESPAWN, 15);
 
-        tileEntity.getLevel().addFreshEntity(proj1);
+        ClientFx.spawn(tileEntity.getLevel(), proj1);
 
     }
 
@@ -181,7 +177,7 @@ public class ParticleUtil {
         proj1.getEntityData().set(EntityFollowProjectile.SPAWN_TOUCH, true);
         proj1.getEntityData().set(EntityFollowProjectile.DESPAWN, 20);
 
-        tileEntity.getLevel().addFreshEntity(proj1);
+        ClientFx.spawn(tileEntity.getLevel(), proj1);
 
     }
 
@@ -212,12 +208,8 @@ public class ParticleUtil {
     }
 
     public static void spawnOrb(Level level, ParticleColor color, BlockPos pos, int lifetime) {
-        if (level instanceof ServerLevel server) {
-            for (int i = 0; i <= 10; i++)
-                server.sendParticles(
-                        GlowParticleData.createData(color, 0.4f, 0.5f, lifetime),
-                        pos.getX() + ParticleUtil.inRange(0.3, 0.7), pos.getY() + ParticleUtil.inRange(-0.2, 0.2), pos.getZ() + ParticleUtil.inRange(0.3, 0.7), 1,
-                        0d, 0d, 0, 0);
+        if (level instanceof ServerLevel) {
+            ClientFx.orb(level, color, pos, lifetime);
         }
     }
 }

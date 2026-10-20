@@ -15,30 +15,57 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ManaCapEvents {
     public static double MEAN_TPS = 20.0;
 
+    private static final Map<ServerPlayer, double[]> PREDICTED = new WeakHashMap<>();
+
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-        if (e.player.getCommandSenderWorld().isClientSide || e.player.getCommandSenderWorld().getGameTime() % ServerConfig.REGEN_INTERVAL.get() != 0)
+        if (e.phase != TickEvent.Phase.END || e.player.getCommandSenderWorld().isClientSide || !(e.player instanceof ServerPlayer player))
+            return;
+        int interval = ServerConfig.REGEN_INTERVAL.get();
+        long time = player.level().getGameTime();
+        if (time % interval != 0)
             return;
 
-        IManaCap mana = CapabilityRegistry.getMana(e.player).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(player).orElse(null);
         if (mana == null)
             return;
-        // Force sync mana to client because client caps vanish on world change
-        boolean shouldIgnoreMax = e.player.level().getGameTime() % 60 == 0;
-        if (mana.getCurrentMana() != mana.getMaxMana() || shouldIgnoreMax) {
-            double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int) MEAN_TPS / ServerConfig.REGEN_INTERVAL.get()));
-            mana.addMana(regenPerSecond);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+        double regenPerPhase = ManaUtil.getManaRegen(player) / Math.max(1, ((int) MEAN_TPS / interval));
+        double regen = regenPerPhase * 2;
+        double[] predicted = PREDICTED.computeIfAbsent(player, p -> new double[]{Double.NaN, Double.NaN, Double.NaN});
+        if (mana.getCurrentMana() != mana.getMaxMana()) {
+            mana.addMana(regen);
         }
-        ManaUtil.Mana maxmana = ManaUtil.calcMaxMana(e.player);
+        if (!Double.isNaN(predicted[0]) && predicted[0] < mana.getMaxMana()) {
+            predicted[0] = Math.min(mana.getMaxMana(), predicted[0] + regen);
+        }
+        ManaUtil.Mana maxmana = ManaUtil.calcMaxMana(player);
         int max = maxmana.getRealMax();
-        if (mana.getMaxMana() != max || shouldIgnoreMax) {
+        boolean maxChanged = mana.getMaxMana() != max;
+        if (maxChanged) {
             mana.setMaxMana(max);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier(), maxmana.Reserve()));
+        }
+        boolean full = mana.getCurrentMana() >= mana.getMaxMana();
+        boolean heartbeat = time % (full ? 400 : 60) == 0;
+        boolean drift = Double.isNaN(predicted[0]) || Math.abs(predicted[0] - mana.getCurrentMana()) > 0.01;
+        boolean regenChanged = predicted[1] != regen;
+        if (maxChanged || drift || regenChanged || heartbeat) {
+            predicted[0] = mana.getCurrentMana();
+            predicted[1] = regen;
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier(), maxChanged ? maxmana.Reserve() : -1, regen, interval, time));
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
+        if (e.getEntity() instanceof ServerPlayer player) {
+            PREDICTED.remove(player);
         }
     }
 
@@ -61,7 +88,7 @@ public class ManaCapEvents {
     }
 
     @SubscribeEvent
-    public static void playerLoggedIn(PlayerEvent.StartTracking e) {
+    public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         syncPlayerEvent(e.getEntity());
     }
 
@@ -71,7 +98,8 @@ public class ManaCapEvents {
     }
 
     public static void syncPlayerEvent(Player playerEntity) {
-        if (playerEntity instanceof ServerPlayer) {
+        if (playerEntity instanceof ServerPlayer serverPlayer) {
+            PREDICTED.remove(serverPlayer);
             CapabilityRegistry.getMana(playerEntity).ifPresent(mana -> {
                 var manaCalc = ManaUtil.calcMaxMana(playerEntity);
                 mana.setMaxMana(manaCalc.getRealMax());

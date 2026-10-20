@@ -20,11 +20,11 @@ public class RelayCollectorTile extends RelayTile {
         super.tick();
         if (disabled)
             return;
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() <= getMaxSource()) {
+        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSourceLong() <= getMaxSourceLong()) {
             List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
 
             for (ISpecialSourceProvider provider : takeList) {
-                if (this.getSource() >= getMaxSource()) {
+                if (this.getSourceLong() >= getMaxSourceLong()) {
                     break;
                 }
                 if(this.getToPos() != null && level.isLoaded(this.getToPos()) && level.getBlockEntity(this.getToPos()) == provider.getSource()){
@@ -34,7 +34,7 @@ public class RelayCollectorTile extends RelayTile {
                     continue;
                 }
 
-                int transferred = transferSource(provider.getSource(), this);
+                long transferred = transferSourceLong(provider.getSource(), this);
                 if (transferred > 0) {
                     ParticleUtil.spawnFollowProjectile(level, provider.getCurrentPos(), this.worldPosition, this.getColor());
                 }

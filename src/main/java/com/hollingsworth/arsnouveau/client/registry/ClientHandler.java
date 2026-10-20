@@ -65,6 +65,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE.get(), ArcanePedestalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.LARGE_SOURCE_JAR_TILE.get(), LargeSourceJarRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE.get(), EnchantingApparatusRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE.get(), ScribesRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE.get(), PortalTileRenderer::new);
@@ -214,7 +215,7 @@ public class ClientHandler {
             });
             ItemProperties.register(BlockRegistry.SOURCE_JAR.asItem(), new ResourceLocation(ArsNouveau.MODID, "source"), (stack, level, entity, seed) -> {
                 CompoundTag tag = stack.getTag();
-                return tag != null ? (tag.getCompound("BlockEntityTag").getInt("source") / 10000.0F) : 0.0F;
+                return tag != null ? (tag.getCompound("BlockEntityTag").getLong("source") / 10000.0F) : 0.0F;
             });
         });
     }

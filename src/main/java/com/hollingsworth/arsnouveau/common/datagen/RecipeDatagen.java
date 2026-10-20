@@ -62,6 +62,11 @@ public class RecipeDatagen extends RecipeProvider {
                     .pattern("x x")
                     .pattern("yyy").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
 
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.LARGE_SOURCE_JAR).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .pattern("xyx")
+                    .pattern("yzy")
+                    .pattern("xyx").define('x', SOURCESTONE).define('y', BlockRegistry.SOURCE_JAR).define('z', SOURCE_GEM_BLOCK).save(consumer);
+
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BlockRegistry.ARCANE_PEDESTAL.get()).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xzx")
                     .pattern("yxy")

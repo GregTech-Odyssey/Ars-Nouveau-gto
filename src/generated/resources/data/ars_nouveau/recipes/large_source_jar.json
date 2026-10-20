@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "x": {
+      "item": "ars_nouveau:sourcestone"
+    },
+    "y": {
+      "item": "ars_nouveau:source_jar"
+    },
+    "z": {
+      "tag": "forge:storage_blocks/source"
+    }
+  },
+  "pattern": [
+    "xyx",
+    "yzy",
+    "xyx"
+  ],
+  "result": {
+    "item": "ars_nouveau:large_source_jar"
+  },
+  "show_notification": true
+}

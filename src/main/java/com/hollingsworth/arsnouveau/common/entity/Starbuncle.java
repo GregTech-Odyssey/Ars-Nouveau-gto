@@ -169,7 +169,6 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
 
     public void setBehavior(ChangeableBehavior behavior) {
         this.dynamicBehavior = behavior;
-        getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
         reloadGoals();
         syncBehavior();
     }
@@ -338,7 +337,7 @@ public class Starbuncle extends PathfinderMob implements GeoEntity, IDecoratable
     }
 
     public void syncBehavior() {
-        Networking.sendToNearby(level, this, new PacketSyncTag(dynamicBehavior.toTag(new CompoundTag()), getId()));
+        getEntityData().set(Starbuncle.BEHAVIOR_TAG, dynamicBehavior.toTag(new CompoundTag()));
     }
 
     @Override

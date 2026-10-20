@@ -29,21 +29,22 @@ public class RelayWarpTile extends RelaySplitterTile {
         }
     }
 
-    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate) {
+    @Override
+    public long transferSourceLong(ISourceTile from, ISourceTile to, long fromTransferRate) {
         if (to instanceof RelayWarpTile toWarp) {
             double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
             double probLoss = adjustedDist / 100.0;
             if (adjustedDist > 0 && level.getRandom().nextFloat() < probLoss) {
-                int transferRate = getTransferRate(from, to, fromTransferRate);
+                long transferRate = getTransferRateLong(from, to, fromTransferRate);
                 if (transferRate == 0)
                     return 0;
-                from.removeSource(transferRate);
-                int lossyTransfer = Math.max(1, (int) (transferRate * 0.7));
-                to.addSource(lossyTransfer);
+                from.removeSourceLong(transferRate);
+                long lossyTransfer = Math.max(1, (long) (transferRate * 0.7));
+                to.addSourceLong(lossyTransfer);
                 return lossyTransfer;
             }
         }
-        return super.transferSource(from, to, fromTransferRate);
+        return super.transferSourceLong(from, to, fromTransferRate);
     }
 
     @Override

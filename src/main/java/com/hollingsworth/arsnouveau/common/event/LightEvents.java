@@ -14,9 +14,12 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class LightEvents {
+    private static final Map<ServerPlayer, List<Integer>> LAST_SENT = new WeakHashMap<>();
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent e) {
@@ -34,8 +37,11 @@ public class LightEvents {
                     }
                 }
             }
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new PacketSyncLitEntities(litID));
+            if (!litID.equals(LAST_SENT.get(serverPlayer))) {
+                LAST_SENT.put(serverPlayer, litID);
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new PacketSyncLitEntities(litID));
+            }
         }
     }
 }

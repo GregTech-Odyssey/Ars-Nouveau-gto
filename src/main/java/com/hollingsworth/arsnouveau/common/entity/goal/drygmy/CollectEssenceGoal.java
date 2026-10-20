@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.drygmy;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
@@ -83,7 +84,7 @@ public class CollectEssenceGoal extends Goal {
                         50,
                         255,
                         20);
-                drygmy.level.addFreshEntity(item);
+                ClientFx.spawn(drygmy.level, item);
                 drygmy.channelCooldown = 100;
                 drygmy.getHome().giveProgress();
             }

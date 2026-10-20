@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.common.compat.ae2.ArsAE2;
+import com.hollingsworth.arsnouveau.common.compat.ae2.client.ArsAE2Client;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
@@ -20,7 +22,6 @@ import com.hollingsworth.arsnouveau.setup.proxy.ClientProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.IProxy;
 import com.hollingsworth.arsnouveau.setup.proxy.ServerProxy;
 import com.hollingsworth.arsnouveau.setup.registry.*;
-import com.hollingsworth.arsnouveau.setup.reward.Rewards;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -82,12 +83,9 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ANCriteriaTriggers.init();
-        try {
-            Thread thread = new Thread(Rewards::init);
-            thread.setDaemon(true);
-            thread.start();
-        }catch (Exception e){
-            e.printStackTrace();
+        if (ModList.get().isLoaded("ae2")) {
+            ArsAE2.init(modEventBus);
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArsAE2Client.init(modEventBus));
         }
     }
 

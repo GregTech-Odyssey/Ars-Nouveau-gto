@@ -19,6 +19,9 @@ public class ClientInfo {
     public static int redOverlayTicks = 0;
     public static float redOverlayMana = 0;
     public static float reservedOverlayMana = 0.15F;
+    public static double manaRegen = 0;
+    public static int manaRegenInterval = 0;
+    public static long manaSyncTime = 0;
 
     public static float partialTicks = 0.0f;
     public static List<BlockPos> scryingPositions = new ArrayList<>();

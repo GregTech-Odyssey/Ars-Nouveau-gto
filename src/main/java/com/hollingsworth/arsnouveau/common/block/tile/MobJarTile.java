@@ -10,9 +10,7 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.level.Level;
@@ -182,10 +180,10 @@ public class MobJarTile extends ModdedTile implements ITickable, IDispellable, I
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    protected void readSyncTag(CompoundTag tag) {
         this.cachedEntity = null;
         this.entityTag = null;
-        super.onDataPacket(net, pkt);
+        super.readSyncTag(tag);
     }
 
     public void dispatchBehavior(Consumer<JarBehavior<? extends Entity>> consumer){

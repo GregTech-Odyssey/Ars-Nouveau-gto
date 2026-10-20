@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
+import net.minecraft.world.phys.Vec3;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -45,7 +47,10 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     public void stop() {
         this.timeGrowing = 0;
         this.growPos = null;
+        this.fxSent = false;
     }
+
+    private boolean fxSent;
 
     @Override
     public void tick() {
@@ -57,7 +62,10 @@ public class BonemealGoal extends DistanceRestrictedGoal {
             sylph.getNavigation().moveTo(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
         } else {
             ServerLevel world = (ServerLevel) sylph.level;
-            world.sendParticles(ParticleTypes.COMPOSTER, this.growPos.getX() + 0.5, this.growPos.getY() + 1.1, this.growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+            if (!fxSent) {
+                fxSent = true;
+                ClientFx.emit(world, ParticleTypes.COMPOSTER, new Vec3(this.growPos.getX() + 0.5, this.growPos.getY() + 1.1, this.growPos.getZ() + 0.5), this.timeGrowing, 1);
+            }
             this.timeGrowing--;
             if (this.timeGrowing <= 0) {
                 sylph.timeSinceBonemeal = 0;

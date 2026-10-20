@@ -26,7 +26,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        int mana = 20;
+        long mana = 20;
 
         if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_PLANTS)) {
             mana += 25;
@@ -37,7 +37,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void treeGrow(SaplingGrowTreeEvent event) {
-        int mana = 50;
+        long mana = 50;
         if (event.getLevel().getBlockState(event.getPos()).is(BlockTagProvider.MAGIC_SAPLINGS)) {
             mana += 50;
         }

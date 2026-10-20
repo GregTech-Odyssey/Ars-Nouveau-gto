@@ -1,15 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
 import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -58,29 +60,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     public void processFromList() {
-        if (fromList.isEmpty())
-            return;
-        ArrayList<BlockPos> stale = new ArrayList<>();
-
-        int ratePer = getTransferRate() / fromList.size();
-        for (BlockPos fromPos : fromList) {
-            if (!level.isLoaded(fromPos))
-                continue;
-
-            if (!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)) {
-                stale.add(fromPos);
-                continue;
-            }
-            int fromRate = Math.min(ratePer, getTransferRate(fromTile, this));
-            if (transferSource(fromTile, this, fromRate) > 0) {
-                createParticles(fromPos, worldPosition);
-            }
-        }
-        for (BlockPos s : stale) {
-            fromList.remove(s);
-            updateBlock();
-        }
-
+        processList(fromList, false);
     }
 
     public void createParticles(BlockPos from, BlockPos to) {
@@ -88,25 +68,31 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
     }
 
     public void processToList() {
-        if (toList.isEmpty())
+        processList(toList, true);
+    }
+
+    private void processList(ArrayList<BlockPos> posList, boolean sendSource) {
+        if (posList.isEmpty())
             return;
         ArrayList<BlockPos> stale = new ArrayList<>();
-        int ratePer = getSource() / toList.size();
-        for (BlockPos toPos : toList) {
-            if (!level.isLoaded(toPos))
+        long ratePer = getTransferRateLong() / posList.size();
+        for (BlockPos pos : posList) {
+            if (!level.isLoaded(pos))
                 continue;
-            if (!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)) {
-                stale.add(toPos);
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be == null) {
+                stale.add(pos);
                 continue;
             }
-
-            int transfer = transferSource(this, toTile, ratePer);
-            if (transfer > 0) {
-                createParticles(worldPosition, toPos);
+            IAdvancedSourceTile tile = be.getCapability(CapabilityRegistry.SOURCE_TILE, IAdvancedSourceTile.getDirTo(getBlockPos(), pos)).orElse(null);
+            if (tile == null)
+                continue;
+            if (transferSourceLong(sendSource ? this : tile, sendSource ? tile : this, ratePer) > 0) {
+                createParticles(sendSource ? worldPosition : pos, sendSource ? pos : worldPosition);
             }
         }
         for (BlockPos s : stale) {
-            toList.remove(s);
+            posList.remove(s);
             updateBlock();
         }
     }

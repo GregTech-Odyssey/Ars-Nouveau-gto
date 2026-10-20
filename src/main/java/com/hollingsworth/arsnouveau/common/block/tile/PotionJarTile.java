@@ -61,8 +61,8 @@ public class PotionJarTile extends ModdedTile implements ITooltipProvider, IWand
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
+    protected void readSyncTag(CompoundTag tag) {
+        super.readSyncTag(tag);
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
     }
 

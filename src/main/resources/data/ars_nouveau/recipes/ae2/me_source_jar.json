@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "output": {
+    "item": "ars_nouveau:me_source_jar"
+  },
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    },
+    {
+      "tag": "ae2:interface"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:source_jar"
+    }
+  ],
+  "sourceCost": 0
+}

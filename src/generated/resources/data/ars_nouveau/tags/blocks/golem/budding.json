@@ -1,5 +1,9 @@
 {
   "values": [
-    "minecraft:budding_amethyst"
+    "minecraft:budding_amethyst",
+    {
+      "id": "#forge:budding",
+      "required": false
+    }
   ]
 }

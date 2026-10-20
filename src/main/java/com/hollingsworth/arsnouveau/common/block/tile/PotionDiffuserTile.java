@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
@@ -66,7 +67,7 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
                 EntityFlyingItem item2 = new EntityFlyingItem(level, jar.getBlockPos().above(), worldPosition, Math.round(255 * color2.getRed()), Math.round(255 * color2.getGreen()), Math.round(255 * color2.getBlue()))
                         .withNoTouch();
                 item2.setDistanceAdjust(2f);
-                level.addFreshEntity(item2);
+                ClientFx.spawn(level, item2);
                 updateBlock();
             }
         }

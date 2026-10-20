@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
@@ -135,23 +136,23 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSource() < cost) {
+        if (this.level.getGameTime() % 20 == 0 && this.getSourceLong() < cost) {
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 
             ISpecialSourceProvider takePos = SourceUtil.takeSource(worldPosition, level, 2, Math.min(200, cost));
             if (takePos != null) {
-                this.addSource(transferRate);
+                this.addSourceLong(transferRate);
                 EntityFlyingItem item = new EntityFlyingItem(level, takePos.getCurrentPos().above(), worldPosition, 255, 50, 80)
                         .withNoTouch();
                 item.setDistanceAdjust(2f);
-                level.addFreshEntity(item);
+                ClientFx.spawn(level, item);
                 if (!draining) {
                     draining = true;
                     updateBlock();
                 }
             } else {
-                this.addSource(10);
+                this.addSourceLong(10);
                 if (draining) {
                     draining = false;
                     updateBlock();
@@ -160,9 +161,9 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         }
 
-        if (this.getSource() >= cost && craftTicks <= 0) {
+        if (this.getSourceLong() >= cost && craftTicks <= 0) {
             this.setItem(0, recipe.getResult(this).copy());
-            this.addSource(-cost);
+            this.removeSourceLong(cost);
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleColor.defaultParticleColor());
             updateBlock();
         }
@@ -321,7 +322,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             int cost = recipe.getSourceCost(this);
             tooltip.add(recipe.getCraftingText(this));
             if(cost > 0) {
-                int progress = Math.min(100, (getSource() * 100 / cost));
+                int progress = (int) Math.min(100, getSourceLong() * 100 / cost);
                 tooltip.add(recipe.getCraftingProgressText(this, progress));
             }
         }
