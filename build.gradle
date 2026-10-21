@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'net.neoforged.moddev.legacyforge' version '2.0.142'
-    id 'com.gto.gtopublishgradleplugin' version '1.0.25'
+    id 'com.gto.gtopublishgradleplugin' version '1.0.26'
 }
 
 version = gto_version
@@ -100,6 +100,7 @@ dependencies {
 
     modImplementation("com.gto:datasynclib-forge-1.20.1:${datasynclib_version}")
     modImplementation("com.gto:gtoutils-forge-1.20.1:${gtoutils_version}")
+    modImplementation("com.gto:gtorenders-forge-1.20.1:${gtorenders_version}")
     modCompileOnly("appeng:appliedenergistics2-forge-1.20.1:${ae2_version}") { transitive = false }
     modImplementation("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
     modImplementation("vazkii.patchouli:Patchouli:${patchouli_version}")

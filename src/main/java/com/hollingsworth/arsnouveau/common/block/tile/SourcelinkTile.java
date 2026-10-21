@@ -2,12 +2,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
-import com.hollingsworth.arsnouveau.api.source.SourceIndex;
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,7 +36,6 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     int progress;
     public boolean isDisabled = false;
-    public boolean registered = false;
 
     public SourcelinkTile(BlockEntityType<?> sourceLinkTile, BlockPos pos, BlockState state) {
         super(sourceLinkTile, pos, state);
@@ -55,33 +56,6 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        if (usesEventQueue() && level != null && !level.isClientSide) {
-            SourceIndex.registerSourcelink(this);
-            registered = true;
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        if (registered) {
-            SourceIndex.unregisterSourcelink(this);
-            registered = false;
-        }
-        super.setRemoved();
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        if (registered) {
-            SourceIndex.unregisterSourcelink(this);
-            registered = false;
-        }
-        super.onChunkUnloaded();
-    }
-
-    @Override
     public void tick() {
         if (level.isClientSide)
             return;
@@ -96,11 +70,8 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
 
     public List<ArcanePedestalTile> getSurroundingPedestals() {
         List<ArcanePedestalTile> inventories = new ArrayList<>();
-        for (BlockPos p : BlockPos.betweenClosed(getBlockPos().below().east().north(), getBlockPos().above().west().south())) {
-            if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestal) {
-                inventories.add(pedestal);
-            }
-        }
+        ArsBlockEntityIndexes.PEDESTALS.query(level, getBlockPos(), BlockRange.box(1), null, inventories);
+        BlockOrder.sortBetweenClosed(inventories, ArcanePedestalTile::getBlockPos);
         return inventories;
     }
 

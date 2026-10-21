@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -11,6 +12,8 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +30,18 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RitualMobCapture extends AbstractRitual {
+    private static List<MobJarTile> emptyJarsAround(Level level, BlockPos center, int radius) {
+        List<MobJarTile> jars = new ArrayList<>();
+        ArsBlockEntityIndexes.MOB_JARS.query(level, center, BlockRange.box(radius),
+                tile -> tile.getEntity() == null && level.getBlockState(tile.getBlockPos()).getBlock() instanceof MobJar, jars);
+        BlockOrder.sortBetweenClosed(jars, MobJarTile::getBlockPos);
+        return jars;
+    }
+
     @Override
     protected void tick() {
         Level world = getWorld();
@@ -41,38 +55,32 @@ public class RitualMobCapture extends AbstractRitual {
             Level level = getWorld();
             BlockPos pos = getPos();
             //Get nearby source jars
-            for(BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))){
-                if (level.getBlockState(blockPos).getBlock() instanceof MobJar) {
-                    MobJarTile tile = (MobJarTile) level.getBlockEntity(blockPos);
-                    if(tile == null || tile.getEntity() != null){
-                        continue;
+            for (MobJarTile tile : emptyJarsAround(level, pos, radius)) {
+                for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
+                    if(e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()){
+                        if(mob.isLeashed()){
+                            mob.dropLeash(true, true);
+                        }
                     }
-                    for(Entity e : level.getEntities((Entity)null, new AABB(tile.getBlockPos()).inflate(5), this::canJar)){
-                        if(e instanceof Mob mob && ((Mob) e).isLeashed() && e.shouldBeSaved()){
-                            if(mob.isLeashed()){
-                                mob.dropLeash(true, true);
-                            }
+                    if (e instanceof Raider raider && raider.hasActiveRaid()) {
+                        raider.getCurrentRaid().removeFromRaid(raider, false);
+                    }
+                    if(tile.setEntityData(e)){
+                        e.remove(Entity.RemovalReason.UNLOADED_TO_CHUNK);
+                        EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
+                        ClientFx.spawn(level, followProjectile);
+                        ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
+                        didWorkOnce = true;
+                        if(e instanceof Starbuncle starbuncle){
+                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY, (ServerLevel) level, starbuncle.blockPosition(), 10);
                         }
-                        if (e instanceof Raider raider && raider.hasActiveRaid()) {
-                            raider.getCurrentRaid().removeFromRaid(raider, false);
+                        if(e instanceof LightningBolt bolt){
+                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CAUGHT_LIGHTNING, (ServerLevel) level, bolt.blockPosition(), 10);
                         }
-                        if(tile.setEntityData(e)){
-                            e.remove(Entity.RemovalReason.UNLOADED_TO_CHUNK);
-                            EntityFlyingItem followProjectile = new EntityFlyingItem(level, e.position, Vec3.atCenterOf(tile.getBlockPos()), 100, 50, 100);
-                            ClientFx.spawn(level, followProjectile);
-                            ParticleUtil.spawnPoof((ServerLevel) level, e.getOnPos().above());
-                            didWorkOnce = true;
-                            if(e instanceof Starbuncle starbuncle){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.SHRUNK_STARBY, (ServerLevel) level, starbuncle.blockPosition(), 10);
-                            }
-                            if(e instanceof LightningBolt bolt){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.CAUGHT_LIGHTNING, (ServerLevel) level, bolt.blockPosition(), 10);
-                            }
-                            if(e instanceof ItemEntity item && item.getItem().getItem() == Items.CLOCK){
-                                ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.TIME_IN_BOTTLE, (ServerLevel) level, item.blockPosition(), 10);
-                            }
-                            break;
+                        if(e instanceof ItemEntity item && item.getItem().getItem() == Items.CLOCK){
+                            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.TIME_IN_BOTTLE, (ServerLevel) level, item.blockPosition(), 10);
                         }
+                        break;
                     }
                 }
             }

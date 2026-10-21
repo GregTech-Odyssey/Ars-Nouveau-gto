@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -15,6 +16,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,6 +31,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -135,23 +139,28 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
         }
     }
 
+    public static List<BlockEntity> blockEntitiesAround(Level level, BlockPos center) {
+        List<BlockEntity> found = new ArrayList<>();
+        ArsBlockEntityIndexes.ALL.query(level, center, BlockRange.box(6, 2, 6), null, found);
+        BlockOrder.sortBetweenClosed(found, BlockEntity::getBlockPos);
+        return found;
+    }
+
     public void takeNearby() {
-        for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if (level.getBlockEntity(bPos) != null && level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).isPresent()) {
-                IItemHandler handler = level.getBlockEntity(bPos).getCapability(ITEM_HANDLER, null).orElse(null);
-                if (handler != null) {
-                    for (int i = 0; i < handler.getSlots(); i++) {
-                        ItemStack stack = handler.getStackInSlot(i);
-                        if (canConsumeItemstack(stack)) {
-                            ItemStack stack1 = handler.extractItem(i, 1, false);
-                            stack1.copy().setCount(1);
-                            consumedStacks.add(stack1);
-                            EntityFlyingItem flyingItem = new EntityFlyingItem(level, bPos, getBlockPos());
-                            flyingItem.setStack(stack1);
-                            ClientFx.spawn(level, flyingItem);
-                            updateBlock();
-                            return;
-                        }
+        for (BlockEntity be : blockEntitiesAround(level, worldPosition)) {
+            IItemHandler handler = be.getCapability(ITEM_HANDLER, null).orElse(null);
+            if (handler != null) {
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack stack = handler.getStackInSlot(i);
+                    if (canConsumeItemstack(stack)) {
+                        ItemStack stack1 = handler.extractItem(i, 1, false);
+                        stack1.copy().setCount(1);
+                        consumedStacks.add(stack1);
+                        EntityFlyingItem flyingItem = new EntityFlyingItem(level, be.getBlockPos(), getBlockPos());
+                        flyingItem.setStack(stack1);
+                        ClientFx.spawn(level, flyingItem);
+                        updateBlock();
+                        return;
                     }
                 }
             }

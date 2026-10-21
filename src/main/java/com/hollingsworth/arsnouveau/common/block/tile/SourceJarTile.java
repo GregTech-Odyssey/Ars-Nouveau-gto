@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
-import com.hollingsworth.arsnouveau.api.source.SourceIndex;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
@@ -31,24 +30,6 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
     @Override
     public int getMaxSource() {
         return 10000;
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        SourceIndex.register(this);
-    }
-
-    @Override
-    public void setRemoved() {
-        SourceIndex.unregister(this);
-        super.setRemoved();
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        SourceIndex.unregister(this);
-        super.onChunkUnloaded();
     }
 
     @Override

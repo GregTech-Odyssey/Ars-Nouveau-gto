@@ -27,6 +27,14 @@ public class CompoundScryer implements IScryer {
     }
 
     @Override
+    public boolean mayRevealState(BlockState state) {
+        for (IScryer scryer : scryerList) {
+            if (scryer.mayRevealState(state)) return true;
+        }
+        return false;
+    }
+
+    @Override
     public IScryer fromTag(CompoundTag tag) {
         CompoundScryer compoundScryer = new CompoundScryer();
         int count = tag.getInt("scryer_count");

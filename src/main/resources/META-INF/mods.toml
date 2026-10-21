@@ -65,6 +65,12 @@ A build of Ars Nouveau maintained for the GregTech Odyssey modpack, based on the
 [[dependencies.ars_nouveau]]
     modId="gtoutils"
     mandatory=true
+    versionRange="[26.10.3,)"
+    ordering="AFTER"
+    side="BOTH"
+[[dependencies.ars_nouveau]]
+    modId="gtorenders"
+    mandatory=true
     versionRange="[26.10.1,)"
     ordering="AFTER"
     side="BOTH"

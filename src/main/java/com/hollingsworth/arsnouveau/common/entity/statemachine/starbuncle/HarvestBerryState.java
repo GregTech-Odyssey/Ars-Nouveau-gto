@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.suried.gtoutils.spatial.LevelSections;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -53,13 +54,8 @@ public class HarvestBerryState extends TravelToPosState{
 
     public static BlockPos getNearbyManaBerry(Level world, Starbuncle entity) {
         List<BlockPos> posList = new ArrayList<>();
-        for (BlockPos blockpos : BlockPos.withinManhattan(entity.blockPosition(), 10, 3, 10)) {
-            var state = world.getBlockState(blockpos).getBlock();
-            if (state instanceof SourceBerryBush
-                    && world.getBlockState(blockpos).getValue(AGE) > 1) {
-                posList.add(blockpos.immutable());
-            }
-        }
+        LevelSections.withinManhattan(world, entity.blockPosition(), 10, 3, 10,
+                state -> state.getBlock() instanceof SourceBerryBush && state.getValue(AGE) > 1, Integer.MAX_VALUE, posList);
         return posList.isEmpty() ? null : posList.get(world.random.nextInt(posList.size()));
     }
 }

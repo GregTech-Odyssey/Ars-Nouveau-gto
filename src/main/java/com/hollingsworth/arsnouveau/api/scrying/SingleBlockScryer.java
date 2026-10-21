@@ -27,6 +27,11 @@ public class SingleBlockScryer implements IScryer {
     }
 
     @Override
+    public boolean mayRevealState(BlockState state) {
+        return block != null && state.getBlock() == block;
+    }
+
+    @Override
     public IScryer fromTag(CompoundTag tag) {
         SingleBlockScryer scryer = new SingleBlockScryer(null);
         scryer.block = tag.contains("block") ? ForgeRegistries.BLOCKS.getValue(new ResourceLocation(tag.getString("block"))) : null;

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
@@ -15,6 +16,8 @@ import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -135,10 +138,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
         if (this.includeEntities) {
             this.nearbyEntities.addAll(level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6))));
         }
-        for(BlockPos b : BlockPos.withinManhattan(getBlockPos(), 10, 10, 10)){
-            if(level.getBlockEntity(b) instanceof MobJarTile mobJarTile && mobJarTile.getEntity() instanceof LivingEntity livingEntity){
-                nearbyEntities.add(livingEntity);
-            }
+        List<MobJarTile> jars = new ArrayList<>();
+        ArsBlockEntityIndexes.MOB_JARS.query(level, getBlockPos(), BlockRange.box(10), jar -> jar.getEntity() instanceof LivingEntity, jars);
+        BlockOrder.sortWithinManhattan(jars, getBlockPos(), MobJarTile::getBlockPos);
+        for (MobJarTile jar : jars) {
+            nearbyEntities.add((LivingEntity) jar.getEntity());
         }
 
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof Player)).collect(Collectors.toList());

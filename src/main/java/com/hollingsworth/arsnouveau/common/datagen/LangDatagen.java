@@ -227,8 +227,8 @@ public class LangDatagen extends LanguageProvider {
         add("entity.ars_nouveau.wixie", "Wixie");
         add("block.ars_nouveau.creative_source_jar", "Creative Source Jar");
         add("block.ars_nouveau.large_source_jar", "Large Source Jar");
-        add("ars_nouveau.large_source_jar.capacity", "Capacity per layer: %s");
-        add("ars_nouveau.large_source_jar.stacking", "Occupies 3x3x3; layers stacked with aligned centers share storage");
+        add("ars_nouveau.large_source_jar.capacity", "Capacity per jar: %s");
+        add("ars_nouveau.large_source_jar.stacking", "Occupies 3x3x3; jars stacked with aligned centers share storage");
         add("ars_nouveau.large_source_jar.stored", "Stored: %s");
         add("ars_nouveau.large_source_jar.amount", "%s / %s source");
         add("ars_nouveau.page.source_acceptor", "The ME Source Converter converts source into AE energy. Attach it to an ME network and feed it source with a relay in order to power the network itself simply using source.");
@@ -665,7 +665,7 @@ public class LangDatagen extends LanguageProvider {
         add("ars_nouveau.page3.warp_portal", "Warp Portal");
         add("ars_nouveau.page4.warp_portal", "A magical portal that can send players, mobs, spells, and items to any location in the same dimension.");
         add("ars_nouveau.page.ritual_brazier", "A brazier that may be used as decoration or for performing rituals. To light the brazier for decoration, cast a Light spell on the brazier. The color of the brazier corresponds with the color of the spell. Applying a redstone signal will disable a running ritual. For information on performing rituals, see the dedicated section on rituals.");
-        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.");
+        add("ars_nouveau.page1.basic_spell_turret", "Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw source from nearby Source Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block. Items dropped by blocks that a turret breaks in one cast are merged by item type and dropped at the center of the broken area.");
         add("ars_nouveau.page2.basic_spell_turret", "Enchanted Spell Turrets cast spells at half the source cost compared to basic spell turrets.");
         add("ars_nouveau.page3.basic_spell_turret", "Timer Spell Turrets will automatically fire on a timer. Defaulted to 1 second, the time may be increased by right-clicking the block. Punching will decrease the time. Sneaking will allow you to configure it in 10 second intervals. To prevent further changes, lock and unlock the turret using the dominion wand. Setting the turret to 0 seconds or providing a redstone signal will disable it. Casts Projectile, Touch, and Redstone for free.");
         add("ars_nouveau.page4.basic_spell_turret", "Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.");

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.radial_menu.RadialMenuSlot;
@@ -11,6 +12,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketMountCamera;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -63,11 +66,12 @@ public class ScryersOculus extends TickableModBlock {
         List<RadialMenuSlot<Item>> slots = new ArrayList<>();
         List<ItemStack> stackList = new ArrayList<>();
         int offset = 3;
-        for (BlockPos b : BlockPos.betweenClosed(pPos.offset(offset, -offset, offset), pPos.offset(-offset, offset, -offset))) {
-            if (pLevel.getBlockEntity(b) instanceof ArcanePedestalTile tile && tile.getStack().is(ItemsRegistry.SCRYER_SCROLL.get())) {
-                slots.add(new RadialMenuSlot<>(tile.getStack().getHoverName().getString(), tile.getStack().getItem(), new ArrayList<>()));
-                stackList.add(tile.getStack());
-            }
+        List<ArcanePedestalTile> pedestals = new ArrayList<>();
+        ArsBlockEntityIndexes.PEDESTALS.query(pLevel, pPos, BlockRange.box(offset), tile -> tile.getStack().is(ItemsRegistry.SCRYER_SCROLL.get()), pedestals);
+        BlockOrder.sortBetweenClosed(pedestals, ArcanePedestalTile::getBlockPos);
+        for (ArcanePedestalTile tile : pedestals) {
+            slots.add(new RadialMenuSlot<>(tile.getStack().getHoverName().getString(), tile.getStack().getItem(), new ArrayList<>()));
+            stackList.add(tile.getStack());
         }
         if (slots.isEmpty()) {
             PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.scryers_eye.no_scrolls"));

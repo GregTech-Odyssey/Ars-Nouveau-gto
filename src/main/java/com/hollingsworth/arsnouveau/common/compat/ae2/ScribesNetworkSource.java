@@ -27,9 +27,8 @@ public final class ScribesNetworkSource {
         if (level == null) return;
         BlockPos center = scribes.getBlockPos();
         StorageTargetResolver resolver = null;
-        for (BlockPos pos : BlockPos.betweenClosed(center.north(6).east(6).below(2), center.south(6).west(6).above(2))) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be == null) continue;
+        for (BlockEntity be : ScribesTile.blockEntitiesAround(level, center)) {
+            BlockPos pos = be.getBlockPos();
             MEStorage storage;
             if (be instanceof MEStorageHost host) {
                 storage = host.getAnyMEStorage();

@@ -22,7 +22,7 @@ import com.hollingsworth.arsnouveau.common.compat.ae2.SourceKeyType;
 public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
     public static final SourceRenderer INSTANCE = new SourceRenderer();
     static final Material SOURCE =
-            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
+            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/source_ae_icon"));
 
     private SourceRenderer() {}
 

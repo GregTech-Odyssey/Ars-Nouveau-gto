@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -14,6 +15,8 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -41,6 +44,9 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 // TODO: 1.20 Make all inventories bind only, remove auto inventory detection
 // Also remove setStack and use pedestals only.
 public class WixieCauldronTile extends SummoningTile implements ITooltipProvider, IWandable {
@@ -139,18 +145,15 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
      * Picks the next recipe to craft collecting items from the pedestals and the cauldron
      */
     public void rotateCraft(){
-        BlockPos leftBound = worldPosition.below().south().east();
-        BlockPos rightBound = worldPosition.above().north().west();
         List<ItemStack> itemStacks = new ArrayList<>();
         if(this.setStack != null && !this.setStack.isEmpty()){
             itemStacks.add(this.setStack);
         }
-        for(BlockPos pos : BlockPos.betweenClosed(leftBound, rightBound)){
-            if(level.getBlockEntity(pos) instanceof ArcanePedestalTile pedestalTile
-                    && !pedestalTile.getStack().isEmpty()
-                    && !pedestalTile.hasSignal){
-                itemStacks.add(pedestalTile.getStack().copy());
-            }
+        List<ArcanePedestalTile> pedestals = new ArrayList<>();
+        ArsBlockEntityIndexes.PEDESTALS.query(level, worldPosition, BlockRange.box(1), tile -> !tile.getStack().isEmpty() && !tile.hasSignal, pedestals);
+        BlockOrder.sortBetweenClosed(pedestals, ArcanePedestalTile::getBlockPos);
+        for (ArcanePedestalTile pedestalTile : pedestals) {
+            itemStacks.add(pedestalTile.getStack().copy());
         }
         if(itemStacks.isEmpty())
             return;
@@ -238,37 +241,32 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
         }
         cachedInventories = new ArrayList<>();
-        for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
-            if(!level.isLoaded(bPos))
-                continue;
-            BlockEntity blockEntity = level.getBlockEntity(bPos);
-            if(blockEntity == null || blockEntity instanceof ArcanePedestalTile)
+        for (BlockEntity blockEntity : ScribesTile.blockEntitiesAround(level, worldPosition)) {
+            if(blockEntity instanceof ArcanePedestalTile)
                 continue;
             if(!blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
                 continue;
-            cachedInventories.add(bPos.immutable());
+            cachedInventories.add(blockEntity.getBlockPos());
         }
         setChanged();
     }
 
     public static @Nullable BlockPos findPotionStorage(Level level, BlockPos worldPosition, Potion passedPot) {
-        for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
-            if (level.getBlockEntity(bPos) instanceof PotionJarTile tile && tile.canAccept(new PotionData(passedPot), 300)) {
-                return bPos.immutable();
-            }
-        }
-        return null;
+        PotionData data = new PotionData(passedPot);
+        return firstPotionJar(level, worldPosition.below(2), 4, 3, 4, tile -> tile.canAccept(data, 300));
     }
 
     public static @Nullable BlockPos findNeededPotion(Potion passedPot, int amount, Level level, BlockPos worldPosition) {
-        for(BlockPos bPos : BlockPos.withinManhattan(worldPosition.below(2), 4, 3, 4)){
-            if (level.getBlockEntity(bPos) instanceof PotionJarTile tile &&
-                    tile.getAmount() >= amount &&
-                    tile.getData().areSameEffects(new PotionData(passedPot))) {
-                return bPos.immutable();
-            }
-        }
-        return null;
+        PotionData data = new PotionData(passedPot);
+        return firstPotionJar(level, worldPosition.below(2), 4, 3, 4, tile -> tile.getAmount() >= amount && tile.getData().areSameEffects(data));
+    }
+
+    public static @Nullable BlockPos firstPotionJar(Level level, BlockPos center, int rx, int ry, int rz, Predicate<PotionJarTile> filter) {
+        List<PotionJarTile> found = new ArrayList<>();
+        ArsBlockEntityIndexes.POTION_JARS.query(level, center, BlockRange.box(rx, ry, rz), filter, found);
+        if (found.isEmpty()) return null;
+        BlockOrder.sortWithinManhattan(found, center, PotionJarTile::getBlockPos);
+        return found.get(0).getBlockPos();
     }
 
     public void convertedEffect() {

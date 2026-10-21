@@ -20,7 +20,6 @@
     "CrossbowMixin",
     "DamageSourceMixin",
     "EntityMixin",
-    "LevelChunkMixin",
     "LivingAccessor",
     "MobAccessor",
     "PotionRecipeMixin",

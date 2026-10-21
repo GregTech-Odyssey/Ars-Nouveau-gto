@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.common.compat.ae2.ArsAE2;
 import com.hollingsworth.arsnouveau.common.compat.ae2.client.ArsAE2Client;
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.api.registry.*;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.ritual.DispenserRitualBehavior;
@@ -83,6 +84,7 @@ public class ArsNouveau {
         modEventBus.addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ANCriteriaTriggers.init();
+        ArsBlockEntityIndexes.init();
         if (ModList.get().isLoaded("ae2")) {
             ArsAE2.init(modEventBus);
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArsAE2Client.init(modEventBus));

@@ -54,13 +54,6 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
     }
 
     public static @Nullable BlockPos findNearbyPotion(Level level, BlockPos worldPosition) {
-        for (BlockPos p : BlockPos.withinManhattan(worldPosition.below(1), 1, 1, 1)) {
-            if (level.getBlockEntity(p) instanceof PotionJarTile tile) {
-                if (tile.getAmount() >= 100) {
-                    return p;
-                }
-            }
-        }
-        return null;
+        return WixieCauldronTile.firstPotionJar(level, worldPosition.below(1), 1, 1, 1, tile -> tile.getAmount() >= 100);
     }
 }

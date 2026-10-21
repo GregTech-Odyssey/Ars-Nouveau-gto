@@ -4,14 +4,12 @@ import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
-import com.hollingsworth.arsnouveau.api.source.ManhattanOrder;
-import com.hollingsworth.arsnouveau.api.source.SourceIndex;
-import com.hollingsworth.arsnouveau.api.source.SourceTileIndex;
-import com.hollingsworth.arsnouveau.api.source.SourceManager;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+import com.suried.gtoutils.spatial.BlockOrder;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,51 +17,53 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class SourceUtil {
 
     public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        for (SourceJarTile jar : SourceIndex.jarsAround(world, pos, range, SourceJarTile::canAcceptSource)) {
+        for (SourceJarTile jar : jarsAround(world, pos, range, SourceJarTile::canAcceptSource)) {
             posList.add(new SourceProvider(jar, jar.getBlockPos()));
         }
-        List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canGiveSourceNearby(pos, world, range);
-        for(ISpecialSourceProvider p : provider){
-            posList.add(new SourceProvider(p));
-        }
         List<ISpecialSourceProvider> found = new ArrayList<>();
-        SourceTileIndex.forEachAround(world, pos, range, be -> {
+        ArsBlockEntityIndexes.SOURCE_TILES.forEach(world, pos, BlockRange.box(range), null, be -> {
             IAdvancedSourceTile tile = sourceTileAt(world, pos, be);
             if (tile != null && tile.canAcceptSource() && tile.sourcelinksCanProvidePower()) {
                 found.add(new SourceProvider(tile, be.getBlockPos().immutable()));
             }
         });
-        ManhattanOrder.sort(found, pos, ISpecialSourceProvider::getCurrentPos);
+        BlockOrder.sortWithinManhattan(found, pos, ISpecialSourceProvider::getCurrentPos);
         posList.addAll(found);
         return posList;
     }
 
     public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
-        for (SourceJarTile jar : SourceIndex.jarsAround(world, pos, range, jar -> jar.getSourceLong() > 0)) {
+        for (SourceJarTile jar : jarsAround(world, pos, range, jar -> jar.getSourceLong() > 0)) {
             posList.add(new SourceProvider(jar, jar.getBlockPos()));
         }
-        List<ISpecialSourceProvider> provider = SourceManager.INSTANCE.canTakeSourceNearby(pos, world, range);
-        for(ISpecialSourceProvider p : provider){
-            posList.add(new SourceProvider(p));
-        }
         List<ISpecialSourceProvider> found = new ArrayList<>();
-        SourceTileIndex.forEachAround(world, pos, range, be -> {
+        ArsBlockEntityIndexes.SOURCE_TILES.forEach(world, pos, BlockRange.box(range), null, be -> {
             IAdvancedSourceTile tile = sourceTileAt(world, pos, be);
             if (tile != null && tile.getSource() > 0 && tile.relayCanTakePower()) {
                 found.add(new SourceProvider(tile, be.getBlockPos().immutable()));
             }
         });
-        ManhattanOrder.sort(found, pos, ISpecialSourceProvider::getCurrentPos);
+        BlockOrder.sortWithinManhattan(found, pos, ISpecialSourceProvider::getCurrentPos);
         posList.addAll(found);
         return posList;
+    }
+
+    private static List<SourceJarTile> jarsAround(Level level, BlockPos center, int range, Predicate<? super SourceJarTile> filter) {
+        if (ArsBlockEntityIndexes.SOURCE_JARS.size(level) == 0) return Collections.emptyList();
+        List<SourceJarTile> out = new ArrayList<>();
+        ArsBlockEntityIndexes.SOURCE_JARS.query(level, center, BlockRange.box(range), filter, out);
+        BlockOrder.sortWithinManhattan(out, center, SourceJarTile::getBlockPos);
+        return out;
     }
 
     private static @Nullable IAdvancedSourceTile sourceTileAt(Level world, BlockPos from, BlockEntity be) {
@@ -109,15 +109,13 @@ public class SourceUtil {
     }
 
     private static boolean findSourceNearby(BlockPos pos, Level world, int range, long source) {
-        if (SourceIndex.anyJarAround(world, pos, range, jar -> jar.getSourceLong() >= source)) {
+        BlockRange box = BlockRange.box(range);
+        if (ArsBlockEntityIndexes.SOURCE_JARS.findAny(world, pos, box, jar -> jar.getSourceLong() >= source) != null) {
             return true;
         }
-        if (SourceTileIndex.anyAround(world, pos, range, be -> {
+        return ArsBlockEntityIndexes.SOURCE_TILES.findAny(world, pos, box, be -> {
             IAdvancedSourceTile tile = sourceTileAt(world, pos, be);
             return tile != null && tile.getSource() >= source && tile.relayCanTakePower();
-        })) {
-            return true;
-        }
-        return SourceManager.INSTANCE.hasSourceNearby(pos, world, range, source) != null;
+        }) != null;
     }
 }

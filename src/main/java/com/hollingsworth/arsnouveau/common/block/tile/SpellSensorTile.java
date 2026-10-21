@@ -6,13 +6,14 @@ import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.LevelPosMap;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SpellSensor;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.suried.gtoutils.spatial.BlockRange;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,12 +30,13 @@ import net.minecraft.world.level.block.state.properties.SculkSensorPhase;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class SpellSensorTile extends ModdedTile implements ITickable, IWandable, ITooltipProvider {
 
-    public static LevelPosMap SENSOR_MAP = new LevelPosMap((level, pos) -> !(level.getBlockEntity(pos) instanceof SpellSensorTile));
+    private static final int SIGNAL_RANGE = 8;
 
     public int outputDuration;
     public int outputStrength;
@@ -53,24 +55,26 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
 
     public static void onSpellCast(SpellCastEvent event){
         Vec3 vec3 = event.context.getCaster().getPosition();
-        SENSOR_MAP.applyForRange(event.getWorld(), BlockPos.containing(vec3.x, vec3.y, vec3.z), 8, (pos) ->{
-            if(event.getWorld().getBlockEntity(pos) instanceof SpellSensorTile tile && !tile.isOnResolve){
-                tile.onSignal(event.context.getCaster().getPosition(), event.spell);
-            }
-            return false;
-        });
+        BlockPos at = BlockPos.containing(vec3.x, vec3.y, vec3.z);
+        for (SpellSensorTile tile : sensorsNear(event.getWorld(), new Vec3(at.getX(), at.getY(), at.getZ()), false)) {
+            tile.onSignal(event.context.getCaster().getPosition(), event.spell);
+        }
     }
 
     public static void onSpellResolve(SpellResolveEvent.Post event){
         HitResult resolveSource = event.resolver.hitResult;
         if(resolveSource == null)
             return;
-        SENSOR_MAP.applyForRange(event.world, resolveSource.getLocation(), 8, (pos) ->{
-            if(event.world.getBlockEntity(pos) instanceof SpellSensorTile tile && tile.isOnResolve){
-                tile.onSignal(resolveSource.getLocation(), event.spell);
-            }
-            return false;
-        });
+        for (SpellSensorTile tile : sensorsNear(event.world, resolveSource.getLocation(), true)) {
+            tile.onSignal(resolveSource.getLocation(), event.spell);
+        }
+    }
+
+    private static List<SpellSensorTile> sensorsNear(Level level, Vec3 at, boolean onResolve) {
+        List<SpellSensorTile> found = new ArrayList<>();
+        ArsBlockEntityIndexes.SPELL_SENSORS.query(level, BlockPos.containing(at), BlockRange.box(SIGNAL_RANGE + 1),
+                tile -> tile.isOnResolve == onResolve && BlockUtil.distanceFrom(at, tile.getBlockPos().getCenter()) <= SIGNAL_RANGE, found);
+        return found;
     }
 
     @Override
@@ -141,9 +145,6 @@ public class SpellSensorTile extends ModdedTile implements ITickable, IWandable,
                 level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
                 level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
             }
-        }
-        if(level.getGameTime() % 20 == 0){
-            SENSOR_MAP.addPosition(level, worldPosition);
         }
     }
 

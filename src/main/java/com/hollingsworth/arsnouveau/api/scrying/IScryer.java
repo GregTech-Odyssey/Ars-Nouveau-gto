@@ -11,6 +11,10 @@ public interface IScryer {
 
     boolean shouldRevealBlock(BlockState state, BlockPos p, Player player);
 
+    default boolean mayRevealState(BlockState state) {
+        return true;
+    }
+
     IScryer fromTag(CompoundTag tag);
 
     default CompoundTag toTag(CompoundTag tag) {

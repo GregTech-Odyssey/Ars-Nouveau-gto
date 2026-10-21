@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.compat.ae2;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.source.SourceTileIndex;
+import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
@@ -115,8 +115,8 @@ public final class ArsAE2 {
         MinecraftForge.EVENT_BUS.addListener(ArsAE2::remapLegacy);
         MinecraftForge.EVENT_BUS.addListener(SpellP2PTunnelPart::onSpellHit);
         MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, ArsAE2::attachCapabilities);
-        SourceTileIndex.registerCandidateClass(type -> IPartHost.class.isAssignableFrom(type) || SourceAcceptorBlockEntity.class.isAssignableFrom(type));
-        SourceTileIndex.registerProbe(ArsAE2::hasGenericInventory);
+        ArsBlockEntityIndexes.registerSourceCandidateClass(type -> IPartHost.class.isAssignableFrom(type) || SourceAcceptorBlockEntity.class.isAssignableFrom(type));
+        ArsBlockEntityIndexes.registerSourceProbe(ArsAE2::hasGenericInventory);
         ScribesTile.registerItemSource(ScribesNetworkSource::takeFromNetwork);
     }
 

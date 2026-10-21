@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
+import com.suried.gtoutils.spatial.LevelSections;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -58,16 +59,9 @@ public class ScryEvents {
             Player playerEntity = event.player;
             Level world = playerEntity.level;
             Vec3i scrySize = scryer.getScryingSize();
-            for (BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())) {
-                if (world.isOutsideBuildHeight(p) || world.getBlockState(p).isAir())
-                    continue;
-                if (scryingPos.size() >= scryer.getScryMax())
-                    break;
-
-                if (scryer.shouldRevealBlock(world.getBlockState(p), p, playerEntity)) {
-                    scryingPos.add(new BlockPos(p));
-                }
-            }
+            LevelSections.withinManhattan(world, playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ(),
+                    state -> !state.isAir() && scryer.mayRevealState(state), (state, p) -> scryer.shouldRevealBlock(state, p, playerEntity),
+                    scryer.getScryMax(), scryingPos);
             ClientInfo.scryingPositions = scryingPos;
         }
     }

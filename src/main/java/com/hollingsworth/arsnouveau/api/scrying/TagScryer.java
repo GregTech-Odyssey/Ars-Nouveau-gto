@@ -30,6 +30,11 @@ public class TagScryer implements IScryer {
     }
 
     @Override
+    public boolean mayRevealState(BlockState state) {
+        return blockTag != null && state.is(blockTag);
+    }
+
+    @Override
     public IScryer fromTag(CompoundTag tag) {
         TagScryer scryer = new TagScryer();
         if (tag.contains("blockTag")) {

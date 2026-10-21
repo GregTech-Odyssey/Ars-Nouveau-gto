@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.common.spell.TurretDropMerger;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -50,7 +51,6 @@ public class EffectBreak extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos pos = rayTraceResult.getBlockPos();
-        BlockState state;
 
         MobEffectInstance miningFatigue = shooter.getEffect(MobEffects.DIG_SLOWDOWN);
         if (miningFatigue != null)
@@ -69,11 +69,15 @@ public class EffectBreak extends AbstractEffect {
         if (numSilkTouch > 0 && stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < numSilkTouch) {
             stack.enchant(Enchantments.SILK_TOUCH, numSilkTouch);
         }
+        TurretDropMerger.run(world, spellContext, () -> breakBlocks(posList, stack, rayTraceResult, world, shooter, spellStats, spellContext, resolver));
+    }
+
+    private void breakBlocks(List<BlockPos> posList, ItemStack stack, BlockHitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         for (BlockPos pos1 : posList) {
             if (world.random.nextFloat() < spellStats.getBuffCount(AugmentRandomize.INSTANCE) * 0.25F) {
                 continue;
             }
-            state = world.getBlockState(pos1);
+            BlockState state = world.getBlockState(pos1);
 
             if (!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1) || state.is(BlockTagProvider.BREAK_BLACKLIST)) {
                 continue;
@@ -107,7 +111,7 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
+        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe. When cast by a Spell Turret, the drops of one cast are merged by item type and dropped at the center of the broken area.";
     }
 
     @Override
