@@ -184,4 +184,5 @@ gtoPublish {
     curseforgeProjectId   = '1755416'
     curseforgeJavaVersion = 'Java 21'
     curseforgeEnvironment = 'both'
+    curseforgeRelations   = [geckolib: 'required', curios: 'required', 'data-sync-lib': 'required']
 }
