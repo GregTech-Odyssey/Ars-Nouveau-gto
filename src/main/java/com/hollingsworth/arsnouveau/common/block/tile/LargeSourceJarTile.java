@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * One block of a 3x3x3 large source jar. Every part exposes the shared storage of its column; only the center block (core) stores data and ticks.
- * Units stacked with aligned cores form one column whose storage lives in {@link Column} while loaded and is split back into the cores for saving.
+ * Units stacked with aligned cores form one column whose storage lives in {@link Column} while loaded and is split back into the cores bottom-up (lower units fill first) for saving and breaking.
  */
 public class LargeSourceJarTile extends SourceJarTile {
     public static final long UNIT_CAPACITY = 10_000L * 27 * 4;
@@ -411,8 +411,11 @@ public class LargeSourceJarTile extends SourceJarTile {
         }
 
         private long shareOf(int index) {
-            int n = cores.size();
-            return total / n + (index < total % n ? 1 : 0);
+            long below = 0;
+            for (int i = 0; i < index; i++) {
+                below += cores.get(i).unitCapacity();
+            }
+            return Math.max(0, Math.min(cores.get(index).unitCapacity(), total - below));
         }
 
         long shareOf(LargeSourceJarTile core) {
