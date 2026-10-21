@@ -6,7 +6,7 @@
 - GTO_CHANGES.md 只记录游戏设计层面的差异，不记录实现方式。
 - 模组 ID 保持 `ars_nouveau`，不得改动资源命名空间与 Java 包名，以免破坏存档与附属模组兼容。
 - 新生魔艺本体不得依赖 GregTech、GTOCore、GTOLib 等整合包模组；需要整合包参与的行为，通过通用接口或配方字段开放，由整合包侧注册或声明。
-- 本分支的代码与素材均依据 LGPLv3 授权。上游自 2025-02 起在 main 系分支将素材改为保留所有权利，因此不得从上游 main、1.21 等分支移植贴图、模型、音效等素材；移植代码前也要先确认对应提交的许可证。
+- 本分支的代码与素材依据 LGPLv3 授权，例外是并入 Ars Énergistique 时带进来的、以 AE2 贴图为基础改绘的 AE 联动贴图（如魔源存储元件及其外壳），沿用 AE2 素材的 CC BY-NC-SA 3.0（含非商业条款）。上游自 2025-02 起在 main 系分支将素材改为保留所有权利，因此不得从上游 main、1.21 等分支移植贴图、模型、音效等素材；移植代码前也要先确认对应提交的许可证。引入第三方素材时，要在 README 的许可证一节写明来源与协议。
 - 允许的外部依赖例外只有 DataSyncLib、GTOUtils 与 GTORenders（另有可选的 AE2 联动，见下文）。DataSyncLib：方块实体向客户端的同步统一走它（`ModdedTile` 实现 `BlockEntitySync.Holder`，每 tick 合并、无人追踪跳过、只发变化的顶层 NBT 键），存盘仍用原版 NBT。`getUpdatePacket` 不再返回原版整包，改为登记同步；新增需要同步的状态照常写进 `saveAdditional` 并调用 `updateBlock()`，客户端只用部分字段的类覆写 `writeSyncTag`/`readSyncTag`（如 `RepositoryTile`）。不要修改 DataSyncLib 本身。
 - GTOUtils（`com.suried.gtoutils`）：按范围找方块实体一律用它的索引，不要逐格扫描世界或遍历全维度。全部索引集中在 `ArsBlockEntityIndexes`（模组构造时初始化，新索引只能加在这里）：按类型收录用 `BlockEntityIndex`，区块增删方块实体时由 GTOUtils 自动登记注销，方块实体里不写钩子；按能力收录用 `ProbedBlockEntityIndex`；只能逐个判断能力的低频查找用 `ALL`。查询范围用 `BlockRange` 选球形或长方体，结果依赖原版遍历顺序的用 `BlockOrder` 排序。按方块状态在一片范围里找格子（找某种方块、数某种方块）用 `LevelSections` 的 `betweenClosed`/`inRange`/`withinManhattan`，它先按 16³ 区段的调色板跳过不可能命中的区段，结果顺序与原版逐格遍历相同，不要逐格 `getBlockState`。
 - GTORenders（`com.suried.gtorenders`）：发光、闪光、连线三种粒子的 Provider 调用 `MoteParticles`（带本模组原贴图的 `MoteLook`，返回 null，不生成粒子对象），由 GPU 批量绘制；新代码照常 `addParticle(GlowParticleData...)` 即可，外观与原版一致。按像素画液面或贴图盒用 `SpriteQuads`（见 `LargeSourceJarRenderer`）。不要为了发光效果新建粒子类型或纯视觉实体。
