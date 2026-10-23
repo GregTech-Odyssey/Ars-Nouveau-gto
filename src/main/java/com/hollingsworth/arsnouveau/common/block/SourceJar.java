@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarSpec;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -35,26 +37,41 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
+public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock, SourceJarSpec.Holder {
 
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
+
+    private final SourceJarSpec spec;
+    private final BiFunction<BlockPos, BlockState, ? extends SourceJarTile> tileFactory;
 
     public SourceJar() {
         this(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.SOURCE_JAR);
     }
 
     public SourceJar(Properties properties, String registryName) {
+        this(properties, registryName, SourceJarSpec.JAR, SourceJarTile::new);
+    }
+
+    public SourceJar(Properties properties, String registryName, SourceJarSpec spec, BiFunction<BlockPos, BlockState, ? extends SourceJarTile> tileFactory) {
         super(properties, registryName);
+        this.spec = spec;
+        this.tileFactory = tileFactory;
         registerDefaultState(defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
     @Override
+    public SourceJarSpec jarSpec() {
+        return spec;
+    }
+
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SourceJarTile(pos, state);
+        return tileFactory.apply(pos, state);
     }
 
     @Override
@@ -131,10 +148,11 @@ public class SourceJar extends SourceBlock implements SimpleWaterloggedBlock {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.capacity", spec.capacity()).withStyle(ChatFormatting.GRAY));
         if (stack.getTag() == null)
             return;
         long mana = stack.getTag().getCompound("BlockEntityTag").getLong("source");
-        tooltip.add(Component.literal((mana * 100) / 10000 + "% full"));
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", mana * 100 / spec.capacity()).withStyle(ChatFormatting.GRAY));
     }
 
     @Override

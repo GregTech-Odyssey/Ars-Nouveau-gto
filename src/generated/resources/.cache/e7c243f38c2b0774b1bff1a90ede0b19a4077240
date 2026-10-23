@@ -1,4 +1,4 @@
-// 1.20.1	2024-05-25T15:52:16.7098195	Patchouli
+// 1.20.1	2026-10-22T01:20:44.5910454	Patchouli
 d5f03c259d2af4f5e8e286639783f4fc833b1076 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/aqua_affinity.json
 2ec536fea831588201432d61d70af61385882054 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/alteration_table.json
 a82f4fc73946d228b1e3f5e03d0ecef46f33cdfb assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/armor/applying_perks.json
@@ -249,6 +249,7 @@ dbb199e3a567e3a71177d41c2b8922afb8389028 assets/ars_nouveau/patchouli_books/worn
 38ba77e54d73ec616e70b2fdfb2f78dbf0bfab53 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/smite.json
 5c9d742c9d9f7c4e9edb008f162b47b8b5443405 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/agronomic_sourcelink.json
 a15996ea5afdc6cb22c8836b07ff5ea9f9094f5f assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/alchemical_sourcelink.json
+ee2defa2e2f3d6f06d0b528c75f619e3b5292fa4 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/large_source_jar.json
 3db09458abf213e57f9706cd310b11b53eb49ccd assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/mycelial_sourcelink.json
 b023564bc9452a188c1042830ed6d21b045b6d17 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/relay.json
 e8dd3e7da488206194505f9ac3dc5f3cc1dab3a7 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/source/relay_collector.json

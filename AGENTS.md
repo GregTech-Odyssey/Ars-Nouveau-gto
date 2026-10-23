@@ -13,6 +13,7 @@
 - 视觉特效一律由客户端生成：服务端不生成纯视觉实体（`EntityFollowProjectile`、`EntityFlyingItem`），不逐粒子或每 tick 发包。需要服务端告知时机的，用 `ClientFx`（`spawn`、`poof`、`orb`、`beam`、`emit`、`windshear`）发一个 `PacketClientFx` 小事件，由客户端本地重建；持续的特效用 `emit` 一次性告诉客户端持续时长。
 - 玩家魔力由客户端按服务端同步的回魔速度本地推算，服务端只在偏差、上限或回魔速度变化时以及定时兜底时校正（`ManaCapEvents`）。
 - 应用能源 2（AE2）是可选联动，取代了 Ars Énergistique：只在 `common/compat/ae2` 里引用 AE 类（compileOnly，坐标来自 GTO maven 的 AE fork），入口 `ArsAE2.init` 由 `ModList.isLoaded("ae2")` 守住，没装 AE 时不得加载这个包里的任何类；核心代码需要 AE 参与时开放钩子（如 `ScribesTile.registerItemSource`、`ArsBlockEntityIndexes.registerSourceCandidateClass/registerSourceProbe`）由联动包注册。联动的配方放在 `data/ars_nouveau/recipes/ae2/` 并带 `forge:mod_loaded` 条件，方块掉落写在代码里，帕秋莉条目带 `"flag": "mod:ae2"`；改完要在不装 AE 的情况下跑一次 `runServer` 确认无报错。`arseng` 命名空间的注册名（含 `ae2:keytypes` 里的 `arseng:source`）通过别名和缺失映射转到 `ars_nouveau`。
+- 魔源在两个持有者之间转移一律走 `ISourceTile.transfer(from, to, amount)`：它先模拟目标能收多少、从来源扣、只给实际扣到的量、给不出去的退回来源。单边加减用 `addSource/removeSource(amount, simulate)`，返回实际变化量（旧的 `addSource(int)`/`removeSource(int)` 返回的是新存量，不能当搬运量用）；存取结果与读数可能不一致的实现（ME 魔源罐、AE 槽位适配、AE 能量适配、包装类）必须覆写这两个方法如实返回。不要手写"先给后扣"；代理整个 ME 网络的方块不跨操作缓存读数，存储总线对着同网的 ME 魔源罐视为空。
 - 魔源能力 `CapabilityRegistry.SOURCE_TILE`（`IAdvancedSourceTile`）是中继器连接与魔源查找的统一入口：普通 `ISourceTile` 方块实体自动挂上包装，其他方块实体自己提供该能力即可。`SourceUtil` 的范围查找里，魔源罐走 `ArsBlockEntityIndexes.SOURCE_JARS`，其余带该能力的方块实体走 `SOURCE_TILES`，都不要逐格扫描。
 - 构建与运行都用 JDK 21（DataSyncLib 是 Java 21 字节码），构建工具是 ModDevGradle legacyforge。
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.compat.ae2;
 
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarSpec;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
@@ -196,7 +197,7 @@ public final class ArsAE2 {
             StackWorldBehaviors.registerExportStrategy(SourceKeyType.TYPE, SourceStorageExportStrategy::new);
             StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
             ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, SourceContainerItemStrategy.INSTANCE);
-            GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
+            GenericSlotCapacities.register(SourceKeyType.TYPE, SourceJarSpec.JAR.capacity());
             P2PTunnelAttunement.registerAttunementTag(SOURCE_P2P_TUNNEL);
             P2PTunnelAttunement.registerAttunementTag(SPELL_P2P_TUNNEL);
         });

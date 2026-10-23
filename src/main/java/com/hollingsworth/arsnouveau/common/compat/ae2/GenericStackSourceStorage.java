@@ -6,6 +6,7 @@ import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.config.Actionable;
 
 import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
 @SuppressWarnings("UnstableApiUsage")
 public record GenericStackSourceStorage(GenericInternalInventory inv) implements IAdvancedSourceTile {
@@ -57,6 +58,16 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
     @Override
     public int removeSource(int source) {
         return extract(source, Actionable.MODULATE);
+    }
+
+    @Override
+    public long addSource(long amount, boolean simulate) {
+        return amount <= 0 ? 0 : insert(ISourceTile.clampToInt(amount), simulate ? Actionable.SIMULATE : Actionable.MODULATE);
+    }
+
+    @Override
+    public long removeSource(long amount, boolean simulate) {
+        return amount <= 0 ? 0 : extract(ISourceTile.clampToInt(amount), simulate ? Actionable.SIMULATE : Actionable.MODULATE);
     }
 
     private int insert(int amount, Actionable mode) {

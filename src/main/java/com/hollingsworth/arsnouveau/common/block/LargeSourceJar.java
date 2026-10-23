@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.LargeSourceJarTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarSpec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +41,7 @@ import java.util.function.BiFunction;
  * A 3x3x3 source jar placed as one unit; part_x/y/z locate each block inside its unit and the center block is the core.
  * Units placed directly above each other with aligned cores join into one column; joined marks a top or bottom layer touching such a unit.
  */
-public class LargeSourceJar extends ModBlock implements EntityBlock {
+public class LargeSourceJar extends ModBlock implements EntityBlock, SourceJarSpec.Holder {
     public static final IntegerProperty PART_X = IntegerProperty.create("part_x", 0, 2);
     public static final IntegerProperty PART_Y = IntegerProperty.create("part_y", 0, 2);
     public static final IntegerProperty PART_Z = IntegerProperty.create("part_z", 0, 2);
@@ -58,16 +59,23 @@ public class LargeSourceJar extends ModBlock implements EntityBlock {
                         SHAPES[shapeIndex(x, y, z, j == 1)] = partShape(x, y, z, j == 1);
     }
 
+    private final SourceJarSpec spec;
     private final BiFunction<BlockPos, BlockState, ? extends LargeSourceJarTile> tileFactory;
 
-    public LargeSourceJar(Properties properties, BiFunction<BlockPos, BlockState, ? extends LargeSourceJarTile> tileFactory) {
+    public LargeSourceJar(Properties properties, SourceJarSpec spec, BiFunction<BlockPos, BlockState, ? extends LargeSourceJarTile> tileFactory) {
         super(properties);
+        this.spec = spec;
         this.tileFactory = tileFactory;
         registerDefaultState(stateDefinition.any().setValue(PART_X, 1).setValue(PART_Y, 1).setValue(PART_Z, 1).setValue(JOINED, false));
     }
 
     public LargeSourceJar() {
-        this(defaultJarProperties(), LargeSourceJarTile::new);
+        this(defaultJarProperties(), SourceJarSpec.LARGE, LargeSourceJarTile::new);
+    }
+
+    @Override
+    public SourceJarSpec jarSpec() {
+        return spec;
     }
 
     public static Properties defaultJarProperties() {
@@ -136,16 +144,17 @@ public class LargeSourceJar extends ModBlock implements EntityBlock {
         int y = state.getValue(PART_Y);
         boolean joined = false;
         if (y == 2) {
-            joined = alignedNeighbor(state, level.getBlockState(pos.above()), 0);
+            joined = stacks(state, level.getBlockState(pos.above()));
         } else if (y == 0) {
-            joined = alignedNeighbor(state, level.getBlockState(pos.below()), 2);
+            joined = stacks(level.getBlockState(pos.below()), state);
         }
         return state.getValue(JOINED) == joined ? state : state.setValue(JOINED, joined);
     }
 
-    private boolean alignedNeighbor(BlockState self, BlockState other, int expectedY) {
-        return other.is(this) && other.getValue(PART_Y) == expectedY
-                && other.getValue(PART_X).equals(self.getValue(PART_X)) && other.getValue(PART_Z).equals(self.getValue(PART_Z));
+    public static boolean stacks(BlockState lower, BlockState upper) {
+        return lower.getBlock() instanceof LargeSourceJar && upper.is(lower.getBlock())
+                && lower.getValue(PART_Y) == 2 && upper.getValue(PART_Y) == 0
+                && lower.getValue(PART_X).equals(upper.getValue(PART_X)) && lower.getValue(PART_Z).equals(upper.getValue(PART_Z));
     }
 
     @Override

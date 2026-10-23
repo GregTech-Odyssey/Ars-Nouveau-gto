@@ -77,6 +77,16 @@ public record SourceTileWrapper(ISourceTile tile, boolean takeFrom, boolean give
     }
 
     @Override
+    public long addSource(long amount, boolean simulate) {
+        return tile.addSource(amount, simulate);
+    }
+
+    @Override
+    public long removeSource(long amount, boolean simulate) {
+        return tile.removeSource(amount, simulate);
+    }
+
+    @Override
     public boolean relayCanTakePower() {
         return takeFrom;
     }

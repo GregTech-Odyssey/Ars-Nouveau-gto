@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 
 import net.minecraft.core.BlockPos;
@@ -44,27 +45,43 @@ public class MESourceJarBlockEntity extends SourceJarTile implements IGridConnec
 
     @Override
     public int addSource(int source) {
-        var grid = getMainNode().getGrid();
-        return grid != null && getMainNode().isActive()
-                ? (int) StorageHelper.poweredInsert(
-                        grid.getEnergyService(),
-                        grid.getStorageService().getInventory(),
-                        SourceKey.KEY,
-                        source,
-                        actionSource)
-                : 0;
+        return ISourceTile.clampToInt(addSource((long) source, false));
     }
 
     public int removeSource(int source) {
+        return ISourceTile.clampToInt(removeSource((long) source, false));
+    }
+
+    @Override
+    public long addSource(long amount, boolean simulate) {
         var grid = getMainNode().getGrid();
-        return grid != null && getMainNode().isActive()
-                ? (int) StorageHelper.poweredExtraction(
+        return amount > 0 && grid != null && getMainNode().isActive()
+                ? StorageHelper.poweredInsert(
                         grid.getEnergyService(),
                         grid.getStorageService().getInventory(),
                         SourceKey.KEY,
-                        source,
-                        actionSource)
+                        amount,
+                        actionSource,
+                        simulate ? Actionable.SIMULATE : Actionable.MODULATE)
                 : 0;
+    }
+
+    @Override
+    public long removeSource(long amount, boolean simulate) {
+        var grid = getMainNode().getGrid();
+        return amount > 0 && grid != null && getMainNode().isActive()
+                ? StorageHelper.poweredExtraction(
+                        grid.getEnergyService(),
+                        grid.getStorageService().getInventory(),
+                        SourceKey.KEY,
+                        amount,
+                        actionSource,
+                        simulate ? Actionable.SIMULATE : Actionable.MODULATE)
+                : 0;
+    }
+
+    boolean isOnGrid(@org.jetbrains.annotations.Nullable appeng.api.networking.IGrid grid) {
+        return grid != null && getMainNode().getGrid() == grid;
     }
 
     @Override

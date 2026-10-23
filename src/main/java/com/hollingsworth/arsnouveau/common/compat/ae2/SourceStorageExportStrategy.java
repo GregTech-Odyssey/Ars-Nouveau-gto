@@ -34,20 +34,27 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
         var sourceTile = apiCache.find(fromSide);
 
         if (sourceTile != null) {
-            var insertable = (int) Math.min(amount, sourceTile.getMaxSource() - sourceTile.getSource());
-            var extracted = (int) StorageHelper.poweredExtraction(
+            var insertable = sourceTile.addSource(amount, true);
+            if (insertable <= 0) {
+                return 0;
+            }
+            var inventory = context.getInternalStorage().getInventory();
+            var extracted = StorageHelper.poweredExtraction(
                     context.getEnergySource(),
-                    context.getInternalStorage().getInventory(),
+                    inventory,
                     SourceKey.KEY,
                     insertable,
                     context.getActionSource(),
                     Actionable.MODULATE);
-
-            if (extracted > 0) {
-                sourceTile.addSource(extracted);
+            if (extracted <= 0) {
+                return 0;
+            }
+            var given = sourceTile.addSource(extracted, false);
+            if (given < extracted) {
+                inventory.insert(SourceKey.KEY, extracted - given, Actionable.MODULATE, context.getActionSource());
             }
 
-            return extracted;
+            return given;
         }
 
         return 0;
@@ -62,13 +69,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
         var sourceTile = apiCache.find(fromSide);
 
         if (sourceTile != null) {
-            var inserted = (int) Math.min(amount, sourceTile.getMaxSource() - sourceTile.getSource());
-
-            if (inserted > 0 && mode == Actionable.MODULATE) {
-                sourceTile.addSource(inserted);
-            }
-
-            return inserted;
+            return sourceTile.addSource(amount, mode == Actionable.SIMULATE);
         }
 
         return 0;

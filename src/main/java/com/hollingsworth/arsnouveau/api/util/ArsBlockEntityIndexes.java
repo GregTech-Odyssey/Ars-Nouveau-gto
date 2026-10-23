@@ -25,7 +25,7 @@ public final class ArsBlockEntityIndexes {
     private static volatile Predicate<BlockEntity> sourceProbe;
 
     public static final BlockEntityIndex<BlockEntity> ALL = BlockEntityIndex.all();
-    public static final BlockEntityIndex<SourceJarTile> SOURCE_JARS = BlockEntityIndex.create(SourceJarTile.class);
+    public static final BlockEntityIndex<SourceJarTile> SOURCE_JARS = BlockEntityIndex.create(SourceJarTile.class, SourceJarTile::isStorageAnchor);
     public static final BlockEntityIndex<SourcelinkTile> EVENT_SOURCELINKS = BlockEntityIndex.create(SourcelinkTile.class,
             tile -> tile.usesEventQueue() && !tile.getLevel().isClientSide);
     public static final ProbedBlockEntityIndex SOURCE_TILES = ProbedBlockEntityIndex.create(ArsBlockEntityIndexes::sourceKind,

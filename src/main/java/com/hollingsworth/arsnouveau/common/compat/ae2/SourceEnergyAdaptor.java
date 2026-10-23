@@ -58,6 +58,20 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
     }
 
     @Override
+    public long addSource(long amount, boolean simulate) {
+        if (amount <= 0) {
+            return 0;
+        }
+        double left = sink.injectExternalPower(PowerUnits.AE, amount * AE_PER_SOURCE, simulate ? Actionable.SIMULATE : Actionable.MODULATE);
+        return Math.max(0, amount - (long) Math.ceil(left / AE_PER_SOURCE));
+    }
+
+    @Override
+    public long removeSource(long amount, boolean simulate) {
+        return 0;
+    }
+
+    @Override
     public boolean relayCanTakePower() {
         return false;
     }

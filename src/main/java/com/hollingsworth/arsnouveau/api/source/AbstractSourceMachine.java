@@ -138,9 +138,7 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         long transferRate = getTransferRateLong(from, to, fromTransferRate);
         if (transferRate <= 0)
             return 0;
-        from.removeSourceLong(transferRate);
-        to.addSourceLong(transferRate);
-        return transferRate;
+        return ISourceTile.transfer(from, to, transferRate);
     }
 
     public int getTransferRate(ISourceTile from, ISourceTile to, int fromTransferRate) {

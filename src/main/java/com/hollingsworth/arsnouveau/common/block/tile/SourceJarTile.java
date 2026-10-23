@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.common.util.RegistryWrapper;
@@ -13,23 +14,49 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider, ITickable {
+public class SourceJarTile extends AbstractSourceMachine implements ITooltipProvider, ITickable, SourceJarSpec.Holder {
+    private final SourceJarSpec spec;
 
     public SourceJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
+        spec = SourceJarSpec.of(state.getBlock(), SourceJarSpec.JAR);
     }
 
     public SourceJarTile(BlockEntityType<? extends SourceJarTile> tileTileEntityType, BlockPos pos, BlockState state) {
         super(tileTileEntityType, pos, state);
+        spec = SourceJarSpec.of(state.getBlock(), SourceJarSpec.JAR);
     }
 
     public SourceJarTile(RegistryWrapper<? extends BlockEntityType<?>> type, BlockPos pos, BlockState state) {
         super(type.get(), pos, state);
+        spec = SourceJarSpec.of(state.getBlock(), SourceJarSpec.JAR);
+    }
+
+    @Override
+    public SourceJarSpec jarSpec() {
+        return spec;
+    }
+
+    public boolean isStorageAnchor() {
+        return true;
+    }
+
+    public Object sharedStorage() {
+        return this;
+    }
+
+    public BlockPos nearestPart(BlockPos to) {
+        return spec.nearestPart(worldPosition, to);
+    }
+
+    public boolean reaches(BlockPos center, int range) {
+        BlockPos part = nearestPart(center);
+        return Math.abs(part.getX() - center.getX()) <= range && Math.abs(part.getY() - center.getY()) <= range && Math.abs(part.getZ() - center.getZ()) <= range;
     }
 
     @Override
     public int getMaxSource() {
-        return 10000;
+        return ISourceTile.clampToInt(spec.capacity());
     }
 
     @Override
@@ -54,7 +81,7 @@ public class SourceJarTile extends AbstractSourceMachine implements ITooltipProv
 
     @Override
     public int getTransferRate() {
-        return getMaxSource();
+        return ISourceTile.clampToInt(spec.transferRate());
     }
 
     @Override

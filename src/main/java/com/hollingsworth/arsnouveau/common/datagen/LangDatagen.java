@@ -228,7 +228,9 @@ public class LangDatagen extends LanguageProvider {
         add("block.ars_nouveau.creative_source_jar", "Creative Source Jar");
         add("block.ars_nouveau.large_source_jar", "Large Source Jar");
         add("ars_nouveau.large_source_jar.capacity", "Capacity per jar: %s");
-        add("ars_nouveau.large_source_jar.stacking", "Occupies 3x3x3; jars stacked with aligned centers share storage");
+        add("ars_nouveau.large_source_jar.stacking", "Occupies %sx%sx%s; jars stacked with aligned centers share storage");
+        add("ars_nouveau.source_jar.capacity", "Capacity: %s");
+        add("ars_nouveau.page.large_source_jar", "A Large Source Jar is a much bigger Source Jar; its capacity is shown on the item. Large Source Jars placed directly on top of each other with aligned centers join into one column that shares its storage and fills from the bottom layer up. Breaking any block of a jar breaks that whole layer, and the dropped jar keeps only the source stored in that layer. Comparators read the fill level of the whole column, and devices that look for nearby jars count a column once.");
         add("ars_nouveau.large_source_jar.stored", "Stored: %s");
         add("ars_nouveau.large_source_jar.amount", "%s / %s source");
         add("ars_nouveau.page.source_acceptor", "The ME Source Converter converts source into AE energy. Attach it to an ME network and feed it source with a relay in order to power the network itself simply using source.");

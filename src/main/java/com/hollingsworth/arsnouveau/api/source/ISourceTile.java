@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.source;
 
 /**
- * Interface for a generic tile that holds source.
- * The long methods are the primary API; the int methods remain for addons compiled against the old signatures.
+ * Interface for a generic tile that holds source. Moves between holders go through {@link #transfer}, which takes first
+ * and only gives what was taken; addSource/removeSource(long, boolean) return the amount that actually changed.
  */
 public interface ISourceTile {
 
@@ -48,6 +48,44 @@ public interface ISourceTile {
 
     default long removeSourceLong(long source) {
         return removeSource(clampToInt(source));
+    }
+
+    default long addSource(long amount, boolean simulate) {
+        long change = Math.min(amount, getMaxSourceLong() - getSourceLong());
+        if (change <= 0) {
+            return 0;
+        }
+        if (!simulate) {
+            addSourceLong(change);
+        }
+        return change;
+    }
+
+    default long removeSource(long amount, boolean simulate) {
+        long change = Math.min(amount, getSourceLong());
+        if (change <= 0) {
+            return 0;
+        }
+        if (!simulate) {
+            removeSourceLong(change);
+        }
+        return change;
+    }
+
+    static long transfer(ISourceTile from, ISourceTile to, long amount) {
+        if (amount <= 0) {
+            return 0;
+        }
+        long room = to.addSource(amount, true);
+        long taken = room > 0 ? from.removeSource(room, false) : 0;
+        if (taken <= 0) {
+            return 0;
+        }
+        long given = to.addSource(taken, false);
+        if (given < taken) {
+            from.addSource(taken - given, false);
+        }
+        return given;
     }
 
     static int clampToInt(long value) {

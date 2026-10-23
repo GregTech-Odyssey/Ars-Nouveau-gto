@@ -23,14 +23,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.LongSupplier;
 
 public class LargeSourceJarItem extends BlockItem {
-    private final LongSupplier unitCapacity;
-
-    public LargeSourceJarItem(LargeSourceJar block, Properties properties, LongSupplier unitCapacity) {
+    public LargeSourceJarItem(LargeSourceJar block, Properties properties) {
         super(block, properties);
-        this.unitCapacity = unitCapacity;
     }
 
     public static long storedSource(ItemStack stack) {
@@ -100,8 +96,9 @@ public class LargeSourceJarItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
-        tooltip.add(Component.translatable("ars_nouveau.large_source_jar.capacity", unitCapacity.getAsLong()).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("ars_nouveau.large_source_jar.stacking").withStyle(ChatFormatting.GRAY));
+        var spec = ((LargeSourceJar) getBlock()).jarSpec();
+        tooltip.add(Component.translatable("ars_nouveau.large_source_jar.capacity", spec.capacity()).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("ars_nouveau.large_source_jar.stacking", spec.width(), spec.height(), spec.depth()).withStyle(ChatFormatting.GRAY));
         long stored = storedSource(stack);
         if (stored > 0) {
             tooltip.add(Component.translatable("ars_nouveau.large_source_jar.stored", stored).withStyle(ChatFormatting.GRAY));

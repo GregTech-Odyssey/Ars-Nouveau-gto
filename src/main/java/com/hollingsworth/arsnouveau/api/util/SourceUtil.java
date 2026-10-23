@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarSpec;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
@@ -18,7 +19,9 @@ import net.minecraftforge.fml.common.Mod;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -27,7 +30,7 @@ public class SourceUtil {
     public static List<ISpecialSourceProvider> canGiveSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
         for (SourceJarTile jar : jarsAround(world, pos, range, SourceJarTile::canAcceptSource)) {
-            posList.add(new SourceProvider(jar, jar.getBlockPos()));
+            posList.add(new SourceProvider(jar, jar.nearestPart(pos)));
         }
         List<ISpecialSourceProvider> found = new ArrayList<>();
         ArsBlockEntityIndexes.SOURCE_TILES.forEach(world, pos, BlockRange.box(range), null, be -> {
@@ -44,7 +47,7 @@ public class SourceUtil {
     public static List<ISpecialSourceProvider> canTakeSource(BlockPos pos, Level world, int range) {
         List<ISpecialSourceProvider> posList = new ArrayList<>();
         for (SourceJarTile jar : jarsAround(world, pos, range, jar -> jar.getSourceLong() > 0)) {
-            posList.add(new SourceProvider(jar, jar.getBlockPos()));
+            posList.add(new SourceProvider(jar, jar.nearestPart(pos)));
         }
         List<ISpecialSourceProvider> found = new ArrayList<>();
         ArsBlockEntityIndexes.SOURCE_TILES.forEach(world, pos, BlockRange.box(range), null, be -> {
@@ -60,9 +63,17 @@ public class SourceUtil {
 
     private static List<SourceJarTile> jarsAround(Level level, BlockPos center, int range, Predicate<? super SourceJarTile> filter) {
         if (ArsBlockEntityIndexes.SOURCE_JARS.size(level) == 0) return Collections.emptyList();
-        List<SourceJarTile> out = new ArrayList<>();
-        ArsBlockEntityIndexes.SOURCE_JARS.query(level, center, BlockRange.box(range), filter, out);
-        BlockOrder.sortWithinManhattan(out, center, SourceJarTile::getBlockPos);
+        List<SourceJarTile> found = new ArrayList<>();
+        ArsBlockEntityIndexes.SOURCE_JARS.query(level, center, BlockRange.box(range + SourceJarSpec.maxReach()), jar -> jar.reaches(center, range) && filter.test(jar), found);
+        BlockOrder.sortWithinManhattan(found, center, jar -> jar.nearestPart(center));
+        if (SourceJarSpec.maxReach() == 0) return found;
+        List<SourceJarTile> out = new ArrayList<>(found.size());
+        Set<Object> storages = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (SourceJarTile jar : found) {
+            if (storages.add(jar.sharedStorage())) {
+                out.add(jar);
+            }
+        }
         return out;
     }
 
@@ -79,9 +90,15 @@ public class SourceUtil {
     public static @Nullable ISpecialSourceProvider takeSource(BlockPos pos, Level level, int range, long source){
         List<ISpecialSourceProvider> providers = canTakeSource(pos, level, range);
         for(ISpecialSourceProvider provider : providers){
-            if(provider.getSource().getSourceLong() >= source){
-                provider.getSource().removeSourceLong(source);
-                return provider;
+            var tile = provider.getSource();
+            if(tile.getSourceLong() >= source){
+                long taken = tile.removeSource(source, false);
+                if(taken >= source){
+                    return provider;
+                }
+                if(taken > 0){
+                    tile.addSource(taken, false);
+                }
             }
         }
         return null;
@@ -110,7 +127,8 @@ public class SourceUtil {
 
     private static boolean findSourceNearby(BlockPos pos, Level world, int range, long source) {
         BlockRange box = BlockRange.box(range);
-        if (ArsBlockEntityIndexes.SOURCE_JARS.findAny(world, pos, box, jar -> jar.getSourceLong() >= source) != null) {
+        if (ArsBlockEntityIndexes.SOURCE_JARS.findAny(world, pos, BlockRange.box(range + SourceJarSpec.maxReach()),
+                jar -> jar.reaches(pos, range) && jar.getSourceLong() >= source) != null) {
             return true;
         }
         return ArsBlockEntityIndexes.SOURCE_TILES.findAny(world, pos, box, be -> {

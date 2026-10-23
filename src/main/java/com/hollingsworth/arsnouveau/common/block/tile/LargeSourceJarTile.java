@@ -23,7 +23,6 @@ import java.util.List;
  * Units stacked with aligned cores form one column whose storage lives in {@link Column} while loaded and is split back into the cores bottom-up (lower units fill first) for saving and breaking.
  */
 public class LargeSourceJarTile extends SourceJarTile {
-    public static final long UNIT_CAPACITY = 10_000L * 27 * 4;
     public static final int SEGMENT_PIXELS = 48;
     private static final String TAG_STORED = "source";
     private static final String TAG_SHOWN = "shown";
@@ -51,10 +50,6 @@ public class LargeSourceJarTile extends SourceJarTile {
 
     public LargeSourceJarTile(BlockPos pos, BlockState state) {
         this(BlockRegistry.LARGE_SOURCE_JAR_TILE.get(), pos, state);
-    }
-
-    public long unitCapacity() {
-        return UNIT_CAPACITY;
     }
 
     public boolean isCore() {
@@ -88,6 +83,28 @@ public class LargeSourceJarTile extends SourceJarTile {
     }
 
     @Nullable
+    static LargeSourceJarTile stackedCore(Level level, LargeSourceJarTile core, boolean up) {
+        BlockPos center = core.worldPosition;
+        BlockPos lower = up ? center.above() : center.below(2);
+        if (!level.isLoaded(lower) || !level.isLoaded(lower.above())
+                || !LargeSourceJar.stacks(level.getBlockState(lower), level.getBlockState(lower.above()))) {
+            return null;
+        }
+        return coreAt(level, up ? center.above(3) : center.below(3), core.getBlockState().getBlock());
+    }
+
+    @Override
+    public boolean isStorageAnchor() {
+        return core;
+    }
+
+    @Override
+    public Object sharedStorage() {
+        Column current = column();
+        return current != null ? current : this;
+    }
+
+    @Nullable
     private Column column() {
         if (level == null || level.isClientSide) {
             return null;
@@ -116,7 +133,7 @@ public class LargeSourceJarTile extends SourceJarTile {
     }
 
     public void onUnitPlaced(long initialSource) {
-        stored = Math.max(0, Math.min(initialSource, unitCapacity()));
+        stored = Math.max(0, Math.min(initialSource, jarSpec().capacity()));
         Block block = getBlockState().getBlock();
         for (BlockPos neighbor : new BlockPos[]{worldPosition.below(3), worldPosition.above(3)}) {
             LargeSourceJarTile other = coreAt(level, neighbor, block);
@@ -174,7 +191,7 @@ public class LargeSourceJarTile extends SourceJarTile {
 
     @Override
     public long getTransferRateLong() {
-        return getMaxSourceLong();
+        return jarSpec().transferRate();
     }
 
     @Override
@@ -280,7 +297,7 @@ public class LargeSourceJarTile extends SourceJarTile {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        stored = isCore() ? Math.max(0, Math.min(tag.getLong(TAG_STORED), unitCapacity())) : 0;
+        stored = isCore() ? Math.max(0, Math.min(tag.getLong(TAG_STORED), jarSpec().capacity())) : 0;
     }
 
     @Override
@@ -365,13 +382,12 @@ public class LargeSourceJarTile extends SourceJarTile {
 
         static Column form(LargeSourceJarTile start) {
             Level level = start.level;
-            Block block = start.getBlockState().getBlock();
             LargeSourceJarTile bottom = start;
-            for (LargeSourceJarTile below = coreAt(level, bottom.worldPosition.below(3), block); below != null; below = coreAt(level, bottom.worldPosition.below(3), block)) {
+            for (LargeSourceJarTile below = stackedCore(level, bottom, false); below != null; below = stackedCore(level, bottom, false)) {
                 bottom = below;
             }
             List<LargeSourceJarTile> cores = new ArrayList<>();
-            for (LargeSourceJarTile current = bottom; current != null; current = coreAt(level, current.worldPosition.above(3), block)) {
+            for (LargeSourceJarTile current = bottom; current != null; current = stackedCore(level, current, true)) {
                 cores.add(current);
             }
             for (LargeSourceJarTile core : cores) {
@@ -382,7 +398,7 @@ public class LargeSourceJarTile extends SourceJarTile {
             long capacity = 0;
             long sum = 0;
             for (LargeSourceJarTile core : cores) {
-                capacity += core.unitCapacity();
+                capacity += core.jarSpec().capacity();
                 sum += core.stored;
             }
             Column result = new Column(level, cores, capacity);
@@ -413,9 +429,9 @@ public class LargeSourceJarTile extends SourceJarTile {
         private long shareOf(int index) {
             long below = 0;
             for (int i = 0; i < index; i++) {
-                below += cores.get(i).unitCapacity();
+                below += cores.get(i).jarSpec().capacity();
             }
-            return Math.max(0, Math.min(cores.get(index).unitCapacity(), total - below));
+            return Math.max(0, Math.min(cores.get(index).jarSpec().capacity(), total - below));
         }
 
         long shareOf(LargeSourceJarTile core) {

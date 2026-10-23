@@ -405,6 +405,7 @@ public class PatchouliProvider extends SimpleDataProvider{
         addBasicItem(BlockRegistry.ALCHEMICAL_BLOCK, SOURCE, new CraftingPage(BlockRegistry.ALCHEMICAL_BLOCK));
         addBasicItem(BlockRegistry.MYCELIAL_BLOCK, SOURCE, new CraftingPage(BlockRegistry.MYCELIAL_BLOCK));
         addBasicItem(BlockRegistry.SOURCE_JAR, SOURCE, new CraftingPage(BlockRegistry.SOURCE_JAR));
+        addBasicItem(BlockRegistry.LARGE_SOURCE_JAR, SOURCE, new CraftingPage(BlockRegistry.LARGE_SOURCE_JAR));
 
         addBasicItem(BlockRegistry.RELAY, SOURCE, new CraftingPage(BlockRegistry.RELAY).withText("ars_nouveau.page2.relay"));
 

@@ -49,18 +49,14 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
         var amount = inv.insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
 
         if (amount > 0) {
-            sourceTile.removeSource((int) amount);
+            amount = sourceTile.removeSource(amount, false);
         }
 
-        var inserted = inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
+        var inserted = amount > 0 ? inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource()) : 0;
 
         if (inserted < amount) {
             var leftover = amount - inserted;
-            var backFill = (int) Math.min(leftover, sourceTile.getMaxSource() - sourceTile.getSource());
-
-            if (backFill > 0) {
-                sourceTile.addSource(backFill);
-            }
+            var backFill = sourceTile.addSource(leftover, false);
 
             if (leftover > backFill) {
                 LOGGER.error("Storage import issue, voided {} source.", leftover - backFill);

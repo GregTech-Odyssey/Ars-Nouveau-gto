@@ -38,10 +38,10 @@ public class RelayWarpTile extends RelaySplitterTile {
                 long transferRate = getTransferRateLong(from, to, fromTransferRate);
                 if (transferRate == 0)
                     return 0;
-                from.removeSourceLong(transferRate);
-                long lossyTransfer = Math.max(1, (long) (transferRate * 0.7));
-                to.addSourceLong(lossyTransfer);
-                return lossyTransfer;
+                long taken = from.removeSource(transferRate, false);
+                if (taken <= 0)
+                    return 0;
+                return to.addSource(Math.max(1, (long) (taken * 0.7)), false);
             }
         }
         return super.transferSourceLong(from, to, fromTransferRate);
