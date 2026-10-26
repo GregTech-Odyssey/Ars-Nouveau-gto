@@ -1,4 +1,4 @@
-// 1.20.1	2026-10-22T01:20:44.5885028	AN tags
+// 1.20.1	2026-10-26T15:23:29.0946217	AN tags
 939cde8f97e4e8d7ea8445415522f703b2b927d4 data/ars_nouveau/tags/blocks/an_decorative.json
 de95bc21249101b079255a1a00274f60d55e0602 data/ars_nouveau/tags/blocks/blazing_logs.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/break_blacklist.json
@@ -15,6 +15,7 @@ df87c9e82c58b24ac8e979c73fc3be68bf25b4b0 data/ars_nouveau/tags/blocks/harvest/fo
 5efa96a28ef2e2290cc0a0f827844a96bd9f94f2 data/ars_nouveau/tags/blocks/ignore_tile.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/interact_blacklist.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/ars_nouveau/tags/blocks/lectern_blacklist.json
+be52f216fc05590e90f16b1f8f786444cd699482 data/ars_nouveau/tags/blocks/machines.json
 bf1a44f8a79b447f1e7b6541e8c3d93e4ef6f71f data/ars_nouveau/tags/blocks/magic_plants.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/ars_nouveau/tags/blocks/magic_saplings.json
 6429b3e3e4f89e7bb44af0c2ab98368717674afc data/ars_nouveau/tags/blocks/no_break_drop.json
@@ -32,6 +33,7 @@ f36268e9375442e51cbf98f2c4d573082aa56378 data/forge/tags/blocks/bushes.json
 87c0ae6c7a718897569f2f2b4d81fdcf8e9b269b data/forge/tags/blocks/fences/wooden.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/blocks/fence_gates.json
 0a05d2d0fafe11fe202f401f1dbed0401ced9eca data/forge/tags/blocks/fence_gates/wooden.json
+f2b25f247457d4d7d843b0ea99833212138f6405 data/forge/tags/blocks/logs/archwood.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/forge/tags/blocks/relocation_not_supported.json
 3737e6b65e87993bd971b233c3aca5088721eb32 data/minecraft/tags/blocks/bee_growables.json
 43a847dca5f71ae27537abc65fabcd8d3fdb1c72 data/minecraft/tags/blocks/buttons.json
@@ -42,11 +44,11 @@ a01909919207615cda1bb44f33db287efa02333b data/minecraft/tags/blocks/doors.json
 538ec6e043a39f9e362acfa8b44db2f266ace007 data/minecraft/tags/blocks/fire.json
 248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/blocks/leaves.json
 248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/blocks/leaves/archwood_leaves.json
-f2b25f247457d4d7d843b0ea99833212138f6405 data/minecraft/tags/blocks/logs.json
-f2b25f247457d4d7d843b0ea99833212138f6405 data/minecraft/tags/blocks/logs_that_burn.json
-e8c6b8b119d79bc393cacf55b78f9847be95731a data/minecraft/tags/blocks/mineable/axe.json
-09d25939216754a32aee1e0e3278aa55cc5b770c data/minecraft/tags/blocks/mineable/hoe.json
-8453c4475b6d1d6237bc48a830f0c933e465fd7c data/minecraft/tags/blocks/mineable/pickaxe.json
+9933569db377f0f6fdde7020ccd6526f163439ad data/minecraft/tags/blocks/logs.json
+9933569db377f0f6fdde7020ccd6526f163439ad data/minecraft/tags/blocks/logs_that_burn.json
+9cad3eb82d0843e295dfdc0f8e035afc13b65980 data/minecraft/tags/blocks/mineable/axe.json
+248bbddd99634aced7fd4adc84b0290de05f4a0a data/minecraft/tags/blocks/mineable/hoe.json
+9dd86eee59be305bcd79203e97cc57d1651786be data/minecraft/tags/blocks/mineable/pickaxe.json
 f898aac12b01b598949701b1f6e45aa0cd1d9a25 data/minecraft/tags/blocks/planks.json
 5a18f153ac2947c6cea854e2fa5be21d85eb6766 data/minecraft/tags/blocks/portals.json
 ce9ccf92ade8cd330c990516ee0f8a30c35adea9 data/minecraft/tags/blocks/saplings.json

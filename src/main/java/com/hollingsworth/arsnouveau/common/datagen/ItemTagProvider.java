@@ -12,6 +12,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.versions.forge.ForgeVersion;
@@ -62,65 +63,14 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(SOURCE_GEM_TAG)
                 .add(ItemsRegistry.SOURCE_GEM.get());
         this.tag(SHARD_TAG).add(Items.AMETHYST_SHARD);
-        this.tag(ARCHWOOD_LOG_TAG)
-                .add(BlockRegistry.BLAZING_LOG.asItem(),
-                        BlockRegistry.CASCADING_LOG.asItem(),
-                        BlockRegistry.VEXING_LOG.asItem(),
-                        BlockRegistry.FLOURISHING_LOG.asItem(),
-                        BlockRegistry.BLAZING_WOOD.asItem(),
-                        BlockRegistry.CASCADING_WOOD.asItem(),
-                        BlockRegistry.FLOURISHING_WOOD.asItem(),
-                        BlockRegistry.VEXING_WOOD.asItem(),
-                        BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-                        BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-                        BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-                        BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-                        BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-                        BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-                        BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-                        BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem());
-        this.tag(ItemTags.LOGS).add(
-                BlockRegistry.BLAZING_LOG.asItem(),
-                BlockRegistry.CASCADING_LOG.asItem(),
-                BlockRegistry.VEXING_LOG.asItem(),
-                BlockRegistry.FLOURISHING_LOG.asItem(),
-                BlockRegistry.BLAZING_WOOD.asItem(),
-                BlockRegistry.CASCADING_WOOD.asItem(),
-                BlockRegistry.FLOURISHING_WOOD.asItem(),
-                BlockRegistry.VEXING_WOOD.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
-        );
-        this.tag(ItemTags.LEAVES).add(BlockRegistry.VEXING_LEAVES.asItem(),
-                BlockRegistry.CASCADING_LEAVE.asItem(),
-                BlockRegistry.BLAZING_LEAVES.asItem(),
-                BlockRegistry.FLOURISHING_LEAVES.asItem());
-        this.tag(ItemTags.LOGS_THAT_BURN).add(
-                BlockRegistry.BLAZING_LOG.asItem(),
-                BlockRegistry.CASCADING_LOG.asItem(),
-                BlockRegistry.VEXING_LOG.asItem(),
-                BlockRegistry.FLOURISHING_LOG.asItem(),
-                BlockRegistry.BLAZING_WOOD.asItem(),
-                BlockRegistry.CASCADING_WOOD.asItem(),
-                BlockRegistry.FLOURISHING_WOOD.asItem(),
-                BlockRegistry.VEXING_WOOD.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
-                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
-
-
-        );
+        for (Block block : BlockTagProvider.archwoodLogs()) {
+            this.tag(ARCHWOOD_LOG_TAG).add(block.asItem());
+        }
+        this.tag(ItemTags.LOGS).addTag(ARCHWOOD_LOG_TAG);
+        for (Block block : BlockTagProvider.archwoodLeaves()) {
+            this.tag(ItemTags.LEAVES).add(block.asItem());
+        }
+        this.tag(ItemTags.LOGS_THAT_BURN).addTag(ARCHWOOD_LOG_TAG);
         this.tag(ItemTags.create(new ResourceLocation("forge", "planks/archwood")))
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());
         this.tag(Tags.Items.SEEDS)

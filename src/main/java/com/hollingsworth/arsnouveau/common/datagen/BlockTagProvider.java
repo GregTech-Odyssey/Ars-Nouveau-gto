@@ -9,13 +9,21 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
@@ -46,21 +54,13 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     public static TagKey<Block> DOWSING_ROD = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(new ResourceLocation("forge", "bushes"));
     public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "lectern_blacklist"));
+    public static TagKey<Block> MACHINES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "machines"));
+    public static TagKey<Block> ARCHWOOD_LOGS = BlockTags.create(new ResourceLocation("forge", "logs/archwood"));
+    public static TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
+    private static final ResourceLocation[] AE2_MACHINES = {new ResourceLocation(ArsNouveau.MODID, "me_source_jar"), new ResourceLocation(ArsNouveau.MODID, "source_acceptor")};
 
-    public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
-        super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
-    }
-
-    @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(INTERACT_BLACKLIST);
-        this.tag(LECTERN_BLACKLIST);
-        this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
-        this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
-        this.tag(RELOCATION_NOT_SUPPORTED);
-        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST).addOptionalTag(new ResourceLocation("forge", "budding"));
-        this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+    public static Block[] stoneMachines() {
+        return new Block[] {
                 BlockRegistry.RELAY.get(),
                 BlockRegistry.ARCANE_CORE_BLOCK.get(),
                 BlockRegistry.ENCHANTING_APP_BLOCK.get(),
@@ -99,19 +99,66 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.MOB_JAR.get(),
                 BlockRegistry.VOID_PRISM.get(),
                 BlockRegistry.BRAZIER_RELAY.get(),
-                BlockRegistry.REDSTONE_RELAY.get()
-        );
+                BlockRegistry.REDSTONE_RELAY.get(),
+                BlockRegistry.AGRONOMIC_SOURCELINK.get(),
+                BlockRegistry.ROTATING_TURRET.get(),
+                BlockRegistry.RELAY_COLLECTOR.get(),
+                BlockRegistry.SPELL_SENSOR.get()
+        };
+    }
 
-        this.tag(BlockTags.MINEABLE_WITH_AXE).add(
+    private static Block[][] archwoodLogsByColor() {
+        return new Block[][] {
+                {BlockRegistry.BLAZING_LOG.get(), BlockRegistry.BLAZING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_RED.get(), BlockRegistry.STRIPPED_AWWOOD_RED.get()},
+                {BlockRegistry.CASCADING_LOG.get(), BlockRegistry.CASCADING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_BLUE.get(), BlockRegistry.STRIPPED_AWWOOD_BLUE.get()},
+                {BlockRegistry.FLOURISHING_LOG.get(), BlockRegistry.FLOURISHING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_GREEN.get(), BlockRegistry.STRIPPED_AWWOOD_GREEN.get()},
+                {BlockRegistry.VEXING_LOG.get(), BlockRegistry.VEXING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_PURPLE.get(), BlockRegistry.STRIPPED_AWWOOD_PURPLE.get()}
+        };
+    }
+
+    public static Block[] archwoodLogs() {
+        return Arrays.stream(archwoodLogsByColor()).flatMap(Arrays::stream).toArray(Block[]::new);
+    }
+
+    public static Block[] archwoodLeaves() {
+        return new Block[] {
+                BlockRegistry.VEXING_LEAVES.get(),
+                BlockRegistry.CASCADING_LEAVE.get(),
+                BlockRegistry.BLAZING_LEAVES.get(),
+                BlockRegistry.FLOURISHING_LEAVES.get()
+        };
+    }
+
+    public static Block[] woodMachines() {
+        return new Block[] {
                 BlockRegistry.SCRIBES_BLOCK.get(),
-                BlockRegistry.CASCADING_LOG.get(),
-                BlockRegistry.CASCADING_WOOD.get(),
-                BlockRegistry.BLAZING_LOG.get(),
-                BlockRegistry.BLAZING_WOOD.get(),
-                BlockRegistry.VEXING_LOG.get(),
-                BlockRegistry.VEXING_WOOD.get(),
-                BlockRegistry.FLOURISHING_LOG.get(),
-                BlockRegistry.FLOURISHING_WOOD.get(),
+                BlockRegistry.CRAFTING_LECTERN.get(),
+                BlockRegistry.ARCHWOOD_CHEST.get(),
+                BlockRegistry.ALTERATION_TABLE.get(),
+                BlockRegistry.ITEM_DETECTOR.get(),
+                BlockRegistry.REPOSITORY.get()
+        };
+    }
+
+    private static final Set<String> MINING_TOOL_EXEMPT = Set.of(
+            "mage_block", "whirlisprig_flower", "magebloom_block", "sourceberry_sack", "falseweave", "mirrorweave", "ghostweave", "sky_block",
+            "red_sbed", "blue_sbed", "green_sbed", "orange_sbed", "yellow_sbed", "purple_sbed");
+
+    public BlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
+        super(output, Registries.BLOCK, future, block -> block.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
+    }
+
+    @Override
+    protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(INTERACT_BLACKLIST);
+        this.tag(LECTERN_BLACKLIST);
+        this.tag(BlockTags.FIRE).add(BlockRegistry.MAGIC_FIRE.get());
+        this.tag(OCCLUDES_SPELL_SENSOR).add(BlockRegistry.MAGEBLOOM_BLOCK.get());
+        this.tag(RELOCATION_NOT_SUPPORTED);
+        this.tag(BUDDING_BLOCKS).add(Blocks.BUDDING_AMETHYST).addOptionalTag(new ResourceLocation("forge", "budding"));
+        this.tag(CLUSTER_BLOCKS).add(Blocks.AMETHYST_CLUSTER);
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(stoneMachines());
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(woodMachines()).addTag(ARCHWOOD_LOGS).add(
                 BlockRegistry.ARCHWOOD_PLANK.get(),
                 BlockRegistry.ARCHWOOD_BUTTON.get(),
                 BlockRegistry.ARCHWOOD_STAIRS.get(),
@@ -121,26 +168,17 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
                 BlockRegistry.ARCHWOOD_PPlate.get(),
                 BlockRegistry.ARCHWOOD_FENCE.get(),
                 BlockRegistry.ARCHWOOD_DOOR.get(),
-                BlockRegistry.STRIPPED_AWLOG_BLUE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_BLUE.get(),
-                BlockRegistry.STRIPPED_AWLOG_GREEN.get(),
-                BlockRegistry.STRIPPED_AWWOOD_GREEN.get(),
-                BlockRegistry.STRIPPED_AWLOG_RED.get(),
-                BlockRegistry.STRIPPED_AWWOOD_RED.get(),
-                BlockRegistry.STRIPPED_AWLOG_PURPLE.get(),
-                BlockRegistry.STRIPPED_AWWOOD_PURPLE.get(),
-                BlockRegistry.CRAFTING_LECTERN.get(),
-                BlockRegistry.ARCHWOOD_CHEST.get(),
-                BlockRegistry.ALTERATION_TABLE.get(),
-                BlockRegistry.ITEM_DETECTOR.get(),
-                BlockRegistry.REPOSITORY.get()
+                BlockRegistry.MENDOSTEEN_POD.get(),
+                BlockRegistry.BASTION_POD.get(),
+                BlockRegistry.FROSTAYA_POD.get(),
+                BlockRegistry.BOMBEGRANTE_POD.get()
         );
-        this.tag(BlockTags.MINEABLE_WITH_HOE).add(
-                BlockRegistry.CASCADING_LEAVE.get(),
-                BlockRegistry.BLAZING_LEAVES.get(),
-                BlockRegistry.FLOURISHING_LEAVES.get(),
-                BlockRegistry.VEXING_LEAVES.get()
-        );
+        this.tag(MACHINES).add(stoneMachines()).add(woodMachines());
+        for (ResourceLocation id : AE2_MACHINES) {
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addOptional(id);
+            this.tag(MACHINES).addOptional(id);
+        }
+        this.tag(BlockTags.MINEABLE_WITH_HOE).add(archwoodLeaves());
         this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.get());
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.get());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
@@ -221,32 +259,20 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(Tags.Blocks.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(Tags.Blocks.FENCE_GATES_WOODEN).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
 
-        this.tag(BlockTags.LOGS)
+        this.tag(ARCHWOOD_LOGS)
                 .addTag(VEXING_LOGS)
                 .addTag(CASCADING_LOGS)
                 .addTag(FLOURISHING_LOGS)
                 .addTag(BLAZING_LOGS);
-
-        this.tag(BlockTags.LOGS_THAT_BURN)
-                .addTag(VEXING_LOGS)
-                .addTag(CASCADING_LOGS)
-                .addTag(FLOURISHING_LOGS)
-                .addTag(BLAZING_LOGS);
+        this.tag(BlockTags.LOGS).addTag(ARCHWOOD_LOGS);
+        this.tag(BlockTags.LOGS_THAT_BURN).addTag(ARCHWOOD_LOGS);
 
         this.tag(BlockTags.PLANKS).add(BlockRegistry.ARCHWOOD_PLANK.get());
         this.tag(BlockTags.FENCE_GATES).add(BlockRegistry.ARCHWOOD_FENCE_GATE.get());
         this.tag(BlockTags.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
         this.tag(BlockTags.WOODEN_FENCES).add(BlockRegistry.ARCHWOOD_FENCE.get());
-        TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
-        this.tag(ARCHWOOD_LEAVES)
-                .add(BlockRegistry.VEXING_LEAVES.get(),
-                        BlockRegistry.CASCADING_LEAVE.get(),
-                        BlockRegistry.BLAZING_LEAVES.get(),
-                        BlockRegistry.FLOURISHING_LEAVES.get());
-        this.tag(BlockTags.LEAVES).add(BlockRegistry.VEXING_LEAVES.get(),
-                BlockRegistry.CASCADING_LEAVE.get(),
-                BlockRegistry.BLAZING_LEAVES.get(),
-                BlockRegistry.FLOURISHING_LEAVES.get());
+        this.tag(ARCHWOOD_LEAVES).add(archwoodLeaves());
+        this.tag(BlockTags.LEAVES).add(archwoodLeaves());
 
         this.tag(BlockTags.BEE_GROWABLES).add(BlockRegistry.MAGE_BLOOM_CROP.get());
         this.tag(BlockTags.BUTTONS).add(BlockRegistry.ARCHWOOD_BUTTON.get());
@@ -287,12 +313,41 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(BlockTags.PORTALS).add(BlockRegistry.PORTAL_BLOCK.get());
         this.tag(AUTOPULL_DISABLED).add(BlockRegistry.SCRIBES_BLOCK.get(), BlockRegistry.ALTERATION_TABLE.get());
 
-        this.tag(BLAZING_LOGS).add(BlockRegistry.BLAZING_LOG.get(), BlockRegistry.BLAZING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_RED.get(), BlockRegistry.STRIPPED_AWWOOD_RED.get());
-        this.tag(CASCADING_LOGS).add(BlockRegistry.CASCADING_LOG.get(), BlockRegistry.CASCADING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_BLUE.get(), BlockRegistry.STRIPPED_AWWOOD_BLUE.get());
-        this.tag(FLOURISHING_LOGS).add(BlockRegistry.FLOURISHING_LOG.get(), BlockRegistry.FLOURISHING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_GREEN.get(), BlockRegistry.STRIPPED_AWWOOD_GREEN.get());
-        this.tag(VEXING_LOGS).add(BlockRegistry.VEXING_LOG.get(), BlockRegistry.VEXING_WOOD.get(), BlockRegistry.STRIPPED_AWLOG_PURPLE.get(), BlockRegistry.STRIPPED_AWWOOD_PURPLE.get());
+        Block[][] logs = archwoodLogsByColor();
+        this.tag(BLAZING_LOGS).add(logs[0]);
+        this.tag(CASCADING_LOGS).add(logs[1]);
+        this.tag(FLOURISHING_LOGS).add(logs[2]);
+        this.tag(VEXING_LOGS).add(logs[3]);
 
         this.tag(DOWSING_ROD).addTag(BUDDING_BLOCKS);
+        checkMiningTools();
+    }
+
+    private void checkMiningTools() {
+        Set<ResourceLocation> covered = new HashSet<>();
+        Set<ResourceLocation> seen = new HashSet<>();
+        for (TagKey<Block> tool : List.of(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_AXE, BlockTags.MINEABLE_WITH_SHOVEL, BlockTags.MINEABLE_WITH_HOE)) {
+            collectElements(tool.location(), covered, seen);
+        }
+        List<ResourceLocation> missing = new ArrayList<>();
+        for (var entry : ForgeRegistries.BLOCKS.getEntries()) {
+            ResourceLocation id = entry.getKey().location();
+            Block block = entry.getValue();
+            if (!id.getNamespace().equals(ArsNouveau.MODID) || block.asItem() == Items.AIR || block.defaultDestroyTime() <= 0 || MINING_TOOL_EXEMPT.contains(id.getPath())) continue;
+            if (!covered.contains(id)) missing.add(id);
+        }
+        if (!missing.isEmpty()) {
+            throw new IllegalStateException("Blocks with hardness but no mining tool tag: " + missing);
+        }
+    }
+
+    private void collectElements(ResourceLocation tag, Set<ResourceLocation> out, Set<ResourceLocation> seen) {
+        TagBuilder builder = builders.get(tag);
+        if (builder == null || !seen.add(tag)) return;
+        for (TagEntry entry : builder.build()) {
+            if (entry.isTag()) collectElements(entry.getId(), out, seen);
+            else out.add(entry.getId());
+        }
     }
 
     public String getName() {
