@@ -59,7 +59,7 @@ A build of Ars Nouveau maintained for the GregTech Odyssey modpack, based on the
 [[dependencies.ars_nouveau]]
     modId="datasynclib"
     mandatory=true
-    versionRange="[26.10.11,)"
+    versionRange="[26.11.2,)"
     ordering="AFTER"
     side="BOTH"
 [[dependencies.ars_nouveau]]

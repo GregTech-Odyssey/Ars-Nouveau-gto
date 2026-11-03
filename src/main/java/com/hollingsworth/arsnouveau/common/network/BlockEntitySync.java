@@ -6,6 +6,7 @@ import com.gto.datasynclib.LogicalSide;
 import com.gto.datasynclib.network.BlockEntitySyncPacket;
 import com.gto.datasynclib.network.DataSyncNetwork;
 import com.gto.datasynclib.util.ByteBufCodecExtends;
+import com.gto.datasynclib.util.ByteBufUtil;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.CompoundTag;
@@ -23,10 +24,12 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Server to client block entity sync over DataSyncLib: requests merge per level tick, are skipped while nobody tracks the chunk,
+ * Server to client block entity sync over DataSyncLib: requests merge per level tick, are skipped while nobody tracks
+ * the chunk,
  * and only the top-level NBT keys that changed since the last send go over the wire.
  */
 public final class BlockEntitySync {
+
     private static final String FULL_KEY = "ars_sync";
     private static final byte NONE = 0;
     private static final byte FULL = 1;
@@ -35,6 +38,7 @@ public final class BlockEntitySync {
     private static final ReferenceLinkedOpenHashSet<BlockEntity> PENDING = new ReferenceLinkedOpenHashSet<>();
 
     public interface Holder extends IFieldDataHolder {
+
         BlockEntitySync ars$sync();
     }
 
@@ -110,7 +114,8 @@ public final class BlockEntitySync {
         if (!manager.updateFieldDirtyFlags(LogicalSide.SERVER, true)) {
             return;
         }
-        byte[] data = manager.writeToNetworkBuffer(LogicalSide.SERVER, false);
+        byte[] data = ByteBufUtil.writeToBytes(ByteBufUtil.FRIENDLY_BYTE_BUF_WRAPPER,
+                buf -> manager.writeToNetworkBuffer(LogicalSide.SERVER, buf, false));
         if (data.length > 0) {
             var chunk = level.getChunkAt(be.getBlockPos());
             DataSyncNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new BlockEntitySyncPacket(be.getBlockPos(), data));
@@ -123,7 +128,8 @@ public final class BlockEntitySync {
             send(be);
         }
         var tag = new CompoundTag();
-        tag.putByteArray(FULL_KEY, manager.get().writeToNetworkBuffer(LogicalSide.SERVER, true));
+        tag.putByteArray(FULL_KEY, ByteBufUtil.writeToBytes(ByteBufUtil.FRIENDLY_BYTE_BUF_WRAPPER,
+                buf -> manager.get().writeToNetworkBuffer(LogicalSide.SERVER, buf, true)));
         return tag;
     }
 
@@ -133,7 +139,8 @@ public final class BlockEntitySync {
 
     public void readFull(CompoundTag tag) {
         if (tag.get(FULL_KEY) instanceof ByteArrayTag data) {
-            manager.get().readFromNetworkBuffer(LogicalSide.CLIENT, data.getAsByteArray());
+            ByteBufUtil.readFromBytes(ByteBufUtil.FRIENDLY_BYTE_BUF_WRAPPER, data.getAsByteArray(),
+                    buf -> manager.get().readFromNetworkBuffer(LogicalSide.CLIENT, buf));
         }
     }
 

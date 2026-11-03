@@ -12,7 +12,7 @@
 ## 模组信息
 
 - 模组显示名为 Ars Nouveau GTO Edition；模组 ID 仍为 `ars_nouveau`，与原版存档及附属模组保持兼容。
-- 只提供 Forge 版，需要 Java 21 与前置模组 DataSyncLib（26.10.11 及以上）、GTOUtils（26.10.1 及以上）、GTORenders（26.10.1 及以上）。
+- 只提供 Forge 版，需要 Java 21 与前置模组 DataSyncLib（26.11.2 及以上）、GTOUtils（26.10.1 及以上）、GTORenders（26.10.1 及以上）；支持 DataSyncLib 26.11.2，修复方块实体同步时的接口不兼容崩溃。
 - 内置了附属模组 Ars Énergistique 1.2.0（作者 90、dkmk100，LGPLv3）的全部内容，见下文“应用能源 2 联动”；不要再同时安装 Ars Énergistique。
 
 ## 魔源通道
