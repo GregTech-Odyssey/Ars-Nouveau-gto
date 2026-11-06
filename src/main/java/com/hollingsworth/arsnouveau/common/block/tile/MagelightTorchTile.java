@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -70,7 +71,7 @@ public class MagelightTorchTile extends SconceTile {
         }
 
         ySpeedOffset = onRoof ? -ySpeedOffset : ySpeedOffset;
-        ParticleColor nextColor = this.color.transition((int) level.getGameTime() * 10);
+        ParticleColor nextColor = this.color.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 10);
         for (int i = 0; i < 5; i++) {
             level.addParticle(
                     GlowParticleData.createData(nextColor),

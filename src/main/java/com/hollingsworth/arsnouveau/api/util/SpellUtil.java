@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -166,8 +167,8 @@ public class SpellUtil {
 
     private static Set<BlockPos> DFSBlockstates(Level world, Collection<BlockPos> start, int maxBlocks, Predicate<BlockState> isMatch) {
         LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
-        HashSet<BlockPos> searched = new HashSet<>(start);
-        HashSet<BlockPos> found = new HashSet<>();
+        OpenCacheHashSet<BlockPos> searched = new OpenCacheHashSet<>(start);
+        OpenCacheHashSet<BlockPos> found = new OpenCacheHashSet<>();
 
         while (!searchQueue.isEmpty() && found.size() < maxBlocks) {
             BlockPos current = searchQueue.removeFirst();

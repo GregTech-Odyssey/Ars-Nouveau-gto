@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.client.renderer.world.PathfindingDebugRenderer;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,17 +18,17 @@ public class SyncPathMessage
     /**
      * Set of visited nodes.
      */
-    public Set<ModNode> lastDebugNodesVisited = new HashSet<>();
+    public Set<ModNode> lastDebugNodesVisited = new OpenCacheHashSet<>();
 
     /**
      * Set of not visited nodes.
      */
-    public Set<ModNode> lastDebugNodesNotVisited  = new HashSet<>();
+    public Set<ModNode> lastDebugNodesNotVisited  = new OpenCacheHashSet<>();
 
     /**
      * Set of chosen nodes for the path.
      */
-    public Set<ModNode> lastDebugNodesPath  = new HashSet<>();
+    public Set<ModNode> lastDebugNodesPath  = new OpenCacheHashSet<>();
 
     /**
      * Default constructor.

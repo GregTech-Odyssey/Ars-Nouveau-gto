@@ -53,7 +53,7 @@ public class RitualMoonfall extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.MOONFALL);
+        return ArsNouveau.id( RitualLib.MOONFALL);
     }
 
     @Override

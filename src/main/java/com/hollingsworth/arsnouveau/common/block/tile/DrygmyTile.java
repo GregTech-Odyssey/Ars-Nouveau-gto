@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
@@ -70,16 +71,17 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider, IWand
                         0, 0, 0);
             }
         }else {
-            if (level.getGameTime() % 100 == 0) {
+            var time = (TickHandler.INSTANCE.tickCounter + tickOffset);
+            if (time % 100 == 0) {
                 refreshEntitiesAndBonus();
             }
 
-            if (level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null) {
+            if (time % 80 == 0 && needsMana && SourceUtil.takeSourceWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null) {
                 this.needsMana = false;
                 updateBlock();
             }
 
-            if (level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()) {
+            if (time % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()) {
                 generateItems();
             }
         }

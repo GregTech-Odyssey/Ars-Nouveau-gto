@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.light;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.config.Config;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -27,12 +30,12 @@ import java.util.function.Function;
  */
 public class LightManager {
 
-    private final static Set<LambDynamicLight> dynamicLightSources = new HashSet<>();
+    private final static Set<LambDynamicLight> dynamicLightSources = new OpenCacheHashSet<>();
     private final static ReentrantReadWriteLock lightSourcesLock = new ReentrantReadWriteLock();
 
     public static long lastUpdate = System.currentTimeMillis();
 
-    public static List<Integer> jarHoldingEntityList = new ArrayList<>();
+    public static IntOpenHashSet jarHoldingEntityList = new IntOpenHashSet();
     public static int lastUpdateCount = 0;
     private static final Map<EntityType<?>, List<Function<?, Integer>>> LIGHT_REGISTRY = new HashMap<>();
 
@@ -215,7 +218,7 @@ public class LightManager {
                 it.lambdynlights$scheduleTrackedChunksRebuild(Minecraft.getInstance().levelRenderer);
             }
         }
-        LightManager.jarHoldingEntityList = new ArrayList<>();
+        LightManager.jarHoldingEntityList = new IntOpenHashSet();
 
         lightSourcesLock.writeLock().unlock();
     }

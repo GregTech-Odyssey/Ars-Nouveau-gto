@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
@@ -38,7 +39,7 @@ public class BrazierRelayTile extends RitualBrazierTile{
     @Override
     public void tick() {
         if (isDecorative && level.isClientSide) {
-            makeParticle(color.transition((int) level.getGameTime() * 10), color.transition((int) level.getGameTime() * 10), 5);
+            makeParticle(color.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 10), color.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 10), 5);
         }
 
         if(!level.isClientSide){
@@ -62,13 +63,13 @@ public class BrazierRelayTile extends RitualBrazierTile{
         double xzOffset = 0.25;
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(centerColor.transition((int) level.getGameTime() * 20)),
+                    GlowParticleData.createData(centerColor.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2), pos.getY() + 0.2 + ParticleUtil.inRange(-0.05, 0.2), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset / 2, xzOffset / 2),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }
         for (int i = 0; i < intensity; i++) {
             world.addParticle(
-                    GlowParticleData.createData(outerColor.transition((int) level.getGameTime() * 20)),
+                    GlowParticleData.createData(outerColor.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 20)),
                     pos.getX() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset), pos.getY() + 0.2 + ParticleUtil.inRange(0, 0.7), pos.getZ() + 0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
                     0, ParticleUtil.inRange(0.0, 0.05f), 0);
         }

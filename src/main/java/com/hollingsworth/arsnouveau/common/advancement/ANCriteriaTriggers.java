@@ -11,14 +11,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.AABB;
 
 public class ANCriteriaTriggers {
-    public static final PlayerTrigger POOF_MOB = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "poof_mob")));
-    public static final PlayerTrigger FAMILIAR = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "familiar")));
-    public static final PlayerTrigger CHIMERA_EXPLOSION = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "chimera_explosion")));
-    public static final PlayerTrigger CREATE_PORTAL = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "portals")));
-    public static final PlayerTrigger PRISMATIC = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "prismatic")));
-    public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "shrunk_starby")));
-    public static final PlayerTrigger CAUGHT_LIGHTNING = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "catch_lightning")));
-    public static final PlayerTrigger TIME_IN_BOTTLE = register(new PlayerTrigger(new ResourceLocation(ArsNouveau.MODID, "time_in_bottle")));
+    public static final PlayerTrigger POOF_MOB = register(new PlayerTrigger(ArsNouveau.id( "poof_mob")));
+    public static final PlayerTrigger FAMILIAR = register(new PlayerTrigger(ArsNouveau.id( "familiar")));
+    public static final PlayerTrigger CHIMERA_EXPLOSION = register(new PlayerTrigger(ArsNouveau.id( "chimera_explosion")));
+    public static final PlayerTrigger CREATE_PORTAL = register(new PlayerTrigger(ArsNouveau.id( "portals")));
+    public static final PlayerTrigger PRISMATIC = register(new PlayerTrigger(ArsNouveau.id( "prismatic")));
+    public static final PlayerTrigger SHRUNK_STARBY = register(new PlayerTrigger(ArsNouveau.id( "shrunk_starby")));
+    public static final PlayerTrigger CAUGHT_LIGHTNING = register(new PlayerTrigger(ArsNouveau.id( "catch_lightning")));
+    public static final PlayerTrigger TIME_IN_BOTTLE = register(new PlayerTrigger(ArsNouveau.id( "time_in_bottle")));
 
     public static void rewardNearbyPlayers(PlayerTrigger criteria, ServerLevel level, BlockPos pos, int radius){
         AABB aabb = new AABB(pos).inflate(radius);

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -55,7 +56,7 @@ public class CraftingLecternTile extends StorageLecternTile implements GeoBlockE
 	private CraftingRecipe currentRecipe;
 	private final TransientCustomContainer craftMatrix = new TransientCustomContainer(craftingContainer, 3, 3);
 	private ResultContainer craftResult = new ResultContainer();
-	private HashSet<CraftingTerminalMenu> craftingListeners = new HashSet<>();
+	private OpenCacheHashSet<CraftingTerminalMenu> craftingListeners = new OpenCacheHashSet<>();
 
 
 	public CraftingLecternTile(BlockPos pos, BlockState state) {

@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,10 +29,10 @@ public class MultiRecipeWrapper implements IRecipeWrapper{
 
     public Set<SingleRecipe> recipes;
 
-    public static Map<Item, MultiRecipeWrapper> RECIPE_CACHE = new HashMap<>();
+    public static Map<Item, MultiRecipeWrapper> RECIPE_CACHE = new Reference2ReferenceOpenHashMap<>();
 
     public MultiRecipeWrapper() {
-        recipes = new HashSet<>();
+        recipes = new OpenCacheHashSet<>();
     }
 
     public static MultiRecipeWrapper fromStack(ItemStack stack, Level level){

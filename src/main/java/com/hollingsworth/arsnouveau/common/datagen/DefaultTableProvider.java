@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.AlterationTable;
 import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
@@ -54,7 +55,7 @@ import java.util.stream.Stream;
 
 public class DefaultTableProvider extends LootTableProvider {
     public DefaultTableProvider(PackOutput pOutput) {
-        super(pOutput, new HashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)));
+        super(pOutput, new OpenCacheHashSet<>(), List.of(new LootTableProvider.SubProviderEntry(BlockLootTable::new, LootContextParamSets.BLOCK), new LootTableProvider.SubProviderEntry(EntityLootTable::new, LootContextParamSets.ENTITY)));
     }
 
     private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
@@ -172,9 +173,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_DIFFUSER);
             for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
                 registerDropSelf(BlockRegistry.getBlock(s));
-                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
+                Block block = ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s + "_stairs"));
                 registerDropSelf(block);
-                Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+                Block slab = ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s + "_slab"));
                 registerDropSelf(slab);
 
             }
@@ -290,7 +291,7 @@ public class DefaultTableProvider extends LootTableProvider {
         @Override
         public void generate(BiConsumer<ResourceLocation, LootTable.Builder> p_249322_) {
             this.generate();
-            Set<ResourceLocation> set = new HashSet<>();
+            Set<ResourceLocation> set = new OpenCacheHashSet<>();
 
             for (Block block : list) {
                 if (block.isEnabled(this.enabledFeatures)) {

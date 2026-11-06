@@ -78,6 +78,6 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     public ResourceLocation getTexture(FamiliarEntity entity) {
         String color = getColor().toLowerCase();
         if (color.isEmpty()) color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/drygmy_" + color + ".png");
     }
 }

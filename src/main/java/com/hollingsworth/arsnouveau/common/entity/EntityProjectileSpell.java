@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.block.IPrismaticBlock;
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -62,7 +63,7 @@ public class EntityProjectileSpell extends ColoredProjectile implements IEntityA
     @Deprecated
     public int expireTime = 60 * 20;
 
-    public Set<BlockPos> hitList = new HashSet<>();
+    public Set<BlockPos> hitList = new OpenCacheHashSet<>();
 
     public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(entityType, world);

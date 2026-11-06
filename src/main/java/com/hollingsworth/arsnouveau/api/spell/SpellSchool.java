@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import net.minecraft.network.chat.Component;
 
 import java.util.HashSet;
@@ -11,8 +12,8 @@ import java.util.Set;
  */
 public class SpellSchool {
     private final String id;
-    private Set<SpellSchool> subSchools = new HashSet<>();
-    private Set<AbstractSpellPart> spellParts = new HashSet<>();
+    private Set<SpellSchool> subSchools = new OpenCacheHashSet<>();
+    private Set<AbstractSpellPart> spellParts = new OpenCacheHashSet<>();
 
     public SpellSchool(String id) {
         this.id = id;

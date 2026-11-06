@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
@@ -142,7 +143,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         addAugmentCostOverrides(defaultAugmentCosts);
         buildAugmentCostOverrideConfig(builder, defaultAugmentCosts);
         super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits(new HashMap<>()));
-        super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new HashSet<>()));
+        super.buildInvalidCombosConfig(builder, getDefaultInvalidCombos(new OpenCacheHashSet<>()));
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue) {

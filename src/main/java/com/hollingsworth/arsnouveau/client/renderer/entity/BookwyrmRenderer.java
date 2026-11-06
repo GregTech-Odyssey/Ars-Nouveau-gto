@@ -18,7 +18,7 @@ import software.bernie.geckolib.util.RenderUtils;
 
 public class BookwyrmRenderer extends TextureVariantRenderer<EntityBookwyrm> {
 
-    public static ResourceLocation BLUE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
+    public static ResourceLocation BLUE = ArsNouveau.id( "textures/entity/book_wyrm_blue.png");
 
     public BookwyrmRenderer(EntityRendererProvider.Context manager) {
         super(manager, new BookwyrmModel<>());

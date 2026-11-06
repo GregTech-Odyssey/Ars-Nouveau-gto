@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveAwayFromLocation;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToLocation;
@@ -580,7 +581,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
         boolean wentAhead = false;
         boolean isTracking = AbstractPathJob.DEBUG_DRAW;// AbstractPathJob.trackingMap.containsValue(ourEntity.getUUID());
 
-        final HashSet<BlockPos> reached = new HashSet<>();
+        final OpenCacheHashSet<BlockPos> reached = new OpenCacheHashSet<>();
         // Look at multiple points, incase we're too fast
         for (int i = this.path.getNextNodeIndex(); i < Math.min(this.path.getNodeCount(), this.path.getNextNodeIndex() + 4); i++) {
             Vec3 next = this.path.getEntityPosAtNode(this.mob, i);

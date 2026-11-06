@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
@@ -164,7 +165,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         if (level.isClientSide || disabled) {
             return;
         }
-        if (level.getGameTime() % 20 != 0)
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 20 != 0)
             return;
 
         if (fromPos != null && level.isLoaded(fromPos)) {

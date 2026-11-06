@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
@@ -122,7 +123,7 @@ public class EffectFreeze extends AbstractEffect implements IPotionEffect {
     @NotNull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());
+        Set<AbstractAugment> augments = new OpenCacheHashSet<>(getPotionAugments());
         augments.add(AugmentAOE.INSTANCE);
         augments.add(AugmentPierce.INSTANCE);
         augments.add(AugmentSensitive.INSTANCE);

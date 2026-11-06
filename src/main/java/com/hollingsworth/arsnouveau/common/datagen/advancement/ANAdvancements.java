@@ -52,7 +52,7 @@ public class ANAdvancements implements ForgeAdvancementProvider.AdvancementGener
 
         Advancement rituals = saveBasicItem(BlockRegistry.RITUAL_BLOCK, root);
         saveBasicItem(ItemsRegistry.AMETHYST_GOLEM_CHARM, rituals);
-        builder("familiar").display(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)), FrameType.GOAL)
+        builder("familiar").display(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.BINDING)), FrameType.GOAL)
                 .addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.FAMILIAR.getId(),ContextAwarePredicate.ANY)).parent(rituals).save(con);
         var jars = saveBasicItem(BlockRegistry.MOB_JAR, rituals);
         builder("shrunk_starbuncle").display(ItemsRegistry.STARBUNCLE_CHARM, FrameType.CHALLENGE, true).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.SHRUNK_STARBY.getId(),ContextAwarePredicate.ANY)).parent(jars).save(con);
@@ -75,7 +75,7 @@ public class ANAdvancements implements ForgeAdvancementProvider.AdvancementGener
         builder("create_portal").display(BlockRegistry.CREATIVE_SOURCE_JAR, FrameType.CHALLENGE, false).addCriterion(new PlayerTrigger.TriggerInstance(ANCriteriaTriggers.CREATE_PORTAL.getId(),ContextAwarePredicate.ANY)).parent(warpScroll).save(con);
         var alteration = saveBasicItem(BlockRegistry.ALTERATION_TABLE, magebloom);
 
-        builder("ritual_gravity").display(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.GRAVITY)), FrameType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.effects().and(ModPotions.GRAVITY_EFFECT.get()))).parent(rituals).save(con);
+        builder("ritual_gravity").display(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.GRAVITY)), FrameType.GOAL).addCriterion("gravity_effect", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.effects().and(ModPotions.GRAVITY_EFFECT.get()))).parent(rituals).save(con);
     }
 
     public ANAdvancementBuilder buildBasicItem(ItemLike item, Advancement parent){

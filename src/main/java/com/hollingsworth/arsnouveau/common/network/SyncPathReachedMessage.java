@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.client.renderer.world.PathfindingDebugRenderer;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,7 @@ public class SyncPathReachedMessage
     /**
      * Set of reached positions.
      */
-    public Set<BlockPos> reached = new HashSet<>();
+    public Set<BlockPos> reached = new OpenCacheHashSet<>();
 
     /**
      * Default constructor.

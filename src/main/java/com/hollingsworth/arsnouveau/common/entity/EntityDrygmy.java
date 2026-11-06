@@ -373,7 +373,7 @@ public class EntityDrygmy extends PathfinderMob implements GeoEntity, ITooltipPr
         String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "brown";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/drygmy_" + color + ".png");
     }
 
     @Override

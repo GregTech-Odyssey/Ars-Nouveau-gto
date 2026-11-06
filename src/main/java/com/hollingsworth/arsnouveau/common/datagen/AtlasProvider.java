@@ -40,9 +40,9 @@ public class AtlasProvider extends SpriteSourceProvider {
     private static EnumMap<ChestType, Material> chestMaterial(String type) {
         EnumMap<ChestType, Material> map = new EnumMap<>(ChestType.class);
 
-        map.put(ChestType.SINGLE, new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/" + type)));
-        map.put(ChestType.LEFT, new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/left")));
-        map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, new ResourceLocation(ArsNouveau.MODID, "model/chest/" + type + "/right")));
+        map.put(ChestType.SINGLE, new Material(Sheets.CHEST_SHEET, ArsNouveau.id( "model/chest/" + type + "/" + type)));
+        map.put(ChestType.LEFT, new Material(Sheets.CHEST_SHEET, ArsNouveau.id( "model/chest/" + type + "/left")));
+        map.put(ChestType.RIGHT, new Material(Sheets.CHEST_SHEET, ArsNouveau.id( "model/chest/" + type + "/right")));
 
         return map;
     }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -20,7 +21,7 @@ public class RelayCollectorTile extends RelayTile {
         super.tick();
         if (disabled)
             return;
-        if (!level.isClientSide && level.getGameTime() % 20 == 0 && getSourceLong() <= getMaxSourceLong()) {
+        if (!level.isClientSide && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0 && getSourceLong() <= getMaxSourceLong()) {
             List<ISpecialSourceProvider> takeList = SourceUtil.canTakeSource(getBlockPos(), level, 5);
 
             for (ISpecialSourceProvider provider : takeList) {

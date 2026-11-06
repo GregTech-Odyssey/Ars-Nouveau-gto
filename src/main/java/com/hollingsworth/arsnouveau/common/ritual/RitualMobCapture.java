@@ -119,6 +119,6 @@ public class RitualMobCapture extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.CONTAINMENT);
+        return ArsNouveau.id( RitualLib.CONTAINMENT);
     }
 }

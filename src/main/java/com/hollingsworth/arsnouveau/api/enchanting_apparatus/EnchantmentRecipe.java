@@ -41,7 +41,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe {
         this.enchantment = enchantment;
         this.enchantLevel = level;
         this.sourceCost = manaCost;
-        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(enchantment).getPath() + "_" + level);
+        this.id = ArsNouveau.id( getRegistryName(enchantment).getPath() + "_" + level);
     }
 
     @Override

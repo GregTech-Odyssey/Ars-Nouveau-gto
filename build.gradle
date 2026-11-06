@@ -15,6 +15,12 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 java.withSourcesJar()
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:-removal"
+    options.compilerArgs << "-Aquiet=true" // Suppress mixin notes
+}
+
 legacyForge {
     enable {
         forgeVersion = "${mc_version}-${forge_version}"
@@ -65,10 +71,6 @@ repositories {
     maven {
         name = 'GTOdyssey'
         url = 'https://gtodyssey.com/maven/releases'
-        content {
-            includeGroup 'com.gto'
-            includeGroup 'appeng'
-        }
     }
     maven { url = "https://maven.theillusivec4.top/" }
     maven {
@@ -98,10 +100,13 @@ dependencies {
     compileOnly(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
     implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:${mixin_extras_version}"))
 
+    modImplementation("dev.emi:emi-forge-1.20.1:1.1.1027")
     modImplementation("com.gto:datasynclib-forge-1.20.1:${datasynclib_version}")
     modImplementation("com.gto:gtoutils-forge-1.20.1:${gtoutils_version}")
     modImplementation("com.gto:gtorenders-forge-1.20.1:${gtorenders_version}")
-    modCompileOnly("appeng:appliedenergistics2-forge-1.20.1:${ae2_version}") { transitive = false }
+    modImplementation("appeng:appliedenergistics2-forge-1.20.1:${ae2_version}") { transitive = false }
+    modImplementation("org.appliedenergistics:guideme:20.1.7")
+    implementation("com.gto.fastcollection:FastCollection:26.11.1")
     modImplementation("software.bernie.geckolib:geckolib-forge-${mc_version}:${gecko_version}")
     modImplementation("vazkii.patchouli:Patchouli:${patchouli_version}")
 

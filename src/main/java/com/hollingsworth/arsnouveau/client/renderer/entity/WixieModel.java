@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 
 public class WixieModel<T extends LivingEntity & GeoAnimatable> extends GeoModel<T> {
 
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie.png");
+    private static final ResourceLocation WILD_TEXTURE = ArsNouveau.id( "textures/entity/wixie.png");
 
     @Override
     public void setCustomAnimations(T entity, long uniqueID, @Nullable AnimationState<T> customPredicate) {
@@ -27,7 +27,7 @@ public class WixieModel<T extends LivingEntity & GeoAnimatable> extends GeoModel
 
     @Override
     public ResourceLocation getModelResource(T entityWixie) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/wixie.geo.json");
+        return ArsNouveau.id( "geo/wixie.geo.json");
     }
 
     @Override
@@ -37,6 +37,6 @@ public class WixieModel<T extends LivingEntity & GeoAnimatable> extends GeoModel
 
     @Override
     public ResourceLocation getAnimationResource(T entityWixie) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/wixie_animations.json");
+        return ArsNouveau.id( "animations/wixie_animations.json");
     }
 }

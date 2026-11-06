@@ -49,11 +49,11 @@ public class ImbuementRecipe implements IImbuementRecipe {
     }
 
     public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source, List<Ingredient> pedestalItems) {
-        this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, pedestalItems);
+        this(ArsNouveau.id( RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, pedestalItems);
     }
 
     public ImbuementRecipe(String id, Ingredient ingredient, ItemStack output, int source) {
-        this(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, new ArrayList<>());
+        this(ArsNouveau.id( RecipeRegistry.IMBUEMENT_RECIPE_ID + "_" + id), ingredient, output, source, new ArrayList<>());
     }
 
     public ImbuementRecipe withPedestalItem(Ingredient i) {
@@ -126,7 +126,7 @@ public class ImbuementRecipe implements IImbuementRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return ForgeRegistries.RECIPE_TYPES.getValue(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.IMBUEMENT_RECIPE_ID));
+        return ForgeRegistries.RECIPE_TYPES.getValue(ArsNouveau.id( RecipeRegistry.IMBUEMENT_RECIPE_ID));
     }
 
     public JsonElement asRecipe() {

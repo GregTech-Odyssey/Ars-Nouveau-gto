@@ -43,21 +43,21 @@ import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegi
 //
 public class PatchouliProvider extends SimpleDataProvider{
 
-    public static ResourceLocation AUTOMATION = new ResourceLocation(ArsNouveau.MODID, "automation");
-    public static ResourceLocation ENCHANTMENTS = new ResourceLocation(ArsNouveau.MODID, "enchantments");
-    public static ResourceLocation EQUIPMENT = new ResourceLocation(ArsNouveau.MODID, "equipment");
-    public static ResourceLocation FAMILIARS = new ResourceLocation(ArsNouveau.MODID, "familiars");
-    public static ResourceLocation GETTING_STARTED = new ResourceLocation(ArsNouveau.MODID, "getting_started");
-    public static ResourceLocation MOD_NEWS = new ResourceLocation(ArsNouveau.MODID, "mod_news");
+    public static ResourceLocation AUTOMATION = ArsNouveau.id( "automation");
+    public static ResourceLocation ENCHANTMENTS = ArsNouveau.id( "enchantments");
+    public static ResourceLocation EQUIPMENT = ArsNouveau.id( "equipment");
+    public static ResourceLocation FAMILIARS = ArsNouveau.id( "familiars");
+    public static ResourceLocation GETTING_STARTED = ArsNouveau.id( "getting_started");
+    public static ResourceLocation MOD_NEWS = ArsNouveau.id( "mod_news");
 
-    public static ResourceLocation MACHINES = new ResourceLocation(ArsNouveau.MODID, "machines");
-    public static ResourceLocation RESOURCES = new ResourceLocation(ArsNouveau.MODID, "resources");
-    public static ResourceLocation RITUALS = new ResourceLocation(ArsNouveau.MODID, "rituals");
-    public static ResourceLocation SOURCE = new ResourceLocation(ArsNouveau.MODID, "source");
-    public static ResourceLocation GLYPHS_1 = new ResourceLocation(ArsNouveau.MODID, "glyphs_1");
-    public static ResourceLocation GLYPHS_2 = new ResourceLocation(ArsNouveau.MODID, "glyphs_2");
-    public static ResourceLocation GLYPHS_3 = new ResourceLocation(ArsNouveau.MODID, "glyphs_3");
-    public static ResourceLocation ARMOR = new ResourceLocation(ArsNouveau.MODID, "armor");
+    public static ResourceLocation MACHINES = ArsNouveau.id( "machines");
+    public static ResourceLocation RESOURCES = ArsNouveau.id( "resources");
+    public static ResourceLocation RITUALS = ArsNouveau.id( "rituals");
+    public static ResourceLocation SOURCE = ArsNouveau.id( "source");
+    public static ResourceLocation GLYPHS_1 = ArsNouveau.id( "glyphs_1");
+    public static ResourceLocation GLYPHS_2 = ArsNouveau.id( "glyphs_2");
+    public static ResourceLocation GLYPHS_3 = ArsNouveau.id( "glyphs_3");
+    public static ResourceLocation ARMOR = ArsNouveau.id( "armor");
 
     public List<PatchouliPage> pages = new ArrayList<>();
 
@@ -281,7 +281,7 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withPage(new CraftingPage(ItemsRegistry.SOURCE_BERRY_PIE).withRecipe2(ItemsRegistry.SOURCE_BERRY_ROLL)), getPath(RESOURCES, "sourceberry"));
 
         addPage(new PatchouliBuilder(RESOURCES, "weald_walker")
-                .withIcon(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.AWAKENING)))
+                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.AWAKENING)))
                 .withLocalizedText()
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_BLAZING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 2)))
                 .withPage(new EntityPage(getRegistryName(ModEntities.ENTITY_CASCADING_WEALD.get()).toString()).withText(getLangPath("weald_walker", 3)))
@@ -431,14 +431,14 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withIcon(BlockRegistry.RITUAL_BLOCK)
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.SUNRISE))))
+                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.SUNRISE))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier")), getPath(RITUALS, "performing_rituals"));
         addPage(new PatchouliBuilder(FAMILIARS, "summoning_familiars")
                 .withSortNum(-1)
-                .withIcon(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING)))
+                .withIcon(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.BINDING)))
                 .withLocalizedText()
                 .withLocalizedText()
-                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(new ResourceLocation(ArsNouveau.MODID, RitualLib.BINDING))))
+                .withPage(new CraftingPage(RitualRegistry.getRitualItemMap().get(ArsNouveau.id( RitualLib.BINDING))))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "ritual_binding")), getPath(FAMILIARS, "summoning_familiars"));
 
         addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
@@ -500,9 +500,9 @@ public class PatchouliProvider extends SimpleDataProvider{
                 .withLocalizedText()
                 .withPage(new CraftingPage(ItemsRegistry.MAGE_FIBER))
                 .withPage(new TextPage("ars_nouveau.page.threads").withTitle("ars_nouveau.threads"))
-                .withPage(new ImagePage().withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/sorcerer_diagram.png"))
-                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/arcanist_thread_diagram.png"))
-                        .withEntry(new ResourceLocation(ArsNouveau.MODID, "textures/gui/entries/battlemage_diagram.png"))
+                .withPage(new ImagePage().withEntry(ArsNouveau.id( "textures/gui/entries/sorcerer_diagram.png"))
+                        .withEntry(ArsNouveau.id( "textures/gui/entries/arcanist_thread_diagram.png"))
+                        .withEntry(ArsNouveau.id( "textures/gui/entries/battlemage_diagram.png"))
                         .withBorder().withTitle("ars_nouveau.thread_layout")
                         .withText("ars_nouveau.page.layout_desc"))
                 .withPage(new ApparatusPage(ItemsRegistry.SORCERER_HOOD))

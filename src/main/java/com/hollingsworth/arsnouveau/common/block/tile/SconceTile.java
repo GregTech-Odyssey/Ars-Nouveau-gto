@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.particle.ParticleColorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
@@ -96,7 +97,7 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable, IDi
             centerX += 0.8;
             centerZ += 0.5;
         }
-        ParticleColor nextColor = this.color.transition((int) level.getGameTime() * 10);
+        ParticleColor nextColor = this.color.transition((int) (TickHandler.INSTANCE.tickCounter + tickOffset) * 10);
         for (int i = 0; i < 10; i++) {
             level.addParticle(
                     GlowParticleData.createData(nextColor),

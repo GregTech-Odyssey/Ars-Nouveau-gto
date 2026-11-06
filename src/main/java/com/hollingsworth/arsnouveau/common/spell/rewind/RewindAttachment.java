@@ -3,15 +3,16 @@ package com.hollingsworth.arsnouveau.common.spell.rewind;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.IContextAttachment;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class RewindAttachment implements IContextAttachment {
-    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "rewind");
+    public static final ResourceLocation ID = ArsNouveau.id( "rewind");
 
-    private final Map<Long, List<IRewindCallback>> rewindEvents = new HashMap<>();
+    private final Long2ObjectOpenHashMap<List<IRewindCallback>> rewindEvents = new Long2ObjectOpenHashMap<>();
     private long lockedTime = 0;
 
     public void addRewindEvents(long gameTime, Collection<IRewindCallback> callbacks){
@@ -37,7 +38,7 @@ public class RewindAttachment implements IContextAttachment {
         return ID;
     }
 
-    public Map<Long, List<IRewindCallback>> getRewindEvents() {
+    public Long2ObjectOpenHashMap<List<IRewindCallback>> getRewindEvents() {
         return rewindEvents;
     }
 

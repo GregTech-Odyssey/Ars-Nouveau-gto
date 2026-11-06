@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.setup.registry.ModPotions;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -41,7 +43,7 @@ public class LightningEntity extends LightningBolt {
     public long boltVertex;
     private int boltLivingTime;
     private boolean effectOnly;
-    List<Integer> hitEntities = new ArrayList<>();
+    IntOpenHashSet hitEntities = new IntOpenHashSet();
     @Nullable
     private ServerPlayer caster;
 

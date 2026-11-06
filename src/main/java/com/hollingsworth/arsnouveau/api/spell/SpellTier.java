@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpellTier {
     public static final ConcurrentHashMap<Integer, SpellTier> SPELL_TIER_MAP = new ConcurrentHashMap<>();
 
-    public static SpellTier ONE = createTier(new ResourceLocation(ArsNouveau.MODID, "one"), 1);
-    public static SpellTier TWO = createTier(new ResourceLocation(ArsNouveau.MODID, "two"), 2);
-    public static SpellTier THREE = createTier(new ResourceLocation(ArsNouveau.MODID, "three"), 3);
-    public static SpellTier CREATIVE = createTier(new ResourceLocation(ArsNouveau.MODID, "creative"), 99);
+    public static SpellTier ONE = createTier(ArsNouveau.id( "one"), 1);
+    public static SpellTier TWO = createTier(ArsNouveau.id( "two"), 2);
+    public static SpellTier THREE = createTier(ArsNouveau.id( "three"), 3);
+    public static SpellTier CREATIVE = createTier(ArsNouveau.id( "creative"), 99);
 
     public int value;
     public ResourceLocation id;

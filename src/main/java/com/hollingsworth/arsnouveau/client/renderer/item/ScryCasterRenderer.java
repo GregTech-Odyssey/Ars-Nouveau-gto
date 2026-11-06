@@ -18,17 +18,17 @@ public class ScryCasterRenderer extends FixedGeoItemRenderer<ScryCaster>{
         super(new GeoModel<ScryCaster>() {
             @Override
             public ResourceLocation getModelResource(ScryCaster wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "geo/enchanters_eye.geo.json");
+                return ArsNouveau.id( "geo/enchanters_eye.geo.json");
             }
 
             @Override
             public ResourceLocation getTextureResource(ScryCaster wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_eye.png");
+                return ArsNouveau.id( "textures/item/enchanters_eye.png");
             }
 
             @Override
             public ResourceLocation getAnimationResource(ScryCaster wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "animations/enchanters_eye.json");
+                return ArsNouveau.id( "animations/enchanters_eye.json");
             }
         });
     }

@@ -45,7 +45,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         this.pedestalItems = pedestalItems;
         this.result = result;
         sourceCost = 0;
-        this.id = new ResourceLocation(ArsNouveau.MODID, getRegistryName(result.getItem()).getPath());
+        this.id = ArsNouveau.id( getRegistryName(result.getItem()).getPath());
     }
 
     public EnchantingApparatusRecipe(ResourceLocation id, List<Ingredient> pedestalItems, Ingredient reagent, ItemStack result) {
@@ -66,7 +66,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
         result = ItemStack.EMPTY;
         pedestalItems = new ArrayList<>();
         sourceCost = 0;
-        this.id = new ResourceLocation(ArsNouveau.MODID, "empty");
+        this.id = ArsNouveau.id( "empty");
     }
 
     public boolean excludeJei(){
@@ -199,7 +199,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return ForgeRegistries.RECIPE_TYPES.getValue(new ResourceLocation(ArsNouveau.MODID, RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
+        return ForgeRegistries.RECIPE_TYPES.getValue(ArsNouveau.id( RecipeRegistry.ENCHANTING_APPARATUS_RECIPE_ID));
     }
 
 

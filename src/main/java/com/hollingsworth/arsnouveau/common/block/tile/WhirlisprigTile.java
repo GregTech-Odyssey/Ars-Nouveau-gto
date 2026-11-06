@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -45,9 +46,9 @@ import java.util.stream.Collectors;
 
 public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
 
-    public static TagKey<Block> KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
-    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
-    public static TagKey<Item> DENIED_DROP = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
+    public static TagKey<Block> KINDA_LIKES = BlockTags.create(ArsNouveau.id( "whirlisprig/kinda_likes"));
+    public static TagKey<Block> GREATLY_LIKES = BlockTags.create(ArsNouveau.id( "whirlisprig/greatly_likes"));
+    public static TagKey<Item> DENIED_DROP = ItemTags.create(ArsNouveau.id( "whirlisprig/denied_drop"));
     public List<ItemStack> ignoreItems = new ArrayList<>();
     public int ticksToNextEval;
     public int moodScore;
@@ -81,7 +82,7 @@ public class WhirlisprigTile extends SummoningTile implements GeoBlockEntity {
             if (ticksToNextEval <= 0)
                 evaluateGrove();
 
-            if (level.getGameTime() % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null) {
+            if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 60 == 0 && progress >= Config.WHIRLISPRIG_MAX_PROGRESS.get() && SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null) {
                 this.progress = 0;
                 DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
                 int numDrops = getDropsByDiversity() + 3;

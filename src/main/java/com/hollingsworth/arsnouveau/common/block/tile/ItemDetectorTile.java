@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -45,7 +46,7 @@ public class ItemDetectorTile extends ModdedTile implements ITickable, IWandable
 
     @Override
     public void tick() {
-        if(level.isClientSide || connectedPos == null || level.getGameTime() % 20 != 0){
+        if(level.isClientSide || connectedPos == null || (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 != 0){
             return;
         }
         BlockEntity tile = level.getBlockEntity(connectedPos);

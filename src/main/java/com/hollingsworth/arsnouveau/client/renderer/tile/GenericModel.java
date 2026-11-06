@@ -16,20 +16,20 @@ public class GenericModel<T extends GeoAnimatable> extends GeoModel<T> {
     public String name;
 
     public GenericModel(String name) {
-        this.modelLocation = new ResourceLocation(ArsNouveau.MODID, "geo/" + name + ".geo.json");
-        this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/" + textPathRoot + "/" + name + ".png");
-        this.animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/" + name + "_animations.json");
+        this.modelLocation = ArsNouveau.id( "geo/" + name + ".geo.json");
+        this.textLoc = ArsNouveau.id( "textures/" + textPathRoot + "/" + name + ".png");
+        this.animationLoc = ArsNouveau.id( "animations/" + name + "_animations.json");
         this.name = name;
     }
 
     public GenericModel(String name, String textPath) {
         this(name);
         this.textPathRoot = textPath;
-        this.textLoc = new ResourceLocation(ArsNouveau.MODID, "textures/" + textPathRoot + "/" + name + ".png");
+        this.textLoc = ArsNouveau.id( "textures/" + textPathRoot + "/" + name + ".png");
     }
 
     public GenericModel withEmptyAnim(){
-        this.animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/empty.json");
+        this.animationLoc = ArsNouveau.id( "animations/empty.json");
         return this;
     }
 

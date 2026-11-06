@@ -33,6 +33,6 @@ public class ReactiveCaster extends SpellCaster {
 
     @Override
     public ResourceLocation getTagID() {
-        return new ResourceLocation(ArsNouveau.MODID, "reactive_caster");
+        return ArsNouveau.id( "reactive_caster");
     }
 }

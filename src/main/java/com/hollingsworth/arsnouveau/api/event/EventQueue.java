@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -82,7 +83,7 @@ public class EventQueue {
 
         if (e.phase != TickEvent.Phase.END)
             return;
-
+        TickHandler.INSTANCE.tickCounter++;
         EventQueue.getClientQueue().tick(e);
     }
 }

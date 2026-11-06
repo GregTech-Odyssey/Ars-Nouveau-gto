@@ -38,16 +38,16 @@ public class WealdWalkerModel<W extends WealdWalker> extends GeoModel<W> {
 
     @Override
     public ResourceLocation getModelResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "geo/" + type + "_waddler.geo.json") : new ResourceLocation(ArsNouveau.MODID, "geo/" + type + "_walker.geo.json");
+        return walker.isBaby() ? ArsNouveau.id( "geo/" + type + "_waddler.geo.json") : ArsNouveau.id( "geo/" + type + "_walker.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_waddler.png") : new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_walker.png");
+        return walker.isBaby() ? ArsNouveau.id( "textures/entity/" + type + "_waddler.png") : ArsNouveau.id( "textures/entity/" + type + "_walker.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(WealdWalker walker) {
-        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID, "animations/weald_waddler_animations.json") : new ResourceLocation(ArsNouveau.MODID, "animations/weald_walker_animations.json");
+        return walker.isBaby() ? ArsNouveau.id( "animations/weald_waddler_animations.json") : ArsNouveau.id( "animations/weald_walker_animations.json");
     }
 }

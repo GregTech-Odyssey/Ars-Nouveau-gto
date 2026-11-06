@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.world;
 
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ModNode;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import org.jetbrains.annotations.NotNull;
@@ -14,17 +15,17 @@ public class PathfindingDebugRenderer
     /**
      * Set of visited nodes.
      */
-    public static Set<ModNode> lastDebugNodesVisited = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesVisited = new OpenCacheHashSet<>();
 
     /**
      * Set of not visited nodes.
      */
-    public static Set<ModNode> lastDebugNodesNotVisited  = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesNotVisited  = new OpenCacheHashSet<>();
 
     /**
      * Set of nodes that belong to the chosen path.
      */
-    public static Set<ModNode> lastDebugNodesPath = new HashSet<>();
+    public static Set<ModNode> lastDebugNodesPath = new OpenCacheHashSet<>();
 
     /**
      * Render debugging information for the pathfinding system.

@@ -30,6 +30,6 @@ public enum MobJarComponent implements IBlockComponentProvider {
 
     @Override
     public ResourceLocation getUid() {
-        return new ResourceLocation(ArsNouveau.MODID, "mob_jar");
+        return ArsNouveau.id( "mob_jar");
     }
 }

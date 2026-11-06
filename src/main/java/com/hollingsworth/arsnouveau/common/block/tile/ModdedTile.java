@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 
 public class ModdedTile extends BlockEntity implements BlockEntitySync.Holder {
     private BlockEntitySync sync;
+    public final int tickOffset = hashCode() % 100;
 
     public ModdedTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);

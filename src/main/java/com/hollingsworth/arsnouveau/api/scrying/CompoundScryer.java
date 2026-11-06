@@ -60,6 +60,6 @@ public class CompoundScryer implements IScryer {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "compound_scryer");
+        return ArsNouveau.id( "compound_scryer");
     }
 }

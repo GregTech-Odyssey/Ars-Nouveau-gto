@@ -30,9 +30,9 @@ import software.bernie.geckolib.util.RenderUtils;
 
 public class AnimBlockRenderer<BOBBY extends AnimBlockSummon> extends GeoEntityRenderer<BOBBY> {
 
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/anim_block.png");
-    public static final ResourceLocation BASE_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/animated_block.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/animated_block_animations.json");
+    protected static final ResourceLocation TEXTURE = ArsNouveau.id( "textures/entity/anim_block.png");
+    public static final ResourceLocation BASE_MODEL = ArsNouveau.id( "geo/animated_block.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.id( "animations/animated_block_animations.json");
 
     private final BlockRenderDispatcher dispatcher;
     protected MultiBufferSource bufferSource;

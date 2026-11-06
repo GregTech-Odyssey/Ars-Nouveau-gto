@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.potion;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class PotionData implements Cloneable{
     private Potion potion = Potions.EMPTY;
     private List<MobEffectInstance> customEffects = new ArrayList<>();
-    private Set<Potion> includedPotions = new HashSet<>();
+    private Set<Potion> includedPotions = new OpenCacheHashSet<>();
 
     public PotionData(Potion potion, List<MobEffectInstance> customEffects, Set<Potion> includedPotions) {
         this.potion = potion;
@@ -30,7 +31,7 @@ public class PotionData implements Cloneable{
     }
 
     public PotionData(){
-        this(Potions.EMPTY, new ArrayList<>(), new HashSet<>());
+        this(Potions.EMPTY, new ArrayList<>(), new OpenCacheHashSet<>());
     }
 
     public PotionData(ItemStack stack){
@@ -47,11 +48,11 @@ public class PotionData implements Cloneable{
     }
 
     public PotionData(Potion potion){
-        this(potion, new ArrayList<>(), new HashSet<>(Collections.singletonList(potion)));
+        this(potion, new ArrayList<>(), new OpenCacheHashSet<>(Collections.singletonList(potion)));
     }
 
     public PotionData(PotionData data){
-        this(data.getPotion(), new ArrayList<>(data.getCustomEffects()), new HashSet<>(data.getIncludedPotions()));
+        this(data.getPotion(), new ArrayList<>(data.getCustomEffects()), new OpenCacheHashSet<>(data.getIncludedPotions()));
     }
 
     public ItemStack asPotionStack(){
@@ -136,11 +137,11 @@ public class PotionData implements Cloneable{
     public PotionData mergeEffects(PotionData other){
         if(areSameEffects(other))
             return new PotionData(getPotion(), getCustomEffects(), getIncludedPotions());
-        Set<MobEffectInstance> set = new HashSet<>();
+        Set<MobEffectInstance> set = new OpenCacheHashSet<>();
         set.addAll(this.fullEffects());
         set.addAll(other.fullEffects());
 
-        Set<Potion> potions = new HashSet<>();
+        Set<Potion> potions = new OpenCacheHashSet<>();
         potions.addAll(this.getIncludedPotions());
         potions.addAll(other.getIncludedPotions());
         return new PotionData(getPotion(), new ArrayList<>(set), potions);
@@ -165,7 +166,7 @@ public class PotionData implements Cloneable{
             PotionData clone = (PotionData) super.clone();
             clone.setPotion(getPotion());
             clone.setCustomEffects(new ArrayList<>(getCustomEffects()));
-            clone.setIncludedPotions(new HashSet<>(getIncludedPotions()));
+            clone.setIncludedPotions(new OpenCacheHashSet<>(getIncludedPotions()));
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

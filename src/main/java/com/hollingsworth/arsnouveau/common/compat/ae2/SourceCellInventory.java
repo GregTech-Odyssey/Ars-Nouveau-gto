@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.compat.ae2;
 
 import java.util.Objects;
 
+import appeng.api.stacks.AEKeyType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -86,6 +87,11 @@ public class SourceCellInventory implements StorageCell {
             // if there is no ISaveProvider, store to NBT immediately
             persist();
         }
+    }
+
+    @Override
+    public boolean supportsKeyType(AEKeyType<?> aeKeyType) {
+        return SourceKeyType.TYPE == aeKeyType;
     }
 
     @Override

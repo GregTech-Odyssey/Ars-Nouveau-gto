@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -31,11 +33,11 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (level instanceof ServerLevel && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
+        if (level instanceof ServerLevel && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0 && this.canAcceptSource()) {
             BlockPos potionPos = findNearbyPotion(level, worldPosition);
             if (potionPos != null && level.getBlockEntity(potionPos) instanceof PotionJarTile tile) {
                 long source = 75;
-                Set<MobEffect> effectTypes = new HashSet<>();
+                Set<MobEffect> effectTypes = new OpenCacheHashSet<>();
                 for (MobEffectInstance e : tile.getData().fullEffects()) {
                     source += (e.getDuration() / 50);
                     source += e.getAmplifier() * 250;

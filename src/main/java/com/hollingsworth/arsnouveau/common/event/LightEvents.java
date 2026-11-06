@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncLitEntities;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -19,14 +21,14 @@ import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class LightEvents {
-    private static final Map<ServerPlayer, List<Integer>> LAST_SENT = new WeakHashMap<>();
+    private static final Map<ServerPlayer, IntOpenHashSet> LAST_SENT = new WeakHashMap<>();
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent e) {
         if (e.player.level.isClientSide)
             return;
         if (e.player.level.getGameTime() % 100 == 0 && e.player.getServer() != null && e.phase == TickEvent.Phase.END && e.player instanceof ServerPlayer serverPlayer) {
-            List<Integer> litID = new ArrayList<>();
+            IntOpenHashSet litID = new IntOpenHashSet();
             for (ServerPlayer player : e.player.getServer().getPlayerList().getPlayers()) {
                 NonNullList<ItemStack> list = player.inventory.items;
                 for (int i = 0; i < 9; i++) {

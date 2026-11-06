@@ -61,7 +61,7 @@ public class RitualSunrise extends AbstractRitual {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, RitualLib.SUNRISE);
+        return ArsNouveau.id( RitualLib.SUNRISE);
     }
 
 }

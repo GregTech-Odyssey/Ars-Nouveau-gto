@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -72,7 +73,7 @@ public class PotionMelderTile extends ModdedTile implements GeoBlockEntity, ITic
             timeMixing = 0;
             return;
         }
-        if (!level.isClientSide && !hasSource && level.getGameTime() % 20 == 0) {
+        if (!level.isClientSide && !hasSource && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0) {
             if (SourceUtil.takeSourceWithParticles(worldPosition, level, 5, Config.MELDER_SOURCE_COST.get()) != null) {
                 hasSource = true;
                 updateBlock();

@@ -17,17 +17,17 @@ public class SwordRenderer extends FixedGeoItemRenderer<EnchantersSword> {
         super(new GeoModel<EnchantersSword>() {
             @Override
             public ResourceLocation getModelResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "geo/sword.geo.json");
+                return ArsNouveau.id( "geo/sword.geo.json");
             }
 
             @Override
             public ResourceLocation getTextureResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "textures/item/enchanters_sword.png");
+                return ArsNouveau.id( "textures/item/enchanters_sword.png");
             }
 
             @Override
             public ResourceLocation getAnimationResource(EnchantersSword wand) {
-                return new ResourceLocation(ArsNouveau.MODID, "animations/sword.json");
+                return ArsNouveau.id( "animations/sword.json");
             }
         });
     }

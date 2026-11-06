@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class SpellCaster implements ISpellCaster {
 
-    private Map<Integer, Spell> spells = new HashMap<>();
+    private final Int2ObjectOpenHashMap<Spell> spells = new Int2ObjectOpenHashMap<>();
     private int slot;
     public ItemStack stack = ItemStack.EMPTY;
     public String flavorText = "";
@@ -157,7 +158,7 @@ public class SpellCaster implements ISpellCaster {
     }
 
     @Override
-    public Map<Integer, Spell> getSpells() {
+    public Int2ObjectOpenHashMap<Spell> getSpells() {
         return spells;
     }
 
@@ -216,6 +217,6 @@ public class SpellCaster implements ISpellCaster {
 
     @Override
     public ResourceLocation getTagID() {
-        return new ResourceLocation(ArsNouveau.MODID, "caster");
+        return ArsNouveau.id( "caster");
     }
 }

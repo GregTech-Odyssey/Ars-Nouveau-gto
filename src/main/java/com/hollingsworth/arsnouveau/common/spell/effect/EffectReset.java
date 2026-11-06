@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,7 @@ public class EffectReset extends AbstractEffect implements IContextManipulator{
 
     @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
-        return new HashSet<>();
+        return new OpenCacheHashSet<>();
     }
 
     @Override

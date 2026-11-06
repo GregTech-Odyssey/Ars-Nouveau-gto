@@ -16,7 +16,7 @@ public class ANGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
     }
 
     public ANGeoModel(String modelLoc, String textLoc, String animationLoc) {
-        this(new ResourceLocation(ArsNouveau.MODID, modelLoc), new ResourceLocation(ArsNouveau.MODID,textLoc), new ResourceLocation(ArsNouveau.MODID, animationLoc));
+        this(ArsNouveau.id( modelLoc), ArsNouveau.id(textLoc), ArsNouveau.id( animationLoc));
     }
 
     @Override

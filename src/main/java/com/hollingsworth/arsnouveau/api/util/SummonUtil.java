@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import appeng.hooks.ticking.TickHandler;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,7 @@ public class SummonUtil {
     }
 
     public static void healOverTime(LivingEntity entity){
-        if (!entity.level.isClientSide && entity.level.getGameTime() % 20 == 0 && !entity.isDeadOrDying()) {
+        if (!entity.level.isClientSide && (TickHandler.INSTANCE.tickCounter + (entity.hashCode()%20)) % 20 == 0 && !entity.isDeadOrDying()) {
             entity.heal(1.0f);
         }
     }

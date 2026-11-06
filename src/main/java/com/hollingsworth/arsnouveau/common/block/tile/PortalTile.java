@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -45,7 +46,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     public Vec2 rotationVec;
     public String displayName;
     public boolean isHorizontal;
-    public Set<Entity> entityQueue = new HashSet<>();
+    public Set<Entity> entityQueue = new OpenCacheHashSet<>();
 
     public PortalTile(BlockPos pos, BlockState state) {
         super(PORTAL_TILE_TYPE, pos, state);

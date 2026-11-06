@@ -153,7 +153,7 @@ public class MESourceJarBlockEntity extends SourceJarTile implements IGridConnec
             level.blockEntityChanged(worldPosition);
 
             if (!setChangedQueued) {
-                TickHandler.instance().addCallable(null, this::setChangedAtEndOfTick);
+                TickHandler.INSTANCE.addCallable(null, this::setChangedAtEndOfTick);
                 setChangedQueued = true;
             }
         }

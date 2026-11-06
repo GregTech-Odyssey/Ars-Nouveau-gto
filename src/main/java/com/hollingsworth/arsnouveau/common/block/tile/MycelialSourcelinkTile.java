@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
@@ -34,7 +35,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile {
         super.tick();
         if (level.isClientSide)
             return;
-        if (level.getGameTime() % 40 == 0 && this.canAcceptSource()) {
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 40 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
                 if (i.getItem().getItem().isEdible()) {
                     long source = getSourceValue(i.getItem());

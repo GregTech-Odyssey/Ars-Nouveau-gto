@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -151,7 +152,7 @@ public class EffectFirework extends AbstractEffect implements IDamageEffect {
         CompoundTag starTag = star.getOrCreateTagElement("Explosion");
         Random random = new Random();
         FireworkRocketItem.Shape fireworkrocketitem$shape = shapes[random.nextInt(shapes.length)];
-        List<Integer> list = Lists.newArrayList();
+        IntArrayList list = new IntArrayList();
         for (int i = 0; i < random.nextInt(8); i++) {
             list.add(getColorfulDyes().get(random.nextInt(getColorfulDyes().size())).getFireworkColor());
         }

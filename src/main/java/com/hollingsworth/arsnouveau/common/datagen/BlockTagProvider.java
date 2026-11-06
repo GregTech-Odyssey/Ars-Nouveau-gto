@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -28,36 +29,36 @@ import java.util.concurrent.CompletableFuture;
 
 public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
-    public static TagKey<Block> IGNORE_TILE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
-    public static TagKey<Block> SUMMON_BED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
-    public static TagKey<Block> SUMMON_SLEEPABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_sleepable"));
-    public static TagKey<Block> DECORATIVE_AN = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
-    public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
-    public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
-    public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/foliage"));
-    public static TagKey<Block> HARVEST_STEMS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
-    public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_blacklist"));
-    public static TagKey<Block> GRAVITY_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "gravity_blacklist"));
-    public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "no_break_drop"));
-    public static TagKey<Block> FELLABLE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
-    public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/budding"));
-    public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/cluster"));
-    public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "break_with_pickaxe"));
-    public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "storage/autopull_disabled"));
+    public static TagKey<Block> IGNORE_TILE = BlockTags.create(ArsNouveau.id( "ignore_tile"));
+    public static TagKey<Block> SUMMON_BED = BlockTags.create(ArsNouveau.id( "summon_bed"));
+    public static TagKey<Block> SUMMON_SLEEPABLE = BlockTags.create(ArsNouveau.id( "summon_sleepable"));
+    public static TagKey<Block> DECORATIVE_AN = BlockTags.create(ArsNouveau.id( "an_decorative"));
+    public static TagKey<Block> MAGIC_SAPLINGS = BlockTags.create(ArsNouveau.id( "magic_saplings"));
+    public static TagKey<Block> MAGIC_PLANTS = BlockTags.create(ArsNouveau.id( "magic_plants"));
+    public static TagKey<Block> HARVEST_FOLIAGE = BlockTags.create(ArsNouveau.id( "harvest/foliage"));
+    public static TagKey<Block> HARVEST_STEMS = BlockTags.create(ArsNouveau.id( "harvest/stems"));
+    public static TagKey<Block> BREAK_BLACKLIST = BlockTags.create(ArsNouveau.id( "break_blacklist"));
+    public static TagKey<Block> GRAVITY_BLACKLIST = BlockTags.create(ArsNouveau.id( "gravity_blacklist"));
+    public static TagKey<Block> NO_BREAK_DROP = BlockTags.create(ArsNouveau.id( "no_break_drop"));
+    public static TagKey<Block> FELLABLE = BlockTags.create(ArsNouveau.id( "harvest/fellable"));
+    public static TagKey<Block> BUDDING_BLOCKS = BlockTags.create(ArsNouveau.id( "golem/budding"));
+    public static TagKey<Block> CLUSTER_BLOCKS = BlockTags.create(ArsNouveau.id( "golem/cluster"));
+    public static TagKey<Block> BREAK_WITH_PICKAXE = BlockTags.create(ArsNouveau.id( "break_with_pickaxe"));
+    public static TagKey<Block> AUTOPULL_DISABLED = BlockTags.create(ArsNouveau.id( "storage/autopull_disabled"));
     public static TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
-    public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "occludes_spell_sensor"));
-    public static TagKey<Block> INTERACT_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_blacklist"));
-    public static TagKey<Block> CASCADING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "cascading_logs"));
-    public static TagKey<Block> FLOURISHING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "flourishing_logs"));
-    public static TagKey<Block> VEXING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "vexing_logs"));
-    public static TagKey<Block> BLAZING_LOGS = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "blazing_logs"));
-    public static TagKey<Block> DOWSING_ROD = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "dowsing_rod"));
+    public static TagKey<Block> OCCLUDES_SPELL_SENSOR = BlockTags.create(ArsNouveau.id( "occludes_spell_sensor"));
+    public static TagKey<Block> INTERACT_BLACKLIST = BlockTags.create(ArsNouveau.id( "interact_blacklist"));
+    public static TagKey<Block> CASCADING_LOGS = BlockTags.create(ArsNouveau.id( "cascading_logs"));
+    public static TagKey<Block> FLOURISHING_LOGS = BlockTags.create(ArsNouveau.id( "flourishing_logs"));
+    public static TagKey<Block> VEXING_LOGS = BlockTags.create(ArsNouveau.id( "vexing_logs"));
+    public static TagKey<Block> BLAZING_LOGS = BlockTags.create(ArsNouveau.id( "blazing_logs"));
+    public static TagKey<Block> DOWSING_ROD = BlockTags.create(ArsNouveau.id( "dowsing_rod"));
     public static TagKey<Block> BUSHES = BlockTags.create(new ResourceLocation("forge", "bushes"));
-    public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "lectern_blacklist"));
-    public static TagKey<Block> MACHINES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "machines"));
+    public static TagKey<Block> LECTERN_BLACKLIST = BlockTags.create(ArsNouveau.id( "lectern_blacklist"));
+    public static TagKey<Block> MACHINES = BlockTags.create(ArsNouveau.id( "machines"));
     public static TagKey<Block> ARCHWOOD_LOGS = BlockTags.create(new ResourceLocation("forge", "logs/archwood"));
     public static TagKey<Block> ARCHWOOD_LEAVES = BlockTags.create(new ResourceLocation("minecraft", "leaves/archwood_leaves"));
-    private static final ResourceLocation[] AE2_MACHINES = {new ResourceLocation(ArsNouveau.MODID, "me_source_jar"), new ResourceLocation(ArsNouveau.MODID, "source_acceptor")};
+    private static final ResourceLocation[] AE2_MACHINES = {ArsNouveau.id( "me_source_jar"), ArsNouveau.id( "source_acceptor")};
 
     public static Block[] stoneMachines() {
         return new Block[] {
@@ -182,9 +183,9 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
         this.tag(Tags.Blocks.CHESTS).add(BlockRegistry.ARCHWOOD_CHEST.get());
         this.tag(Tags.Blocks.CHESTS_WOODEN).add(BlockRegistry.ARCHWOOD_CHEST.get());
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
-            Block stair = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_stairs"));
-            Block slab = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s + "_slab"));
+            Block block = ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s));
+            Block stair = ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s + "_stairs"));
+            Block slab = ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s + "_slab"));
             this.tag(DECORATIVE_AN).add(block, stair, slab);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block, stair, slab);
             this.tag(BlockTags.STAIRS).add(stair);
@@ -215,8 +216,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
 
         this.tag(FELLABLE).add(Blocks.MUSHROOM_STEM).addTags(BlockTags.LOGS, HARVEST_FOLIAGE, HARVEST_STEMS);
 
-        TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
-        TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
+        TagKey<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.create(ArsNouveau.id( "whirlisprig/kinda_likes"));
+        TagKey<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.create(ArsNouveau.id( "whirlisprig/greatly_likes"));
         this.tag(WHIRLISPRIG_GREATLY_LIKES).add(Blocks.MUSHROOM_STEM,
                 Blocks.BROWN_MUSHROOM_BLOCK,
                 Blocks.RED_MUSHROOM_BLOCK,
@@ -324,8 +325,8 @@ public class BlockTagProvider extends IntrinsicHolderTagsProvider<Block> {
     }
 
     private void checkMiningTools() {
-        Set<ResourceLocation> covered = new HashSet<>();
-        Set<ResourceLocation> seen = new HashSet<>();
+        Set<ResourceLocation> covered = new OpenCacheHashSet<>();
+        Set<ResourceLocation> seen = new OpenCacheHashSet<>();
         for (TagKey<Block> tool : List.of(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_AXE, BlockTags.MINEABLE_WITH_SHOVEL, BlockTags.MINEABLE_WITH_HOE)) {
             collectElements(tool.location(), covered, seen);
         }

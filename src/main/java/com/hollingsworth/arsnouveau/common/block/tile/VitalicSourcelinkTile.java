@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
@@ -38,7 +39,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile {
     @Override
     public void tick() {
         super.tick();
-        if (!level.isClientSide && level.getGameTime() % 60 == 0) {
+        if (!level.isClientSide && (TickHandler.INSTANCE.tickCounter + tickOffset) % 60 == 0) {
             for (Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))) {
                 if (entity.isBaby()) {
                     if (entity.getAge() < 0) {

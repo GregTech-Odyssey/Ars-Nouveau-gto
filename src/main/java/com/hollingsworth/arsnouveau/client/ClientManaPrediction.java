@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;

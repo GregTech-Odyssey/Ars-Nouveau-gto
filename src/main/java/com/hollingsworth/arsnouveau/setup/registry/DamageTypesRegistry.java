@@ -9,11 +9,11 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class DamageTypesRegistry {
 
-    public static final ResourceKey<DamageType> GENERIC_SPELL_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "spell"));
-    public static final ResourceKey<DamageType> WINDSHEAR = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "windshear"));
-    public static final ResourceKey<DamageType> COLD_SNAP = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "frost"));
-    public static final ResourceKey<DamageType> FLARE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "flare"));
-    public static final ResourceKey<DamageType> CRUSH = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArsNouveau.MODID, "crush"));
+    public static final ResourceKey<DamageType> GENERIC_SPELL_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, ArsNouveau.id( "spell"));
+    public static final ResourceKey<DamageType> WINDSHEAR = ResourceKey.create(Registries.DAMAGE_TYPE, ArsNouveau.id( "windshear"));
+    public static final ResourceKey<DamageType> COLD_SNAP = ResourceKey.create(Registries.DAMAGE_TYPE, ArsNouveau.id( "frost"));
+    public static final ResourceKey<DamageType> FLARE = ResourceKey.create(Registries.DAMAGE_TYPE, ArsNouveau.id( "flare"));
+    public static final ResourceKey<DamageType> CRUSH = ResourceKey.create(Registries.DAMAGE_TYPE, ArsNouveau.id( "crush"));
 
 
 }

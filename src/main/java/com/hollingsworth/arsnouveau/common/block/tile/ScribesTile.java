@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
@@ -99,7 +100,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
             setChanged();
         }
-        if (!level.isClientSide && level.getGameTime() % 5 == 0 && recipe != null) {
+        if (!level.isClientSide && (TickHandler.INSTANCE.tickCounter + tickOffset) % 5 == 0 && recipe != null) {
             boolean foundStack = false;
             List<ItemEntity> nearbyItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(2));
             for (ItemEntity e : nearbyItems) {
@@ -114,7 +115,7 @@ public class ScribesTile extends ModdedTile implements GeoBlockEntity, ITickable
                     break;
                 }
             }
-            if (!foundStack && level.getGameTime() % 20 == 0 && autoYoink) {
+            if (!foundStack && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0 && autoYoink) {
                 takeNearby();
             }
 

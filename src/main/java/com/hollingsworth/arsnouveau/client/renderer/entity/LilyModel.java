@@ -24,16 +24,16 @@ public class LilyModel extends GeoModel<Lily> {
 
     @Override
     public ResourceLocation getModelResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "geo/lily.geo.json");
+        return ArsNouveau.id( "geo/lily.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/lily.png");
+        return ArsNouveau.id( "textures/entity/lily.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(Lily whirlisprig) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/lily_animations.json");
+        return ArsNouveau.id( "animations/lily_animations.json");
     }
 }

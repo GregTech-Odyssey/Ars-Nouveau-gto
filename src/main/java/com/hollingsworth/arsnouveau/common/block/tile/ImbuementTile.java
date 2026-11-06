@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.block.IPedestalMachine;
@@ -136,7 +137,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         int cost = recipe.getSourceCost(this);
 
-        if (this.level.getGameTime() % 20 == 0 && this.getSourceLong() < cost) {
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0 && this.getSourceLong() < cost) {
             if (!canAcceptSource(Math.min(200, cost)))
                 return;
 

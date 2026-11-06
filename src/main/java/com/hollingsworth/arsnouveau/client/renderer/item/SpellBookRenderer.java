@@ -101,7 +101,7 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<SpellBook> {
     public ResourceLocation getTextureLocation(SpellBook o) {
         String base = "textures/item/spellbook_";
         String color = !currentItemStack.hasTag() || !currentItemStack.getTag().contains("color") ? "purple" : DyeColor.byId(currentItemStack.getOrCreateTag().getInt("color")).getName();
-        return new ResourceLocation(ArsNouveau.MODID, base + color + ".png");
+        return ArsNouveau.id( base + color + ".png");
     }
 
     @Override

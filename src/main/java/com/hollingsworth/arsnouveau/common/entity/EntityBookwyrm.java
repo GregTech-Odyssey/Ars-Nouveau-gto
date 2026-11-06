@@ -330,7 +330,7 @@ public class EntityBookwyrm extends FlyingMob implements IDispellable, ITooltipP
         String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/book_wyrm_" + color + ".png");
     }
 
     @Override

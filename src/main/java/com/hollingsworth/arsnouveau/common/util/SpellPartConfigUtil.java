@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.common.util;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.setup.config.ConfigUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -87,7 +85,7 @@ public class SpellPartConfigUtil {
          */
         public Set<ResourceLocation> parseComboLimits() {
             if (configValue == null) {
-                return new HashSet<>();
+                return Collections.emptySet();
             }
             return configValue.get().stream()
                     .map(ResourceLocation::tryParse)

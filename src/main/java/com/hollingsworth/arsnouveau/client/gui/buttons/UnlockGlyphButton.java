@@ -44,7 +44,7 @@ public class UnlockGlyphButton extends ANButton {
             if (this.spellPart != null) {
                 RenderUtils.drawSpellPart(this.spellPart, graphics, x, y, width, !playerKnows, 0);
                 if (selected)
-                    graphics.blit(new ResourceLocation(ArsNouveau.MODID, "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
+                    graphics.blit(ArsNouveau.id( "textures/gui/glyph_selected.png"), x, y, 0, 0, 16, 16, 16, 16);
             }
         }
     }

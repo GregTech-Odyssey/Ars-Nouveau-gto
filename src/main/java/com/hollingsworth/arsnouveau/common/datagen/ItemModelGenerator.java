@@ -159,7 +159,7 @@ public class ItemModelGenerator extends ItemModelProvider {
     }
 
     private ResourceLocation itemTexture(String item) {
-        return new ResourceLocation(ArsNouveau.MODID, "item" + "/" + item);
+        return ArsNouveau.id( "item" + "/" + item);
     }
 
     private ResourceLocation itemTexture(final Item item) {

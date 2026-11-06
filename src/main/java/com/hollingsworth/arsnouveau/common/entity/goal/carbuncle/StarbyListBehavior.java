@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ColorPos;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,8 +25,8 @@ public class StarbyListBehavior extends StarbyBehavior {
 
     public List<BlockPos> TO_LIST = new ArrayList<>();
 
-    public Map<Integer, Direction> FROM_DIRECTION_MAP = new HashMap<>();
-    public Map<Integer, Direction> TO_DIRECTION_MAP = new HashMap<>();
+    public Int2ObjectOpenHashMap<Direction> FROM_DIRECTION_MAP = new Int2ObjectOpenHashMap<>();
+    public Int2ObjectOpenHashMap<Direction> TO_DIRECTION_MAP = new Int2ObjectOpenHashMap<>();
 
     public StarbyListBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
@@ -69,8 +70,8 @@ public class StarbyListBehavior extends StarbyBehavior {
         super.onWanded(playerEntity);
         FROM_LIST = new ArrayList<>();
         TO_LIST = new ArrayList<>();
-        FROM_DIRECTION_MAP = new HashMap<>();
-        TO_DIRECTION_MAP = new HashMap<>();
+        FROM_DIRECTION_MAP = new Int2ObjectOpenHashMap<>();
+        TO_DIRECTION_MAP = new Int2ObjectOpenHashMap<>();
         PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.connections.cleared"));
         syncTag();
     }
@@ -139,6 +140,6 @@ public class StarbyListBehavior extends StarbyBehavior {
 
     @Override
     protected ResourceLocation getRegistryName() {
-        return new ResourceLocation(ArsNouveau.MODID, "starby_list");
+        return ArsNouveau.id( "starby_list");
     }
 }

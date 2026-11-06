@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.block.LargeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
@@ -165,7 +166,7 @@ public class LargeSourceJarTile extends SourceJarTile {
     public static void serverTick(Level level, BlockPos pos, BlockState state, LargeSourceJarTile tile) {
         Column current = tile.column();
         if (current != null) {
-            current.tick(level.getGameTime());
+            current.tick((TickHandler.INSTANCE.tickCounter + tile.tickOffset));
         }
     }
 

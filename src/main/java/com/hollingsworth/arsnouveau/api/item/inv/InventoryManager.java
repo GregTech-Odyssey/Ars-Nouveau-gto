@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.item.inv;
 import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.IWrappedCaster;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -255,7 +256,7 @@ public class InventoryManager {
      * Returns a reference to a random matching stack, if any. Does not modify the inventory. Chance is a percentage to choose the stack.
      */
     public SlotReference findItemR(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type) {
-        List<Integer> validSlots = new ArrayList<>();
+        IntArrayList validSlots = new IntArrayList();
         //filter the valid slots
         for (int slot = 0; slot < maxSlotForType(itemHandler, type); slot++) {
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
@@ -267,7 +268,7 @@ public class InventoryManager {
             return SlotReference.empty();
         }
         //apply uniform chance if there are any valid slots
-        return new SlotReference(itemHandler.getHandler(), validSlots.get(random.nextInt(validSlots.size())));
+        return new SlotReference(itemHandler.getHandler(), validSlots.getInt(random.nextInt(validSlots.size())));
     }
 
     /**

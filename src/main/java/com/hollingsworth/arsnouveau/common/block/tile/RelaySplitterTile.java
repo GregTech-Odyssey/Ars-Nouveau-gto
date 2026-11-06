@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
 import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -99,7 +100,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public void tick() {
-        if (level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
             return;
 
         processFromList();

@@ -99,6 +99,6 @@ public class FamiliarBookwyrm extends FlyingFamiliarEntity implements ISpellCast
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/book_wyrm_" + color + ".png");
     }
 }

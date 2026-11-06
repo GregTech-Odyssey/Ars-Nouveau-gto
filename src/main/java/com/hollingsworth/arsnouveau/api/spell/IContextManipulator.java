@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,13 +24,13 @@ public interface IContextManipulator {
      * Resets the combination limit validator for this set of glpyhs if THIS glyph appears before them.
      */
     default Set<AbstractSpellPart> bypassCombinationLimitsFor(){
-        return new HashSet<>();
+        return new OpenCacheHashSet<>();
     }
 
     /**
      * Resets the occurrence limit validator for this set of glpyhs if THIS glyph appears before them.
      */
     default Set<AbstractSpellPart> bypassOccurrenceLimitsFor(){
-        return new HashSet<>();
+        return new OpenCacheHashSet<>();
     }
 }

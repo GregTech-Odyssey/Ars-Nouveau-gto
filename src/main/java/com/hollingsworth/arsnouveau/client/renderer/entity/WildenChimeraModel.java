@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
 
 public class WildenChimeraModel extends GeoModel<WildenChimera> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wilden_chimera.png");
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/wilden_chimera.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.json");
+    private static final ResourceLocation TEXTURE = ArsNouveau.id( "textures/entity/wilden_chimera.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.id( "geo/wilden_chimera.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.id( "animations/wilden_chimera_animations.json");
 
 
 

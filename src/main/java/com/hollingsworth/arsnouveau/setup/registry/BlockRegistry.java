@@ -358,7 +358,7 @@ public class BlockRegistry {
             registry.register(s, new SlabBlock(BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
         for(String s : LibBlockNames.DECORATIVE_SOURCESTONE){
-            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
+            registry.register(s + "_stairs", new StairBlock(() -> ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s)).defaultBlockState(), BlockBehaviour.Properties.of().strength(1.5F, 6.0F).sound(SoundType.STONE)));
         }
         registry.register(LibBlockNames.Pot(LibBlockNames.MAGE_BLOOM), createPottedBlock(() -> MAGE_BLOOM_CROP.get()));
         registry.register(LibBlockNames.Pot(LibBlockNames.BLAZING_SAPLING), createPottedBlock(() -> BLAZING_SAPLING.get()));
@@ -376,15 +376,15 @@ public class BlockRegistry {
 
     public static void onBlockItemsRegistry(IForgeRegistry<Item> registry) {
         for (String s : LibBlockNames.DECORATIVE_SOURCESTONE) {
-            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_STAIRS) {
-            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s))));
         }
 
         for (String s : LibBlockNames.DECORATIVE_SLABS) {
-            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s))));
+            ITEMS.register(s, () -> getDefaultBlockItem(ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s))));
         }
     }
 
@@ -402,7 +402,7 @@ public class BlockRegistry {
 
 
     public static Block getBlock(String s) {
-        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, s));
+        return ForgeRegistries.BLOCKS.getValue(ArsNouveau.id( s));
     }
 
     public static <T extends Block>RegistryWrapper<T> registerBlock(String name, Supplier<T> blockSupp) {

@@ -9,8 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animation.AnimationState;
 
 public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
-    public static final ResourceLocation OPEN = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_open.geo.json");
-    public static final ResourceLocation CLOSED = new ResourceLocation(ArsNouveau.MODID, "geo/spellbook_closed.geo.json");
+    public static final ResourceLocation OPEN = ArsNouveau.id( "geo/spellbook_open.geo.json");
+    public static final ResourceLocation CLOSED = ArsNouveau.id( "geo/spellbook_closed.geo.json");
 
     public ResourceLocation modelLoc;
 
@@ -41,12 +41,12 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
 
     @Override
     public ResourceLocation getTextureResource(SpellBook object) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/item/spellbook_purple.png");
+        return ArsNouveau.id( "textures/item/spellbook_purple.png");
     }
 
     @Override
     public ResourceLocation getAnimationResource(SpellBook animatable) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/empty.json");
+        return ArsNouveau.id( "animations/empty.json");
     }
 
     @Override

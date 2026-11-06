@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.google.common.collect.EvictingQueue;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -171,7 +172,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (ExtractedStack extractedStack : multiSlotReference.getSlots()) {
             BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
-                addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, level.getGameTime()));
+                addTransferTask(new TransferTask(pos.above(), getBlockPos().above(), extractedStack.stack, (TickHandler.INSTANCE.tickCounter + tickOffset)));
             }
         }
     }
@@ -183,7 +184,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         for (SlotReference extractedStack : reference.getSlots()) {
             BlockPos pos = handlerPosList.stream().filter(handlerPos -> handlerPos.handler().equals(extractedStack.getHandler())).findFirst().map(HandlerPos::pos).orElse(null);
             if (pos != null) {
-                addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, level.getGameTime()));
+                addTransferTask(new TransferTask(getBlockPos().above(), pos.above(), stack, (TickHandler.INSTANCE.tickCounter + tickOffset)));
             }
         }
     }
@@ -201,7 +202,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
         TransferTask task = null;
         for (TransferTask transferTask : transferTasks) {
             // Remove tasks older than 10 seconds
-            if (level.getGameTime() - transferTask.gameTime > 200) {
+            if ((TickHandler.INSTANCE.tickCounter + tickOffset) - transferTask.gameTime > 200) {
                 staleTasks.add(transferTask);
             }
             task = transferTask;
@@ -332,7 +333,7 @@ public class StorageLecternTile extends ModdedTile implements MenuProvider, ITic
 		if(backoffTicks > 0){
 			backoffTicks--;
 		}
-		if(backoffTicks <= 0 && level.getGameTime() % 20 == 0){
+		if(backoffTicks <= 0 && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0){
 			insertNearbyItems();
 		}
 		if(checkPlayerRangeTicks > 0){

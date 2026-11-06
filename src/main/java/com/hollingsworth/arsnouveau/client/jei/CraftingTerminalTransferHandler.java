@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.client.container.CraftingTerminalMenu;
 import com.hollingsworth.arsnouveau.client.container.IAutoFillTerminal;
 import com.hollingsworth.arsnouveau.client.container.StoredItemStack;
@@ -74,7 +75,7 @@ public class CraftingTerminalTransferHandler<C extends AbstractContainerMenu & I
 			List<IRecipeSlotView> missing = new ArrayList<>();
 			List<IRecipeSlotView> views = recipeSlots.getSlotViews();
 			List<ItemStack[]> inputs = new ArrayList<>();
-			Set<StoredItemStack> stored = new HashSet<>(term.getStoredItems());
+			Set<StoredItemStack> stored = new OpenCacheHashSet<>(term.getStoredItems());
 
 			for (IRecipeSlotView view : views) {
 				if(view.getRole() == RecipeIngredientRole.INPUT || view.getRole() == RecipeIngredientRole.CATALYST) {

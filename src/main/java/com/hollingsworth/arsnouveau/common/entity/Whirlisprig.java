@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
@@ -465,6 +466,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
 
     @Override
     public ResourceLocation getTexture(Whirlisprig entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
+        return ArsNouveau.id( "textures/entity/whirlisprig_" + (getColor(entity).isEmpty() ? "summer" : getColor(entity)) + ".png");
     }
 }

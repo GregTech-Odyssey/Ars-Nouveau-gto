@@ -255,7 +255,7 @@ public class EntityWixie extends AbstractFlyingCreature implements GeoEntity, IA
         String color = getColor(entity).toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/wixie_" + color + ".png");
     }
 
     @Override

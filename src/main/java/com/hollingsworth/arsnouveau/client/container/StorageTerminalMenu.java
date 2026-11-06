@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.container;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.block.tile.StorageLecternTile;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -227,7 +228,7 @@ public class StorageTerminalMenu extends RecipeBookMenu<CraftingContainer> {
 		if(message.contains("tabs")){
 			ListTag tabs = message.getList("tabs", 10);
 			tabNames = new ArrayList<>();
-			Set<String> nameSet = new HashSet<>();
+			Set<String> nameSet = new OpenCacheHashSet<>();
 			for(int i = 0; i < tabs.size(); i++){
 				nameSet.add(tabs.getCompound(i).getString("name"));
 			}

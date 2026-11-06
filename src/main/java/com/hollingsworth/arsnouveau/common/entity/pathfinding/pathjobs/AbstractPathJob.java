@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
 import com.hollingsworth.arsnouveau.common.util.Log;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -66,17 +68,17 @@ public abstract class AbstractPathJob implements Callable<Path> {
     /**
      * Queue of all the visited nodes.
      */
-    public Map<Integer, ModNode> nodesVisited = new HashMap<>();
+    public Int2ObjectOpenHashMap<ModNode> nodesVisited = new Int2ObjectOpenHashMap<>();
 
     //  Debug Rendering
     protected boolean debugDrawEnabled = false;
 
     @Nullable
-    protected Set<ModNode> debugNodesVisited = new HashSet<>();
+    protected Set<ModNode> debugNodesVisited = new OpenCacheHashSet<>();
     @Nullable
-    protected Set<ModNode> debugNodesNotVisited = new HashSet<>();
+    protected Set<ModNode> debugNodesNotVisited = new OpenCacheHashSet<>();
     @Nullable
-    protected Set<ModNode> debugNodesPath = new HashSet<>();
+    protected Set<ModNode> debugNodesPath = new OpenCacheHashSet<>();
     //  May be faster, but can produce strange results
     private final boolean allowJumpPointSearchTypeWalk;
     private int totalNodesAdded = 0;
@@ -159,9 +161,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
         if (DEBUG_DRAW) // this is automatically false when on server
         {
             debugDrawEnabled = true;
-            debugNodesVisited = new HashSet<>();
-            debugNodesNotVisited = new HashSet<>();
-            debugNodesPath = new HashSet<>();
+            debugNodesVisited = new OpenCacheHashSet<>();
+            debugNodesNotVisited = new OpenCacheHashSet<>();
+            debugNodesPath = new OpenCacheHashSet<>();
         }
         this.entity = new WeakReference<>(entity);
     }
@@ -241,9 +243,9 @@ public abstract class AbstractPathJob implements Callable<Path> {
         if (DEBUG_DRAW) // this is automatically false when on server
         {
             debugDrawEnabled = true;
-            debugNodesVisited = new HashSet<>();
-            debugNodesNotVisited = new HashSet<>();
-            debugNodesPath = new HashSet<>();
+            debugNodesVisited = new OpenCacheHashSet<>();
+            debugNodesNotVisited = new OpenCacheHashSet<>();
+            debugNodesPath = new OpenCacheHashSet<>();
         }
         this.entity = new WeakReference<>(entity);
     }
@@ -1324,7 +1326,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
      * @param reached the reached blocks.
      * @param mob     the tracked mob.
      */
-    public static void synchToClient(final HashSet<BlockPos> reached, final Mob mob) {
+    public static void synchToClient(final OpenCacheHashSet<BlockPos> reached, final Mob mob) {
 //        if (reached.isEmpty()) {
 //            return;
 //        }

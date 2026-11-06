@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class SourceTileCapability {
 
-    private static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "source_tile");
+    private static final ResourceLocation ID = ArsNouveau.id( "source_tile");
 
     private SourceTileCapability() {}
 

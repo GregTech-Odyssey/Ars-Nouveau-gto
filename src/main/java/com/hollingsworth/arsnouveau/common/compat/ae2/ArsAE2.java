@@ -90,7 +90,7 @@ public final class ArsAE2 {
     private ArsAE2() {}
 
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(ArsNouveau.MODID, path);
+        return ArsNouveau.id( path);
     }
 
     public static List<ItemStack> selfDrop(Block block, LootParams.Builder builder) {

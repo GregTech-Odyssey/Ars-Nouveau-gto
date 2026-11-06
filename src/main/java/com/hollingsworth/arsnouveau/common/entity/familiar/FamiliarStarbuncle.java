@@ -81,7 +81,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         String color = getColor();
         if (color.isEmpty()) color = DyeColor.ORANGE.getName();
 
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
+        return ArsNouveau.id( "textures/entity/starbuncle_" + color.toLowerCase() + ".png");
     }
 
     @Override

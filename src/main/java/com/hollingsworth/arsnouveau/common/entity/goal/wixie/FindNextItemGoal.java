@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
             found = true;
             return;
         }
-        Set<Item> itemSet = new HashSet<>();
+        Set<Item> itemSet = new ReferenceOpenHashSet<>();
         itemSet.add(getStack.getItem());
         for (BlockPos b : tile.getInventories()) {
             BlockEntity blockEntity = world.getBlockEntity(b);

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.compat.ae2;
 
+import appeng.api.stacks.AEKeyType;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 
 import org.jetbrains.annotations.Nullable;
@@ -62,6 +63,11 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
 
         private static ISourceTile unwrap(ISourceTile tile) {
             return tile instanceof SourceTileWrapper wrapper ? wrapper.tile() : tile;
+        }
+
+        @Override
+        public boolean supportsKeyType(AEKeyType<?> aeKeyType) {
+            return SourceKeyType.TYPE == aeKeyType;
         }
 
         @Override

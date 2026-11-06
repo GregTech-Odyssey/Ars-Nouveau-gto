@@ -53,7 +53,7 @@ public class FamiliarAmethystGolem extends FamiliarEntity {
 
     public static final Map<String,ResourceLocation> Variants = new HashMap<>();
     static {
-        Variants.put("default", new ResourceLocation(ArsNouveau.MODID, "textures/entity/amethyst_golem.png"));
+        Variants.put("default", ArsNouveau.id( "textures/entity/amethyst_golem.png"));
     }
 
     @Override

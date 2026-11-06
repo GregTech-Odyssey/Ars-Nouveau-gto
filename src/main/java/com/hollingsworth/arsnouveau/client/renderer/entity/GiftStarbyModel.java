@@ -12,9 +12,9 @@ import software.bernie.geckolib.model.data.EntityModelData;
 import javax.annotation.Nullable;
 
 public class GiftStarbyModel extends GeoModel<GiftStarbuncle> {
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/gift_starby.png");
-    public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/gift_starby.geo.json");
-    public static final ResourceLocation ANIMATIONS = new ResourceLocation(ArsNouveau.MODID, "animations/starbuncle_animations.json");
+    private static final ResourceLocation WILD_TEXTURE = ArsNouveau.id( "textures/entity/gift_starby.png");
+    public static final ResourceLocation NORMAL_MODEL = ArsNouveau.id( "geo/gift_starby.geo.json");
+    public static final ResourceLocation ANIMATIONS = ArsNouveau.id( "animations/starbuncle_animations.json");
 
     @Override
     public void setCustomAnimations(GiftStarbuncle entity, long uniqueID, @Nullable AnimationState customPredicate) {

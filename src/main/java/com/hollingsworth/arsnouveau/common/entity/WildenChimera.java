@@ -20,6 +20,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.setup.registry.SoundRegistry;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -407,7 +408,7 @@ public class WildenChimera extends Monster implements GeoEntity {
     }
 
     public void getRandomUpgrade() {
-        ArrayList<Integer> upgrades = new ArrayList<>();
+        IntArrayList upgrades = new IntArrayList();
         if (!this.hasWings())
             upgrades.add(0);
         if (!this.hasSpikes())
@@ -416,7 +417,7 @@ public class WildenChimera extends Monster implements GeoEntity {
             upgrades.add(2);
         if (upgrades.isEmpty())
             return;
-        int upgrade = upgrades.get(random.nextInt(upgrades.size()));
+        int upgrade = upgrades.getInt(random.nextInt(upgrades.size()));
         switch (upgrade) {
             case 0 -> setWings(true);
             case 1 -> setSpikes(true);

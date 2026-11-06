@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.mob_jar;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.FilterableItemHandler;
 import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.item.inv.MultiInsertReference;
@@ -64,7 +65,7 @@ public class AllayBehavior extends JarBehavior<Allay> {
             }
         }else{
             Level level = tile.getLevel();
-            if(level.getGameTime() % 40 == 0){
+            if((TickHandler.INSTANCE.tickCounter + tile.tickOffset) % 40 == 0){
                 Allay allay = entityFromJar(tile);
                 ItemStack heldStack = allay.getItemInHand(InteractionHand.MAIN_HAND);
                 List<FilterableItemHandler> inventories = InvUtil.adjacentInventories(level, tile.getBlockPos());

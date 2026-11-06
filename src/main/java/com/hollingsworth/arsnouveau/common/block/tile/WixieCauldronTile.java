@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
@@ -82,7 +83,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             return;
         }
 
-        if (!hasSource && level.getGameTime() % 5 == 0 && SourceUtil.takeSourceWithParticles(worldPosition, level, 6, 50) != null) {
+        if (!hasSource && (TickHandler.INSTANCE.tickCounter + tickOffset) % 5 == 0 && SourceUtil.takeSourceWithParticles(worldPosition, level, 6, 50) != null) {
             this.hasSource = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             setChanged();
@@ -90,10 +91,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
 
         if (!hasSource) return;
 
-        if (level.getGameTime() % 100 == 0) {
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 100 == 0) {
             updateInventories(); // Update the inventories available to use
         }
-        if(!level.isClientSide() && level.getGameTime() % 20 == 0){
+        if(!level.isClientSide() && (TickHandler.INSTANCE.tickCounter + tickOffset) % 20 == 0){
             if(craftManager.isCraftCompleted()){
                 rotateCraft();
             }

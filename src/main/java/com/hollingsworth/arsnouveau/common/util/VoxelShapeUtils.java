@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.util;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
@@ -17,7 +18,7 @@ import java.util.function.UnaryOperator;
  */
 public class VoxelShapeUtils {
     public static VoxelShape rotateY(VoxelShape shape, int rotation) {
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
+        Set<VoxelShape> rotatedShapes = new OpenCacheHashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             x1 = (x1 * 16) - 8; x2 = (x2 * 16) - 8;
@@ -35,7 +36,7 @@ public class VoxelShapeUtils {
     }
 
     public static VoxelShape rotateX(VoxelShape shape, int rotation) {
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
+        Set<VoxelShape> rotatedShapes = new OpenCacheHashSet<>();
 
         shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
             y1 = (y1 * 16) - 8; y2 = (y2 * 16) - 8;

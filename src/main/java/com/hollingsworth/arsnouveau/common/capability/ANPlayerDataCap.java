@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -14,9 +15,9 @@ import java.util.Set;
 
 public class ANPlayerDataCap implements IPlayerCap {
 
-    public Set<AbstractSpellPart> glyphs = new HashSet<>();
+    public Set<AbstractSpellPart> glyphs = new OpenCacheHashSet<>();
 
-    public Set<FamiliarData> familiars = new HashSet<>();
+    public Set<FamiliarData> familiars = new OpenCacheHashSet<>();
 
     public ResourceLocation lastSummonedFamiliar;
 
@@ -30,7 +31,7 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     public void setKnownGlyphs(Collection<AbstractSpellPart> glyphs) {
-        this.glyphs = new HashSet<>(glyphs);
+        this.glyphs = new OpenCacheHashSet<>(glyphs);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     public void setUnlockedFamiliars(Collection<FamiliarData> familiars) {
-        this.familiars = new HashSet<>(familiars);
+        this.familiars = new OpenCacheHashSet<>(familiars);
     }
 
     @Override
@@ -111,8 +112,8 @@ public class ANPlayerDataCap implements IPlayerCap {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        glyphs = new HashSet<>();
-        familiars = new HashSet<>();
+        glyphs = new OpenCacheHashSet<>();
+        familiars = new OpenCacheHashSet<>();
 
         CompoundTag glyphsTag = nbt.getCompound("glyphs");
         for (int i = 0; i < glyphsTag.getInt("size"); i++) {

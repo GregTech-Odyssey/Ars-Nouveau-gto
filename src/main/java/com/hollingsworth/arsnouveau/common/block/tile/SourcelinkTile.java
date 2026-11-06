@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISpecialSourceProvider;
 import com.hollingsworth.arsnouveau.api.util.ArsBlockEntityIndexes;
@@ -59,7 +60,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements GeoBlockEnt
     public void tick() {
         if (level.isClientSide)
             return;
-        if (level.getGameTime() % 100 == 0 && getSourceLong() > 0) {
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 100 == 0 && getSourceLong() > 0) {
             List<ISpecialSourceProvider> providers = SourceUtil.canGiveSource(worldPosition, level, 5);
             if(!providers.isEmpty()){
                 transferSourceLong(this, providers.get(0).getSource());

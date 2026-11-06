@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -37,7 +38,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements GeoAnimata
         super.tick();
         if (level.isClientSide)
             return;
-        if (level.getGameTime() % 80 == 0 && this.canAcceptSource()) {
+        if ((TickHandler.INSTANCE.tickCounter + tickOffset) % 80 == 0 && this.canAcceptSource()) {
             for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))) {
                 long source = getSourceValue(i.getItem());
                 if (source > 0 && (canConsumeEntireItem(i.getItem()) || this.getSourceLong() <= 0)) {

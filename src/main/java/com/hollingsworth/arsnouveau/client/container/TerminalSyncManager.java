@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.container;
 
 
+import com.gto.fastcollection.fastutil.OpenCacheHashSet;
 import com.hollingsworth.arsnouveau.common.network.ClientToServerStoragePacket;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.ServerToClientStoragePacket;
@@ -76,7 +77,7 @@ public class TerminalSyncManager {
 
 	public void update(Map<StoredItemStack, Long> items, ServerPlayer player, Consumer<CompoundTag> extraSync) {
 		List<StoredItemStack> toWrite = new ArrayList<>();
-		Set<StoredItemStack> found = new HashSet<>();
+		Set<StoredItemStack> found = new OpenCacheHashSet<>();
 		items.forEach((s, c) -> {
 			long pc = this.items.getLong(s);
 			if(pc != 0L)found.add(s);

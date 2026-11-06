@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -27,9 +28,10 @@ public class TemporaryTile extends MirrorWeaveTile implements ITickable {
     public void tick() {
         if (level == null || level.isClientSide) return;
 
-        if (gameTime == null) gameTime = level.getGameTime();
+        var time = TickHandler.INSTANCE.tickCounter + tickOffset;
+        if (gameTime == null) gameTime = time;
 
-        if (level.getGameTime() < gameTime + tickDuration) return;
+        if (time < gameTime + tickDuration) return;
 
         level.setBlock(worldPosition, Blocks.AIR.defaultBlockState(), 2);
         level.updateNeighborsAt(worldPosition, level.getBlockState(worldPosition).getBlock());

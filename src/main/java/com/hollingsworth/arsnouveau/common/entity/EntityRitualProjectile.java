@@ -43,7 +43,9 @@ public class EntityRitualProjectile extends ColoredProjectile {
         yOld = getY();
         zOld = getZ();
 
-        this.setPos(getX(), getY() + Math.sin(level.getGameTime() / 10D) / 10, getZ());
+        var time = level.getGameTime();
+
+        this.setPos(getX(), getY() + Math.sin(time / 10D) / 10, getZ());
         xo = getX();
         yo = getY();
         zo = getZ();
@@ -55,9 +57,9 @@ public class EntityRitualProjectile extends ColoredProjectile {
                 counter += level.random.nextInt(3);
                 if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(getParticleColor()),
-                            (float) (position().x()) + Math.sin(level.getGameTime() / 3D),
+                            (float) (position().x()) + Math.sin(time / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) + Math.cos(level.getGameTime() / 3D),
+                            (float) (position().z()) + Math.cos(time / 3D),
                             0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }
@@ -67,9 +69,9 @@ public class EntityRitualProjectile extends ColoredProjectile {
                 counter += level.random.nextInt(3);
                 if (counter % (Minecraft.getInstance().options.particles().get().getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles().get().getId()) == 0) {
                     level.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
-                            (float) (position().x()) - Math.sin(level.getGameTime() / 3D),
+                            (float) (position().x()) - Math.sin(time / 3D),
                             (float) (position().y()),
-                            (float) (position().z()) - Math.cos(level.getGameTime() / 3D),
+                            (float) (position().z()) - Math.cos(time / 3D),
                             0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat()));
                 }
             }

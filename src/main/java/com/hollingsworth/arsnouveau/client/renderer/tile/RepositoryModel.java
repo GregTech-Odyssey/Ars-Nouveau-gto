@@ -8,9 +8,9 @@ import software.bernie.geckolib.model.GeoModel;
 
 public class RepositoryModel extends GeoModel<RepositoryTile> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/block/repository.png");
-    public static final ResourceLocation MODEL = new ResourceLocation(ArsNouveau.MODID, "geo/repository.geo.json");
-    public static final ResourceLocation ANIMATION = new ResourceLocation(ArsNouveau.MODID, "animations/empty.geo.json");
+    public static final ResourceLocation TEXTURE = ArsNouveau.id( "textures/block/repository.png");
+    public static final ResourceLocation MODEL = ArsNouveau.id( "geo/repository.geo.json");
+    public static final ResourceLocation ANIMATION = ArsNouveau.id( "animations/empty.geo.json");
 
     public RepositoryModel(){
     }

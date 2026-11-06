@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -9,7 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class PacketSyncLitEntities {
-    List<Integer> entityIDs = new ArrayList<>();
+    IntOpenHashSet entityIDs = new IntOpenHashSet();
 
     //Decoder
     public PacketSyncLitEntities(FriendlyByteBuf buf) {
@@ -26,7 +28,7 @@ public class PacketSyncLitEntities {
             buf.writeInt(i);
     }
 
-    public PacketSyncLitEntities(List<Integer> entityIDs) {
+    public PacketSyncLitEntities(IntOpenHashSet entityIDs) {
         this.entityIDs = entityIDs;
     }
 

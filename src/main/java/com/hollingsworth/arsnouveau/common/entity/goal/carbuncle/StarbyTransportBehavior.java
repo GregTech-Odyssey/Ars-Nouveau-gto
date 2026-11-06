@@ -40,7 +40,7 @@ public class StarbyTransportBehavior extends StarbyListBehavior {
             .expireAfterAccess(20, TimeUnit.SECONDS)
             .build();
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_transport");
+    public static final ResourceLocation TRANSPORT_ID = ArsNouveau.id( "starby_transport");
 
     public ItemStack itemScroll;
 

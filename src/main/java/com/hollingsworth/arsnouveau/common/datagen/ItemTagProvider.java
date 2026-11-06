@@ -20,20 +20,20 @@ import net.minecraftforge.versions.forge.ForgeVersion;
 import java.util.concurrent.CompletableFuture;
 
 public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
-    public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "summon_bed"));
+    public static TagKey<Item> SUMMON_BED_ITEMS = ItemTags.create(ArsNouveau.id( "summon_bed"));
     public static TagKey<Item> SOURCE_GEM_TAG = ItemTags.create(new ResourceLocation("forge:gems/source"));
     public static TagKey<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.create(new ResourceLocation("forge:storage_blocks/source"));
     public static TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(new ResourceLocation("forge:logs/archwood"));
-    public static TagKey<Item> MAGIC_FOOD = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_food"));
-    public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "wilden_drop"));
-    public static TagKey<Item> SHARD_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "golem/shard"));
+    public static TagKey<Item> MAGIC_FOOD = ItemTags.create(ArsNouveau.id( "magic_food"));
+    public static TagKey<Item> WILDEN_DROP_TAG = ItemTags.create(ArsNouveau.id( "wilden_drop"));
+    public static TagKey<Item> SHARD_TAG = ItemTags.create(ArsNouveau.id( "golem/shard"));
     public static TagKey<Item> BERRY_TAG = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "fruits/berry"));
-    public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "magic_shards"));
-    public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "interact_jar_blacklist"));
-    public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_loot_blacklist"));
-    public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "ritual_trade_blacklist"));
-    public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "shady_wizard_fruits"));
-    public static TagKey<Item> TOSS_BLACKLIST = ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "toss_blacklist"));
+    public static final TagKey<Item> SUMMON_SHARDS_TAG = ItemTags.create(ArsNouveau.id( "magic_shards"));
+    public static TagKey<Item> JAR_ITEM_BLACKLIST = ItemTags.create(ArsNouveau.id( "interact_jar_blacklist"));
+    public static TagKey<Item> RITUAL_LOOT_BLACKLIST = ItemTags.create(ArsNouveau.id( "ritual_loot_blacklist"));
+    public static TagKey<Item> RITUAL_TRADE_BLACKLIST = ItemTags.create(ArsNouveau.id( "ritual_trade_blacklist"));
+    public static TagKey<Item> SHADY_WIZARD_FRUITS = ItemTags.create(ArsNouveau.id( "shady_wizard_fruits"));
+    public static TagKey<Item> TOSS_BLACKLIST = ItemTags.create(ArsNouveau.id( "toss_blacklist"));
 
     public ItemTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> future, ExistingFileHelper helper) {
         super(output, Registries.ITEM, future, item -> item.builtInRegistryHolder().key(), ArsNouveau.MODID, helper);
@@ -53,7 +53,7 @@ public class ItemTagProvider extends IntrinsicHolderTagsProvider<Item> {
         this.tag(MAGIC_FOOD)
                 .add(ItemsRegistry.SOURCE_BERRY_PIE.get(),
                         ItemsRegistry.SOURCE_BERRY_ROLL.get());
-        this.tag(ItemTags.create(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop")))
+        this.tag(ItemTags.create(ArsNouveau.id( "whirlisprig/denied_drop")))
                 .add(Items.DIRT).addTag(Tags.Items.SEEDS);
 
         this.tag(Tags.Items.FENCES).add(BlockRegistry.ARCHWOOD_FENCE.asItem());

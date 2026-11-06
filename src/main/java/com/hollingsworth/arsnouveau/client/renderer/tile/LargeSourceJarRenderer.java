@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 
 public class LargeSourceJarRenderer implements BlockEntityRenderer<LargeSourceJarTile> {
-    private static final ResourceLocation FLUID = new ResourceLocation(ArsNouveau.MODID, "block/mana_still");
+    private static final ResourceLocation FLUID = ArsNouveau.id( "block/mana_still");
     private static final int MIN = -6;
     private static final int MAX = 22;
 

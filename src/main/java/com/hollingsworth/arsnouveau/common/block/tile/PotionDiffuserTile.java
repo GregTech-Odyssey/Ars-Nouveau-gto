@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import appeng.hooks.ticking.TickHandler;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
@@ -39,17 +40,17 @@ public class PotionDiffuserTile extends ModdedTile implements ITickable, IWandab
     public void tick() {
         if(isOff)
             return;
-        if(level.isClientSide && !isOff && ticksToConsume > 0 && !lastConsumedPotion.isEmpty() && level.getGameTime() % 8 == 0) {
+        if(level.isClientSide && !isOff && ticksToConsume > 0 && !lastConsumedPotion.isEmpty() && (TickHandler.INSTANCE.tickCounter + tickOffset) % 8 == 0) {
             level.addParticle(ParticleTypes.SMOKE, getX() + 0.5, getY() + 1, getZ() + 0.5, 0, 0, 0);
             return;
         }
 
-        if(ticksToConsume <= 0 && boundPos != null && level.getGameTime() % 60 == 0){
+        if(ticksToConsume <= 0 && boundPos != null && (TickHandler.INSTANCE.tickCounter + tickOffset) % 60 == 0){
             obtainPotion();
         }
         if(ticksToConsume > 0){
             ticksToConsume--;
-            if(level.getGameTime() % (15 * 20) == 0){
+            if((TickHandler.INSTANCE.tickCounter + tickOffset) % (15 * 20) == 0){
                 for(LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos()).inflate(10))){
                     lastConsumedPotion.applyEffects(null, null, entity);
                 }

@@ -134,7 +134,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         String color = getColor().toLowerCase();
         if (color.isEmpty())
             color = "blue";
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie_" + color + ".png");
+        return ArsNouveau.id( "textures/entity/wixie_" + color + ".png");
     }
 
     public static class DebuffTargetGoal extends Goal {
