@@ -71,8 +71,13 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
         }
 
         @Override
+        public int operationTime() {
+            return 2;
+        }
+
+        @Override
         public long insert(AEKey what, long amount, Actionable mode, IActionSource actionSource) {
-            if (!(what instanceof SourceKey) || ownNetwork()) {
+            if (!(what == SourceKey.KEY) || ownNetwork()) {
                 return 0;
             }
 
@@ -87,7 +92,7 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
 
         @Override
         public long extract(AEKey what, long amount, Actionable mode, IActionSource actionSource) {
-            if (!(what instanceof SourceKey) || ownNetwork()) {
+            if (!(what == SourceKey.KEY) || ownNetwork()) {
                 return 0;
             }
 

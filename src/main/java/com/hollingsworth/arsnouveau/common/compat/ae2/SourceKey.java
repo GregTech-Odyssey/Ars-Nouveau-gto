@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 
-public class SourceKey extends AEKey {
+public final class SourceKey extends AEKey {
     public static final AEKey KEY = new SourceKey();
 
     private static final ResourceLocation ID = new ResourceLocation("ars_nouveau", "source");

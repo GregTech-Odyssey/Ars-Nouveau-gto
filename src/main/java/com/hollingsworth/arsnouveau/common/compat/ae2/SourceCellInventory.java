@@ -95,8 +95,13 @@ public class SourceCellInventory implements StorageCell {
     }
 
     @Override
+    public int operationTime() {
+        return 1;
+    }
+
+    @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount == 0 || !(what instanceof SourceKey)) {
+        if (amount == 0 || !(what == SourceKey.KEY)) {
             return 0;
         }
 

@@ -27,7 +27,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
 
     @Override
     public long transfer(StackTransferContext context, AEKey what, long amount) {
-        if (!(what instanceof SourceKey)) {
+        if (!(what == SourceKey.KEY)) {
             return 0;
         }
 
@@ -62,7 +62,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
 
     @Override
     public long push(AEKey what, long amount, Actionable mode) {
-        if (!(what instanceof SourceKey)) {
+        if (!(what == SourceKey.KEY)) {
             return 0;
         }
 

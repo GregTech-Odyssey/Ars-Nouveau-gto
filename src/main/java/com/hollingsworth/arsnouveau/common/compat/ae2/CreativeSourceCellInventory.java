@@ -14,7 +14,7 @@ import appeng.api.storage.cells.StorageCell;
 public record CreativeSourceCellInventory(ItemStack i) implements StorageCell {
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
-        return what instanceof SourceKey ? amount : 0;
+        return what == SourceKey.KEY ? amount : 0;
     }
 
     @Override
@@ -23,8 +23,13 @@ public record CreativeSourceCellInventory(ItemStack i) implements StorageCell {
     }
 
     @Override
+    public int operationTime() {
+        return 1;
+    }
+
+    @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        return what instanceof SourceKey ? amount : 0;
+        return what ==SourceKey.KEY ? amount : 0;
     }
 
     @Override
