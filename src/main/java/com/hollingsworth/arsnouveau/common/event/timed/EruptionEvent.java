@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class EruptionEvent implements ITimedEvent {
 
@@ -83,5 +84,10 @@ public class EruptionEvent implements ITimedEvent {
     @Override
     public String getID() {
         return ID;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return world;
     }
 }

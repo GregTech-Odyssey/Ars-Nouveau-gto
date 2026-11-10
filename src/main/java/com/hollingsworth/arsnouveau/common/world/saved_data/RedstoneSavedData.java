@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.world.saved_data;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.suried.gtoutils.level.LevelStore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -62,9 +63,11 @@ public class RedstoneSavedData extends SavedData {
         return pCompoundTag;
     }
 
+    private static final LevelStore<RedstoneSavedData> DATA = LevelStore.createWithLevel(level -> ((ServerLevel) level).getDataStorage()
+            .computeIfAbsent(RedstoneSavedData::new, RedstoneSavedData::new, "an_redstone_signals" ));
+
     public static RedstoneSavedData from(ServerLevel level){
-        return level.getDataStorage()
-                .computeIfAbsent(RedstoneSavedData::new, RedstoneSavedData::new, "an_redstone_signals" );
+        return DATA.get(level);
     }
 
     public static class Entry{

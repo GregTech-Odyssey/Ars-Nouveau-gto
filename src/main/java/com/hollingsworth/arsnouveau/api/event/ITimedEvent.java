@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A basic timed event for the EventQueue.
@@ -40,5 +42,10 @@ public interface ITimedEvent {
 
     default void onServerStopping(){
 
+    }
+
+    @Nullable
+    default Level level() {
+        return null;
     }
 }

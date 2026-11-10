@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class BounceTimedEvent implements ITimedEvent {
     LivingEntity livingEntity;
@@ -27,5 +29,10 @@ public class BounceTimedEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return duration >= 1;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return livingEntity == null ? null : livingEntity.level();
     }
 }

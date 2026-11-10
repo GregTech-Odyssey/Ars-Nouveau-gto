@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.event.timed;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.common.block.tile.SkyBlockTile;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class SkyweaveVisibilityEvent implements ITimedEvent {
     public int ticks;
@@ -25,5 +27,10 @@ public class SkyweaveVisibilityEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return ticks <= 0;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return skyweave == null ? null : skyweave.getLevel();
     }
 }

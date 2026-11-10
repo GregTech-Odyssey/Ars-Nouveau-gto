@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraftforge.common.util.FakePlayer;
+import org.jetbrains.annotations.Nullable;
 
 public class OpenChestEvent implements ITimedEvent {
     ServerLevel level;
@@ -56,5 +58,10 @@ public class OpenChestEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return duration <= 0;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return level;
     }
 }

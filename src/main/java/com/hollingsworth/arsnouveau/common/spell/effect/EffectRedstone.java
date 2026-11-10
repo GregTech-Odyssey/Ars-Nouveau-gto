@@ -25,9 +25,7 @@ import net.minecraftforge.event.level.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class EffectRedstone extends AbstractEffect {
     public static EffectRedstone INSTANCE = new EffectRedstone();
@@ -104,6 +102,5 @@ public class EffectRedstone extends AbstractEffect {
         return setOf(SpellSchools.MANIPULATION);
     }
 
-    public static final Map<String, Map<BlockPos, Integer>> signalMap = new ConcurrentHashMap<>();
 
 }

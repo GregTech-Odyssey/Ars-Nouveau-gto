@@ -34,7 +34,6 @@ import com.hollingsworth.arsnouveau.common.network.PotionSyncPacket;
 import com.hollingsworth.arsnouveau.common.perk.JumpHeightPerk;
 import com.hollingsworth.arsnouveau.common.perk.LootingPerk;
 import com.hollingsworth.arsnouveau.common.ritual.DenySpawnRitual;
-import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.common.ritual.RitualGravity;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGlide;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectWololo;
@@ -68,6 +67,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
@@ -236,13 +238,6 @@ public class EventHandler {
             CaelusHandler.setFlying(event.player);
         }
 
-        if (event.player.hasEffect(ModPotions.FLIGHT_EFFECT.get())
-            && event.player.level.getGameTime() % 20 == 0
-            && event.player.getEffect(ModPotions.FLIGHT_EFFECT.get()).getDuration() <= 30 * 20
-            && event.player instanceof ServerPlayer serverPlayer) {
-            RitualEventQueue.getRitual(event.player.level, RitualFlight.class, flight -> flight.attemptRefresh(serverPlayer));
-        }
-
         if (event.player.level.getGameTime() % RitualGravity.renewInterval == 0 && event.player instanceof ServerPlayer serverPlayer) {
             MobEffectInstance gravity = event.player.getEffect(ModPotions.GRAVITY_EFFECT.get());
             if (gravity == null || gravity.getDuration() <= RitualGravity.renewThreshold) {
@@ -251,10 +246,12 @@ public class EventHandler {
         }
     }
 
+    @Deprecated(since = "4.12.27", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "2027.6.1")
     @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if (!event.getEntity().level.isClientSide && event.getEntity() instanceof Player entity) {
-            RitualEventQueue.getRitual(entity.level, RitualFlight.class, flight -> flight.onJumpEvent(event));
+    public static void dropRemovedItems(MissingMappingsEvent event) {
+        for (var mapping : event.getMappings(Registries.ITEM, ArsNouveau.MODID)) {
+            if (mapping.getKey().getPath().equals("ritual_flight")) mapping.ignore();
         }
     }
 
@@ -482,7 +479,9 @@ public class EventHandler {
     public static void treeGrow(SaplingGrowTreeEvent event) {
         if (!(event.getLevel() instanceof ServerLevel level))
             return;
-        Set<UUID> sprigs = Whirlisprig.WHIRLI_MAP.getEntities(level);
+        Set<UUID> sprigs = Whirlisprig.UNTAMED.getIfPresent(level);
+        if (sprigs == null)
+            return;
         List<UUID> sprigsToRemove = new ArrayList<>();
 
         for (UUID uuid : sprigs) {
@@ -495,7 +494,7 @@ public class EventHandler {
             }
         }
         for (UUID uuid : sprigsToRemove) {
-            Whirlisprig.WHIRLI_MAP.removeEntity(level, uuid);
+            sprigs.remove(uuid);
         }
     }
 

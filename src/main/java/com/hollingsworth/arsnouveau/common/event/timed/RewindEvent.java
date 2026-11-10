@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.spell.rewind.IRewindCallback;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindAttachment;
 import com.hollingsworth.arsnouveau.common.spell.rewind.RewindEntityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -89,5 +90,10 @@ public class RewindEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return doneRewinding;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return entity == null ? null : entity.level();
     }
 }

@@ -7,14 +7,13 @@ import com.gto.datasynclib.network.BlockEntitySyncPacket;
 import com.gto.datasynclib.network.DataSyncNetwork;
 import com.gto.datasynclib.util.ByteBufCodecExtends;
 import com.gto.datasynclib.util.ByteBufUtil;
-import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
+import com.suried.gtoutils.schedule.TickBatch;
 import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -35,7 +34,7 @@ public final class BlockEntitySync {
     private static final byte FULL = 1;
     private static final byte DELTA = 2;
     private static final int MAX_KEYS = 4096;
-    private static final ReferenceLinkedOpenHashSet<BlockEntity> PENDING = new ReferenceLinkedOpenHashSet<>();
+    private static final TickBatch<BlockEntity> PENDING = TickBatch.create(BlockEntitySync::send);
 
     public interface Holder extends IFieldDataHolder {
 
@@ -62,40 +61,9 @@ public final class BlockEntitySync {
     }
 
     public static void request(BlockEntity be) {
-        if (be.getLevel() instanceof ServerLevel && be instanceof Holder) {
-            PENDING.add(be);
+        if (be.getLevel() instanceof ServerLevel level && be instanceof Holder) {
+            PENDING.add(level, be);
         }
-    }
-
-    public static void flush(ServerLevel level) {
-        if (PENDING.isEmpty()) {
-            return;
-        }
-        List<BlockEntity> due = null;
-        var it = PENDING.iterator();
-        while (it.hasNext()) {
-            var be = it.next();
-            if (be.getLevel() == level || be.getLevel() == null) {
-                it.remove();
-                if (due == null) {
-                    due = new ArrayList<>();
-                }
-                due.add(be);
-            }
-        }
-        if (due != null) {
-            for (var be : due) {
-                send(be);
-            }
-        }
-    }
-
-    public static void forget(Level level) {
-        PENDING.removeIf(be -> be.getLevel() == level || be.getLevel() == null);
-    }
-
-    public static void clear() {
-        PENDING.clear();
     }
 
     private static void send(BlockEntity be) {
@@ -124,7 +92,7 @@ public final class BlockEntitySync {
 
     public CompoundTag writeFull() {
         var be = (BlockEntity) owner;
-        if (PENDING.remove(be)) {
+        if (be.getLevel() != null && PENDING.remove(be.getLevel(), be)) {
             send(be);
         }
         var tag = new CompoundTag();

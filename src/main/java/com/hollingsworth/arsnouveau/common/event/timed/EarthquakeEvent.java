@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,5 +82,10 @@ public class EarthquakeEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return counter > posList.size();
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return world;
     }
 }

@@ -317,13 +317,6 @@ public class RecipeDatagen extends RecipeProvider {
                     .requires(RecipeDatagen.SOURCE_GEM_BLOCK)
                     .save(consumer);
 
-            shapelessBuilder(getRitualItem(RitualLib.FLIGHT))
-                    .requires(BlockRegistry.VEXING_LOG)
-                    .requires(ItemsRegistry.WILDEN_WING, 3)
-                    .requires(Ingredient.of(Tags.Items.GEMS_DIAMOND), 2)
-                    .requires(Items.ENDER_PEARL)
-                    .save(consumer);
-
             shapelessBuilder(ItemsRegistry.MIMIC_ITEM_SCROLL)
                     .requires(ItemsRegistry.ALLOW_ITEM_SCROLL)
                     .requires(Items.CHEST)

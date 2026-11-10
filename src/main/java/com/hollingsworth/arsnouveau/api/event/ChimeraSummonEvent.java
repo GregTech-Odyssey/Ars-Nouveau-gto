@@ -112,4 +112,9 @@ public class ChimeraSummonEvent implements ITimedEvent {
     public String getID() {
         return ID;
     }
+
+    @Override
+    public @Nullable Level level() {
+        return world;
+    }
 }

@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.client.IVariantColorProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
-import com.hollingsworth.arsnouveau.api.util.LevelEntityMap;
 import com.hollingsworth.arsnouveau.api.util.SummonUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -23,6 +22,10 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import com.suried.gtoutils.level.LevelStore;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -75,7 +78,7 @@ import java.util.List;
 public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, ITooltipProvider, IDispellable, IVariantColorProvider<Whirlisprig> {
     AnimatableInstanceCache manager = GeckoLibUtil.createInstanceCache(this);
 
-    public static LevelEntityMap WHIRLI_MAP = new LevelEntityMap();
+    public static final LevelStore<Set<UUID>> UNTAMED = LevelStore.create(ConcurrentHashMap::newKeySet);
 
     public int timeSinceBonemeal = 0;
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.BOOLEAN);
@@ -236,7 +239,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
     @Override
     public void setRemoved(RemovalReason pRemovalReason) {
         super.setRemoved(pRemovalReason);
-        Whirlisprig.WHIRLI_MAP.removeEntity(level, this.getUUID());
+        var untamed = UNTAMED.getIfPresent(level);
+        if (untamed != null) untamed.remove(this.getUUID());
     }
 
     @Override
@@ -245,7 +249,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements GeoEntity, IT
         SummonUtil.healOverTime(this);
         if (!this.level.isClientSide) {
             if(!this.isRemoved() && !this.isTamed()) {
-                Whirlisprig.WHIRLI_MAP.addEntity(level, this.getUUID());
+                UNTAMED.get(level).add(this.getUUID());
             }
             if (level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
                 this.remove(RemovalReason.DISCARDED);

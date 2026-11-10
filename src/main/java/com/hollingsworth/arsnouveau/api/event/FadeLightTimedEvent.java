@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
     protected int lambdynlights$luminance = 0;
@@ -149,5 +150,10 @@ public class FadeLightTimedEvent implements ITimedEvent, LambDynamicLight {
             for (long pos : this.lambdynlights$trackedLitChunkPos) {
                 LightManager.scheduleChunkRebuild(renderer, pos);
             }
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return level;
     }
 }

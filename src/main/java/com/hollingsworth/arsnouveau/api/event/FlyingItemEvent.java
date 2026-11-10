@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.common.network.ClientFx;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class FlyingItemEvent implements ITimedEvent {
 
@@ -29,5 +30,10 @@ public class FlyingItemEvent implements ITimedEvent {
     @Override
     public boolean isExpired() {
         return delay <= 0;
+    }
+
+    @Override
+    public @Nullable Level level() {
+        return level;
     }
 }

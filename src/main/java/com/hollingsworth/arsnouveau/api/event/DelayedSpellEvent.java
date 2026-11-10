@@ -55,4 +55,9 @@ public class DelayedSpellEvent implements ITimedEvent {
     public boolean isExpired() {
         return duration <= 0 || world == null;
     }
+
+    @Override
+    public @Nullable Level level() {
+        return world;
+    }
 }
