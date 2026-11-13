@@ -95,9 +95,9 @@ repositories {
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:23.0.0'
+    compileOnly(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixin_extras_version}"))
     implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:${mixin_extras_version}"))
 
     modImplementation("dev.emi:emi-forge-1.20.1:1.1.1027")

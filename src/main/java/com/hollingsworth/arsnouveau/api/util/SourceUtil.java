@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.source.IAdvancedSourceTile;
 import com.hollingsworth.arsnouveau.api.source.SourceProvider;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarSpec;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
-import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import com.suried.gtoutils.spatial.BlockOrder;
 import com.suried.gtoutils.spatial.BlockRange;
@@ -111,8 +110,7 @@ public class SourceUtil {
     public static @Nullable ISpecialSourceProvider takeSourceWithParticles(BlockPos pos, Level level, int range, long source){
         ISpecialSourceProvider result = takeSource(pos, level, range, source);
         if(result != null){
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, result.getCurrentPos(), pos);
-            ClientFx.spawn(level, aoeProjectile);
+            ClientFx.followPlain(level, result.getCurrentPos(), pos);
         }
         return result;
     }

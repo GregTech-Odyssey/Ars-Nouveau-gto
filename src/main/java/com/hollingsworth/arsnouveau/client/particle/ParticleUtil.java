@@ -48,17 +48,11 @@ public class ParticleUtil {
     }
 
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to, ParticleColor color) {
-        if (world.isLoaded(to) && world.isLoaded(from)) {
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to, color.toWrapper());
-            ClientFx.spawn(world, aoeProjectile);
-        }
+        ClientFx.follow(world, from, to, color);
     }
 
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to) {
-        if (world.isLoaded(to) && world.isLoaded(from)) {
-            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-            ClientFx.spawn(world, aoeProjectile);
-        }
+        ClientFx.followPlain(world, from, to);
     }
 
     public static void beam(BlockPos toThisBlock, BlockPos fromThisBlock, Level world) {

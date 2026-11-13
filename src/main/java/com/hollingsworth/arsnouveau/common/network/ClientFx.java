@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.ColoredProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
@@ -25,9 +26,8 @@ public final class ClientFx {
         }
         if (visual instanceof EntityFollowProjectile e) {
             var data = e.getEntityData();
-            BlockPos from = data.get(EntityFollowProjectile.from);
-            send(level, from, new PacketClientFx(PacketClientFx.Type.FOLLOW, e.position(), Vec3.ZERO, from, data.get(EntityFollowProjectile.to),
-                    color(e), data.get(EntityFollowProjectile.SPAWN_TOUCH), data.get(EntityFollowProjectile.DESPAWN), Float.NaN, ItemStack.EMPTY));
+            sendFollow(level, e.position(), data.get(EntityFollowProjectile.from), data.get(EntityFollowProjectile.to), color(e),
+                    data.get(EntityFollowProjectile.SPAWN_TOUCH), data.get(EntityFollowProjectile.DESPAWN));
         } else if (visual instanceof EntityFlyingItem e) {
             var data = e.getEntityData();
             Vec3 from = data.get(EntityFlyingItem.from);
@@ -40,10 +40,24 @@ public final class ClientFx {
     }
 
     public static void follow(Level level, BlockPos from, BlockPos to, ParticleColor color) {
+        ParticleColor.IntWrapper rgb = color.toWrapper();
+        followRgb(level, from, to, rgb.r, rgb.g, rgb.b);
+    }
+
+    public static void followPlain(Level level, BlockPos from, BlockPos to) {
+        followRgb(level, from, to, 255, 25, 180);
+    }
+
+    private static void followRgb(Level level, BlockPos from, BlockPos to, int r, int g, int b) {
         if (level.isClientSide || !level.isLoaded(to) || !level.isLoaded(from)) {
             return;
         }
-        spawn(level, new EntityFollowProjectile(level, from, to, color.toWrapper()));
+        sendFollow(level, new Vec3(from.getX() + 0.5, from.getY() + 0.5, from.getZ() + 0.5), from, to,
+                new ParticleColor(Math.min(r, 255), Math.min(g, 255), Math.min(b, 255)), false, (int) (BlockUtil.distanceFrom(from, to) + 10));
+    }
+
+    private static void sendFollow(Level level, Vec3 start, BlockPos from, BlockPos to, ParticleColor color, boolean touch, int despawn) {
+        send(level, from, new PacketClientFx(PacketClientFx.Type.FOLLOW, start, Vec3.ZERO, from, to, color, touch, despawn, Float.NaN, ItemStack.EMPTY));
     }
 
     public static void poof(Level level, BlockPos pos) {

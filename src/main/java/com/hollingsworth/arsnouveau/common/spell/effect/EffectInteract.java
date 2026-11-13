@@ -8,8 +8,10 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.util.RemoteMenuAccess;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -30,8 +32,11 @@ import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -148,18 +153,33 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
+    private static BlockHitResult onTargetShape(BlockHitResult hit, BlockState state, Level level) {
+        BlockPos pos = hit.getBlockPos();
+        VoxelShape shape = state.getShape(level, pos);
+        Vec3 local = hit.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+        for (AABB box : shape.toAabbs()) {
+            if (box.inflate(1.0E-3).contains(local)) return hit;
+        }
+        Vec3 center = Vec3.atCenterOf(pos);
+        Direction face = hit.getDirection();
+        BlockHitResult onShape = shape.isEmpty() ? null : shape.clip(center.relative(face, 1.0), center, pos);
+        return onShape != null ? onShape : new BlockHitResult(center.relative(face, 0.5), face, pos, hit.isInside());
+    }
+
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        BlockPos blockPos = rayTraceResult.getBlockPos();
+    public void onResolveBlock(BlockHitResult hit, Level world,@NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        BlockPos blockPos = hit.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockPos))
             return;
         if(blockState.is(BlockTagProvider.INTERACT_BLACKLIST)){
             return;
         }
+        BlockHitResult rayTraceResult = onTargetShape(hit, blockState, world);
         Player player = getPlayer(shooter, (ServerLevel) world);
         if(isRealPlayer(shooter)){
-            useOnBlock(player, spellStats, blockPos, blockState, world, rayTraceResult);
+            Player user = player;
+            RemoteMenuAccess.interact(user, world, blockPos, () -> useOnBlock(user, spellStats, blockPos, blockState, world, rayTraceResult));
         }else{
             InventoryManager manager = spellContext.getCaster().getInvManager();
             player = setupFakeInventory(spellContext, world);

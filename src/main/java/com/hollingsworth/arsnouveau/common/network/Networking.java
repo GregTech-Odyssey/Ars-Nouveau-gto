@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.util.RemoteMenuAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -225,6 +226,7 @@ public class Networking {
         INSTANCE.registerMessage(nextID(), PotionSyncPacket.class, PotionSyncPacket::toBytes, PotionSyncPacket::new, PotionSyncPacket::handle);
         INSTANCE.registerMessage(nextID(), PacketClientRewindEffect.class, PacketClientRewindEffect::toBytes, PacketClientRewindEffect::new, PacketClientRewindEffect::handle);
         INSTANCE.registerMessage(nextID(), PacketClientFx.class, PacketClientFx::encode, PacketClientFx::decode, PacketClientFx::handle);
+        INSTANCE.registerMessage(nextID(), RemoteMenuAccess.ChunkPacket.class, RemoteMenuAccess.ChunkPacket::encode, RemoteMenuAccess.ChunkPacket::decode, RemoteMenuAccess.ChunkPacket::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

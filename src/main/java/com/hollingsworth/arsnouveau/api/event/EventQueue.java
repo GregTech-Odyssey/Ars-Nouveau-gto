@@ -11,6 +11,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class EventQueue {
 
         if (e.phase != TickEvent.Phase.END)
             return;
-        TickHandler.INSTANCE.tickCounter++;
+        if (ServerLifecycleHooks.getCurrentServer() == null) TickHandler.INSTANCE.tickCounter++;
         EventQueue.getClientQueue().tick(e);
     }
 

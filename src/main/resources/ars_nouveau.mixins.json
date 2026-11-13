@@ -14,7 +14,8 @@
     "light.ClientMixin",
     "light.EntityRendererMixin",
     "light.LevelRendererMixin",
-    "light.LightEntityMixin"
+    "light.LightEntityMixin",
+    "remote.RemoteChunkCacheMixin"
   ],
   "mixins": [
     "CrossbowMixin",
@@ -34,6 +35,11 @@
     "jar.MobAccessorMixin",
     "perks.PerkLivingEntity",
     "redstone.RedstoneLevelMixin",
+    "remote.ContainerMenuMixin",
+    "remote.EntityDistanceMixin",
+    "remote.MenuPacketMixin",
+    "remote.PlayerMenuMixin",
+    "remote.ServerPlayerMenuMixin",
     "rewind.RewindEntityMixin",
     "structure.StructureProcessorAccessor",
     "structure.StructureTemplateAccessor",
